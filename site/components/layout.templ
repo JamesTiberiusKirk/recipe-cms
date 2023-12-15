@@ -1,0 +1,114 @@
+package components
+
+templ Layout() {
+	<html>
+		<head>
+			<link rel="stylesheet" href="/assets/styles.css"/>
+		</head>
+		<body>
+			<script src="https://unpkg.com/htmx.org@1.9.6"></script>
+			<script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+			<script src="https://unpkg.com/htmx.org/dist/ext/loading-states.js"></script>
+			<script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
+			<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+			<script src="/assets/serializeForm.js"></script>
+			<style>
+                            .root__header {
+                                display: block;
+                                padding: 20px;
+                                width: 50%;
+                                margin-left: auto;
+                                margin-right: auto;
+                            }
+
+                            .root__header-row {
+                                display: flex;
+                                flex-direction: row;
+                            }
+
+                            .root__container {
+                                flex-direction: column;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                width: 60%;
+                                margin-left: auto;
+                                margin-right: auto;
+                            }
+                        </style>
+			<script>
+                            // htmx.logAll();
+
+                            htmx.config.defaultSettleDelay = 0;
+                            document.addEventListener('htmx:beforeOnLoad', function (event) {
+                                console.log("htmx:beforeOnLoad CUSTOM", event)
+
+                                const res = event.detail.xhr
+                                const isValidationRoute = (event.detail.requestConfig.path.search("validate"))
+
+                                if (isValidationRoute) {
+                                    if (res.status === 400) {
+                                        console.log("status === 400")
+                                        event.detail.shouldSwap = true;
+                                        event.detail.isError = false;
+                                    }
+
+                                    if (res.status === 200) {
+                                        console.log("status === 200")
+                                    }
+                                }
+
+                                // Bellow is an example of creating your own custom attibutes
+                                // In this example I have created attibutes which dynamically enables or disables (buttons) when using validation routes
+                                // This same could be expanded for a lot of other behaviour
+                                // However, this should not be overused as it could already be covered in htmx
+                                // AND because too much js here will just render the whole point of htmx nil
+                                if (isValidationRoute) {
+                                    if (res.status === 400) {
+                                        const disableOnErrorTargetId = event.srcElement.getAttribute("disableOnError")
+                                        if (disableOnErrorTargetId) {
+                                            const targetIdParsed = disableOnErrorTargetId.replace("#", "")
+                                            const target = document.getElementById(targetIdParsed)
+                                            if (target) target.setAttribute("disabled", true)
+                                        }
+                                    }
+
+                                    if (res.status === 200) {
+                                        const enableOnValidTargetId = event.srcElement.getAttribute("enableOnValid")
+                                        if (enableOnValidTargetId) {
+                                            const targetIdParsed = enableOnValidTargetId.replace("#", "")
+                                            const target = document.getElementById(targetIdParsed)
+                                            if (target) target.removeAttribute("disabled")
+                                        }
+                                    }
+                                }
+                            });
+
+
+                            htmx.defineExtension('json-enc-nested', {
+                                onEvent: function (name, evt) {
+                                    if (name === "htmx:configRequest") {
+                                        evt.detail.headers['Content-Type'] = "application/json";
+                                    }
+                                },
+
+                                encodeParameters : function(xhr, parameters, elt) {
+                                    let jsonEnc = $(elt).serializeJSON()
+                                    console.log("jsonencoded",jsonEnc)
+
+                                    xhr.overrideMimeType('text/json');
+                                    return JSON.stringify(jsonEnc);
+                                }
+                            });
+                        </script>
+			<header class="root__header">
+				<div class="root__header_row">
+					<a href="/recipe/new">Add Recipe</a>
+				</div>
+			</header>
+			<div class="root__container">
+				{ children... }
+			</div>
+		</body>
+	</html>
+}

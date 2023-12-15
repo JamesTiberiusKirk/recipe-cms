@@ -1,0 +1,57 @@
+package recipe
+
+import "github.com/JamesTiberiusKirk/recipe-cms/models"
+import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
+import "fmt"
+
+type recipePageData struct {
+	Recipe models.Recipe
+	Units  []models.Unit
+	Error  string
+}
+
+templ ingredient(ingredient models.Ingredient, availableUnits []models.Unit) {
+	<div id="ingredient">
+		Name:<input name="recipe[ingredients][][name]" value={ ingredient.Name }/>
+		Amount:<input name="recipe[ingredients][][amount]:number" type="number" value={ fmt.Sprint(ingredient.Amount) }/>
+		@components.UnitForm("recipe[ingredients][]",ingredient.Unit, availableUnits)
+	</div>
+}
+
+templ recipePage(data recipePageData) {
+	@components.Layout() {
+		<div>
+			<form
+ 				id="recipe_form"
+ 				name="recipe"
+ 				hx-ext="json-enc-nested"
+ 				hx-post
+ 				hx-select="#recipe_form"
+ 				hx-swap="outerHTML"
+ 				hx-trigger="click from:#submit-all"
+			>
+				Name:<input name="recipe[name]" value={ data.Recipe.Name }/>
+				<br/>
+				Ingredients:
+				<div id="ingredients">
+					for _, ingr := range data.Recipe.Ingredients {
+						@ingredient(ingr, data.Units)
+					}
+				</div>
+				<br/>
+				<button
+ 					hx-get="/recipe/ingredient"
+ 					hx-swap="beforeend"
+ 					hx-target="#ingredients"
+ 					hx-select="#ingredient"
+ 					style="width: 100%"
+				>
+					Add ingredient
+				</button>
+			</form>
+			<button id="submit-all" style="width: 100%">
+				Submit
+			</button>
+		</div>
+	}
+}
