@@ -8,50 +8,225 @@ type recipePageData struct {
 	Recipe models.Recipe
 	Units  []models.Unit
 	Error  string
+	Edit   bool
 }
 
-templ ingredient(ingredient models.Ingredient, availableUnits []models.Unit) {
-	<div id="ingredient">
-		Name:<input name="recipe[ingredients][][name]" value={ ingredient.Name }/>
-		Amount:<input name="recipe[ingredients][][amount]:number" type="number" value={ fmt.Sprint(ingredient.Amount) }/>
-		@components.UnitForm("recipe[ingredients][]",ingredient.Unit, availableUnits)
-	</div>
+css recipePageCSS() {
+	width: 80%;
 }
+
+const (
+	recipeContainerID = "recipe_container"
+	recipeFormID      = "recipe_form"
+)
 
 templ recipePage(data recipePageData) {
 	@components.Layout() {
-		<div>
-			<form
- 				id="recipe_form"
- 				name="recipe"
- 				hx-ext="json-enc-nested"
- 				hx-post
- 				hx-select="#recipe_form"
- 				hx-swap="outerHTML"
- 				hx-trigger="click from:#submit-all"
-			>
-				Name:<input name="recipe[name]" value={ data.Recipe.Name }/>
-				<br/>
-				Ingredients:
-				<div id="ingredients">
-					for _, ingr := range data.Recipe.Ingredients {
-						@ingredient(ingr, data.Units)
-					}
-				</div>
-				<br/>
-				<button
- 					hx-get="/recipe/ingredient"
- 					hx-swap="beforeend"
- 					hx-target="#ingredients"
- 					hx-select="#ingredient"
- 					style="width: 100%"
-				>
-					Add ingredient
-				</button>
-			</form>
-			<button id="submit-all" style="width: 100%">
-				Submit
-			</button>
+		<div
+ 			id={ recipeContainerID }
+ 			class={ recipePageCSS() }
+		>
+			if data.Edit {
+				@recipeForm(recipeFormProps{
+						Recipe: data.Recipe,
+						AvailableUnits: data.Units,
+					})
+			} else {
+				@recipeView(recipeFormProps{
+						Recipe: data.Recipe,
+						AvailableUnits: data.Units,
+					})
+			}
 		</div>
 	}
+}
+
+type recipeFormProps struct {
+	Recipe         models.Recipe
+	AvailableUnits []models.Unit
+}
+
+css recipeFromStyles() {
+	width: 100%;
+}
+
+templ recipeForm(props recipeFormProps) {
+	//hx-post={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
+	//hx-target={ recipeContainerID }
+	//hx-select={ recipeContainerID }
+	//hx-swap="outerHTML"
+	//hx-trigger="click from:#submit-all"
+	<form
+ 		class={ recipeFromStyles() }
+ 		id={ recipeContainerID }
+ 		name="recipe"
+ 		hx-ext="json-enc-nested"
+	>
+		<div style="display:flex; flex-direction: row; justify-content: space-between; ">
+			@components.Input(components.InputProps{
+					Value: props.Recipe.Name,
+					DisplayName: "Name:",
+					Name: []string{"recipe", "name"},
+					Type: components.InputTypeText,
+				})
+			<button
+ 				style="width: 80px; height: 30px; margin-top: 20px;"
+ 				hx-post={ fmt.Sprintf("/recipe/%s", props.Recipe.ID) }
+ 				hx-include="#recipe_form"
+ 				hx-select={ "#" + recipeContainerID }
+ 				hx-target={ "#" + recipeContainerID }
+ 				hx-swap="innerHTML"
+ 				hx-push-url="true"
+			>
+				DONE
+			</button>
+		</div>
+		<br/>
+		@components.TextArea(components.TextAreaProps{
+					ID: "description",
+					FormID: recipeFormID,
+					Value: props.Recipe.Description,
+					Rows: 5,
+					DisplayName: "Description:",
+					Name: []string{"recipe", "description"},
+					MarkdownPreview: true,
+				})
+		<br/>
+		<br/>
+		<br/>
+		Ingredients:
+		<div id="ingredients">
+			for _, ingr := range props.Recipe.Ingredients {
+				@components.Ingredient(components.IngredientProps{
+							// ID: fmt.Sprintf("ingredient:%d", i),
+							Ingredient: ingr,
+							AvailableUnits: props.AvailableUnits,
+							FormName: []string{"recipe", "ingredients", ""},
+						})
+			}
+		</div>
+		<br/>
+		<button
+ 			hx-get="/recipe/ingredient"
+ 			hx-swap="beforeend"
+ 			hx-target="#ingredients"
+ 			hx-select="#ingredient"
+ 			style="width: 100%; height: 30px;"
+		>
+			Add ingredient
+		</button>
+		<br/>
+		<br/>
+		<br/>
+		Seasonings:
+		<div id="seasonings">
+			for _, ingr := range props.Recipe.Seasonings {
+				@components.Ingredient(components.IngredientProps{
+							//ID: fmt.Sprintf("seasoning:%d",i),
+							Ingredient: ingr,
+							AvailableUnits: props.AvailableUnits,
+							FormName: []string{"recipe", "seasonings", ""},
+						})
+			}
+		</div>
+		<br/>
+		<button
+ 			hx-get="/recipe/ingredient?type=seasoning"
+ 			hx-swap="beforeend"
+ 			hx-target="#seasonings"
+ 			hx-select="#seasoning"
+ 			style="width: 100%; height: 30px;"
+		>
+			Add Seasoning 
+		</button>
+		<br/>
+		<br/>
+		@components.TextArea(components.TextAreaProps{
+					ID: "instructions",
+					Value: props.Recipe.Instructions ,
+					Rows: 10,
+					DisplayName: "Instructions:",
+					Name: []string{"recipe", "instructions"},
+					MarkdownPreview: true,
+				})
+		<br/>
+		<button
+ 			id="submit-all"
+ 			style="width: 100%; height: 30px;"
+ 			hx-post={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
+ 			hx-target={ "#" + recipeContainerID }
+ 			hx-select={ "#" + recipeContainerID }
+ 			hx-swap="innerHTML"
+ 			hx-include="#recipe_form"
+		>
+			Update	
+		</button>
+	</form>
+}
+
+css recipeViewStyles() {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 100%;
+}
+
+templ recipeView(props recipeFormProps) {
+	<div class={ recipeViewStyles() }>
+		<div>
+			<h1>{ props.Recipe.Name }</h1>
+			<h5 style="transform: translateY(-25px);">By { props.Recipe.Author.Name }</h5>
+		</div>
+		<button
+ 			style="width: 80px; height: 30px; margin-top: 20px;"
+ 			hx-get={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
+ 			hx-select={ "#" + recipeContainerID }
+ 			hx-target={ "#" + recipeContainerID }
+ 			hx-swap="innerHTML"
+ 			hx-push-url="true"
+		>
+			EDIT
+		</button>
+	</div>
+	<div>
+		@components.RenderMarkdown(props.Recipe.Intro)
+	</div>
+	<div>
+		@components.RenderMarkdown(props.Recipe.Description)
+	</div>
+	<div style="display:flex; flex-flow: row wrap; align-content: stretch; width:100%;">
+		@ingredientTable("Ingredients:",props.Recipe.Ingredients)
+		<span style="width:10px"></span>
+		@ingredientTable("Seasonings:",props.Recipe.Seasonings)
+	</div>
+	<div>
+		@components.RenderMarkdown(props.Recipe.Instructions)
+	</div>
+	<div>
+		@components.RenderMarkdown(props.Recipe.Closing)
+	</div>
+}
+
+templ ingredientTable(title string, ingredients []models.Ingredient) {
+	<div style="">
+		<h2>{ title }</h2>
+		<table style="width: 100%; padding:15px;">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Name</th>
+					<th>Amount</th>
+				</tr>
+			</thead>
+			<tbody>
+				for index, i := range ingredients {
+					<tr>
+						<td>{ fmt.Sprint(index+1) }</td>
+						<td>{ i.Name }</td>
+						<td>{ fmt.Sprintf("%d %s",i.Amount, i.Unit.DisplayName) }</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
 }

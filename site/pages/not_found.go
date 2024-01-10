@@ -4,8 +4,9 @@ import (
 	"net/http"
 
 	"github.com/JamesTiberiusKirk/recipe-cms/common"
+	"github.com/JamesTiberiusKirk/recipe-cms/site/components"
 )
 
 func HandleNotFound(c *common.TemplContext) error {
-	return c.TEMPL(http.StatusNotFound, notFound())
+	return c.TEMPL(http.StatusNotFound, components.NotFound())
 }

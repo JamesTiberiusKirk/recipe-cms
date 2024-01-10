@@ -1,0 +1,58 @@
+package components
+
+import (
+	"fmt"
+	"github.com/JamesTiberiusKirk/recipe-cms/models"
+)
+
+type IngredientProps struct {
+	ID             string
+	FormName       []string
+	Ingredient     models.Ingredient
+	AvailableUnits []models.Unit
+}
+
+func Ingredient(props IngredientProps) templ.Component {
+	return ingredientTempl(
+		props,
+		append(props.FormName, "name"),
+		append(append(props.FormName, "amount"), ":number"),
+		GenerateNestedJsonFormPropName(props.FormName),
+	)
+}
+
+templ ingredientTempl(props IngredientProps, nameFormName []string, amountFormName []string, unitFormName string) {
+	<div
+ 		if props.ID !="" {
+			id={ props.ID }
+		}
+ 		style="padding-top:20px; display:flex; justify-content: space-evenly;"
+ 		class="ingredient"
+	>
+		@Input(InputProps{
+					Value: props.Ingredient.Name,
+					DisplayName: "Name:",
+					Name: nameFormName, 
+					Type: InputTypeText,
+				})
+		@Input(InputProps{
+					Value: fmt.Sprint(props.Ingredient.Amount),
+					DisplayName: "Amount:",
+					Name: amountFormName, 
+					Type: InputTypeNumber,
+				})
+		@UnitForm(unitFormName,props.Ingredient.Unit, props.AvailableUnits)
+		<div style="margin:5px">
+			<img
+ 				width="20"
+ 				height="20"
+ 				src="/assets/cross.svg"
+ 				_="on click remove first <div.ingredient/>"
+			/>
+		</div>
+	</div>
+}
+
+script navigateTo(url templ.SafeURL) {
+	window.location = url
+}

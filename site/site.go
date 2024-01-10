@@ -1,12 +1,12 @@
 package site
 
 import (
-	"encoding/json"
-	"fmt"
+	"strings"
 
 	"github.com/JamesTiberiusKirk/recipe-cms/common"
 	"github.com/JamesTiberiusKirk/recipe-cms/registry"
 	"github.com/JamesTiberiusKirk/recipe-cms/site/pages"
+	"github.com/JamesTiberiusKirk/recipe-cms/site/pages/playground"
 	"github.com/JamesTiberiusKirk/recipe-cms/site/pages/recipe"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -36,6 +36,16 @@ func (s *Site) Start(addr string) error {
 		LogError:     true,
 		LogRemoteIP:  true,
 		LogValuesFunc: func(c echo.Context, values middleware.RequestLoggerValues) error {
+
+			// logging excludes
+			if strings.Contains(values.URI, "/assets") {
+				return nil
+			}
+
+			if strings.Contains(values.URI, "/favicon.ico") {
+				return nil
+			}
+
 			mwLog := logrus.WithFields(logrus.Fields{
 				// "URI":    values.URI,
 				// "status": values.Status,
@@ -66,16 +76,19 @@ func (s *Site) Start(addr string) error {
 	e.GET("/*", common.UseTemplContext(pages.HandleNotFound))
 
 	pages.InitIndexHandler(e.Group(""))
-	recipe.InitEditRecipeHandler(e.Group("/recipe"), s.recipreRegistry)
+	recipe.InitRecipeHandler(e.Group("/recipe"), s.recipreRegistry)
+	recipe.InitRecipesHandler(e.Group("/recipe"), s.recipreRegistry)
+	pages.InitMarkdownRenderer(e.Group(""))
+	playground.InitTestRoute(e.Group("/pg"))
 
-	data, err := json.MarshalIndent(e.Routes(), "", "  ")
-	if err != nil {
-		return err
-	}
+	// data, err := json.MarshalIndent(e.Routes(), "", "  ")
+	// if err != nil {
+	// 	return err
+	// }
 
-	fmt.Println("ROUTES:")
-	fmt.Println(string(data))
-	fmt.Println("-------")
+	// fmt.Println("ROUTES:")
+	// fmt.Println(string(data))
+	// fmt.Println("-------")
 
 	// Start server
 	e.Logger.Fatal(e.Start(addr))

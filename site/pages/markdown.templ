@@ -2,8 +2,6 @@ package pages
 
 import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
 
-templ notFound() {
-	@components.Layout() {
-		<h1>404 Not Found</h1>
-	}
+templ markdownContainer(md string) {
+	@components.RenderMarkdown(md)
 }

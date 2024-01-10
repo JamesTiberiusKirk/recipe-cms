@@ -1,17 +1,68 @@
 package components
 
+templ navBar() {
+	<header class="root__header">
+		<div class="root__header_row">
+			<a href="/recipe">Recipes</a>
+			<a href="/recipe/new">Add Recipe</a>
+		</div>
+	</header>
+}
+
+templ darktheme() {
+	<style>
+            body {
+                background-color: #1a1a1a;
+                color: #ffffff;
+            }
+            
+            h1, h2, h3, h4, h5, h6 {
+                color: #ffffff;
+            }
+            
+            a {
+                color: #4CAF50;
+            }
+            
+            a:hover {
+                color: #45a049;
+            }
+
+            table {
+                border: solid 1px white;
+            }
+        </style>
+}
+
 templ Layout() {
 	<html>
 		<head>
 			<link rel="stylesheet" href="/assets/styles.css"/>
 		</head>
 		<body>
-			<script src="https://unpkg.com/htmx.org@1.9.6"></script>
-			<script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
-			<script src="https://unpkg.com/htmx.org/dist/ext/loading-states.js"></script>
-			<script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
-			<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+			<script src="/assets/htmx.org@1.9.6"></script>
+			<script src="/assets/hyperscript.org@0.9.12"></script>
+			<script src="/assets/loading-states.js"></script>
+			<script src="/assets/json-enc.js"></script>
+			<script src="/assets/jquery-3.7.1.min.js"></script>
 			<script src="/assets/serializeForm.js"></script>
+			<style>
+                            table {
+                                border: solid 1px black;
+                            }
+                            table tbody {
+                                text-align: center;
+                            }
+                            a.button {
+                                -webkit-appearance: button;
+                                -moz-appearance: button;
+                                appearance: button;
+
+                                text-decoration: none;
+                                color: initial;
+                            }
+                        </style>
+			@darktheme()
 			<style>
                             .root__header {
                                 display: block;
@@ -21,9 +72,13 @@ templ Layout() {
                                 margin-right: auto;
                             }
 
-                            .root__header-row {
+                            .root__header_row {
                                 display: flex;
                                 flex-direction: row;
+                            }
+
+                            .root__header_row a {
+                                padding-right: 10px;
                             }
 
                             .root__container {
@@ -31,7 +86,6 @@ templ Layout() {
                                 display: flex;
                                 align-items: center;
                                 justify-content: center;
-                                width: 60%;
                                 margin-left: auto;
                                 margin-right: auto;
                             }
@@ -40,21 +94,24 @@ templ Layout() {
                             // htmx.logAll();
 
                             htmx.config.defaultSettleDelay = 0;
+                            //document.addEventListener('htmx:afterRequest', function (event) {
+                            //    console.log(event)
+                            //})
                             document.addEventListener('htmx:beforeOnLoad', function (event) {
-                                console.log("htmx:beforeOnLoad CUSTOM", event)
+                                // console.log("htmx:beforeOnLoad CUSTOM", event)
 
                                 const res = event.detail.xhr
                                 const isValidationRoute = (event.detail.requestConfig.path.search("validate"))
 
                                 if (isValidationRoute) {
                                     if (res.status === 400) {
-                                        console.log("status === 400")
+                                        // console.log("status === 400")
                                         event.detail.shouldSwap = true;
                                         event.detail.isError = false;
                                     }
 
                                     if (res.status === 200) {
-                                        console.log("status === 200")
+                                        // console.log("status === 200")
                                     }
                                 }
 
@@ -85,27 +142,58 @@ templ Layout() {
                             });
 
 
-                            htmx.defineExtension('json-enc-nested', {
+
+                            htmx.defineExtension('markdown-preview', {
                                 onEvent: function (name, evt) {
-                                    if (name === "htmx:configRequest") {
-                                        evt.detail.headers['Content-Type'] = "application/json";
+                                    if (name === "htmx:configRequest"){
+                                        console.log("markdown configRequest",evt)
+                                        evt.detail.headers['Content-Type'] = "text/plain";
                                     }
                                 },
 
                                 encodeParameters : function(xhr, parameters, elt) {
-                                    let jsonEnc = $(elt).serializeJSON()
-                                    console.log("jsonencoded",jsonEnc)
+                                    console.log("markdown elt.value:", elt.value)
+                                    if (elt.tagName !== "FORM"){
+                                        xhr.overrideMimeType('text/plain');
+                                        return encodeURIComponent(elt.value)
+                                    }
+                                }
+                            });
 
-                                    xhr.overrideMimeType('text/json');
+                            htmx.defineExtension('json-enc-nested', {
+                                onEvent: function (name, evt) {
+                                    if (name === "htmx:configRequest" ){
+                                        console.log("json-enc-nested:",evt)
+                                    }
+                                    if (name === "htmx:configRequest" &&
+                                        (evt.srcElement.tagName === "FORM" ||
+                                           evt.srcElement.form != undefined) ) {
+                                        console.log("json-enc-nested:",evt)
+                                        evt.detail.headers['Content-Type'] = "application/json";
+                                    } 
+                                },
+
+                                encodeParameters : function(xhr, parameters, elt) {
+                                    console.log("json-enc-nested elt:")
+                                    console.dir(elt)
+
+                                    //if (elt.tagName !== "FORM" || (elt.form === undefined)){
+                                    //    return 
+                                    //}
+
+                                    if (elt.form === undefined) {
+                                        return 
+                                    }
+
+                                    let jsonEnc = $(elt.form).serializeJSON()
+                                    console.log("json-enc-nested",jsonEnc)
+
+                                    xhr.overrideMimeType('application/json');
                                     return JSON.stringify(jsonEnc);
                                 }
                             });
                         </script>
-			<header class="root__header">
-				<div class="root__header_row">
-					<a href="/recipe/new">Add Recipe</a>
-				</div>
-			</header>
+			@navBar()
 			<div class="root__container">
 				{ children... }
 			</div>

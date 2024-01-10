@@ -1,13 +1,16 @@
 package recipe
 
 import (
-	"bytes"
+	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/JamesTiberiusKirk/recipe-cms/common"
 	"github.com/JamesTiberiusKirk/recipe-cms/models"
 	"github.com/JamesTiberiusKirk/recipe-cms/registry"
+	"github.com/JamesTiberiusKirk/recipe-cms/site/components"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
 )
 
@@ -15,10 +18,15 @@ type RecipeHandler struct {
 	recipeRegistry *registry.Recipe
 }
 
-func InitEditRecipeHandler(app *echo.Group, rr *registry.Recipe) {
+func InitRecipeHandler(app *echo.Group, rr *registry.Recipe) {
 	h := &RecipeHandler{
 		recipeRegistry: rr,
 	}
+
+	app.Use(middleware.BodyDump(func(c echo.Context, reqBody, resBody []byte) {
+		s, _ := url.QueryUnescape(string(reqBody))
+		logrus.Info("REQ BODY ", s)
+	}))
 
 	app.GET("/:recipe_id", common.UseTemplContext(h.Page))
 	app.POST("/:recipe_id", common.UseTemplContext(h.Page))
@@ -28,10 +36,12 @@ func InitEditRecipeHandler(app *echo.Group, rr *registry.Recipe) {
 
 type RecipeRequestData struct {
 	RecipeID string         `param:"recipe_id"`
+	Edit     bool           `query:"edit"`
 	Recipe   *models.Recipe `json:"recipe,omitempty"`
 }
 
 func (h *RecipeHandler) Page(c *common.TemplContext) error {
+
 	reqData := RecipeRequestData{}
 	echo.QueryParamsBinder(c)
 	err := c.Bind(&reqData)
@@ -42,14 +52,12 @@ func (h *RecipeHandler) Page(c *common.TemplContext) error {
 	logrus.Infof("recipeID: %s\n", reqData.RecipeID)
 	logrus.Infof("recipe: %v\n", reqData.Recipe)
 
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(c.Request().Body)
-
-	logrus.Infof("body: %v\n", buf.String())
-
 	data := recipePageData{
 		Units: models.DefaultSystemUnits,
+		Edit:  (c.QueryParam("edit") == "true"),
 	}
+
+	status := http.StatusOK
 
 	if reqData.RecipeID != "" && reqData.RecipeID != "new" {
 		recipe, err := h.recipeRegistry.GetOneByID(reqData.RecipeID)
@@ -59,29 +67,68 @@ func (h *RecipeHandler) Page(c *common.TemplContext) error {
 
 		if recipe == nil {
 			c.Logger().Info("recipe not found id: %s", reqData.RecipeID)
-			return c.Redirect(http.StatusTemporaryRedirect, "/404")
+			return c.TEMPL(http.StatusNotFound, components.NotFound())
 		}
 
 		data.Recipe = *recipe
 	}
 
-	if c.Request().Method == http.MethodPost {
+	switch c.Request().Method {
+	case http.MethodPost:
+		logrus.Infof("content type: %s", c.Request().Header.Get("Content-Type"))
+
+		if c.Request().Header.Get("Content-Type") != "application/json" {
+			break
+		}
+
 		// TODO: perform db update
 		if reqData.Recipe != nil {
 			data.Recipe = *reqData.Recipe
-			h.recipeRegistry.Upsert(*reqData.Recipe)
+			if reqData.RecipeID != "new" {
+				data.Recipe.ID = reqData.RecipeID
+			}
+
+			logrus.Info("upserting")
+			upserted, wasUpserted, err := h.recipeRegistry.Upsert(data.Recipe)
+			if err != nil {
+				return echo.NewHTTPError(500, "error upserting")
+			}
+
+			logrus.Info("UPSERTED", wasUpserted, upserted)
+			logrus.Info("ID", reqData.RecipeID)
+
+			if reqData.RecipeID == "new" {
+				c.Response().Header().Set("HX-Redirect", fmt.Sprintf("/recipe/%s?edit=true", upserted.ID))
+				status = http.StatusCreated
+			}
+			data.Recipe = upserted
 		}
+
 	}
 
 	if len(data.Recipe.Ingredients) <= 0 {
+		logrus.Info("ingredients empty so assing an empty")
 		data.Recipe.Ingredients = []models.Ingredient{
 			{},
 		}
 	}
 
-	return c.TEMPL(http.StatusOK, recipePage(data))
+	logrus.Info("sending back endit", data.Edit)
+	logrus.Info("req data", reqData.Edit)
+	logrus.Info("c.QueryParam", c.QueryParam("edit"))
+
+	return c.TEMPL(status, recipePage(data))
 }
 
 func (h *RecipeHandler) Ingredient(c *common.TemplContext) error {
-	return c.TEMPL(http.StatusOK, ingredient(models.Ingredient{}, models.DefaultSystemUnits))
+	t := c.QueryParam("type")
+	if t == "" {
+		t = "ingredient"
+	}
+
+	return c.TEMPL(http.StatusOK, components.Ingredient(components.IngredientProps{
+		ID:             t,
+		FormName:       []string{"recipe", fmt.Sprintf("%ss", t), ""},
+		Ingredient:     models.Ingredient{},
+		AvailableUnits: models.DefaultSystemUnits}))
 }

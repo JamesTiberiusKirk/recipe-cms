@@ -1,0 +1,183 @@
+package components
+
+import "fmt"
+
+css InputStyles() {
+	background: '#ffffff';
+}
+
+type InputType string
+
+// <input type="button">
+// <input type="checkbox">
+// <input type="color">
+// <input type="date">
+// <input type="datetime-local">
+// <input type="email">
+// <input type="file">
+// <input type="hidden">
+// <input type="image">
+// <input type="month">
+// <input type="number">
+// <input type="password">
+// <input type="radio">
+// <input type="range">
+// <input type="reset">
+// <input type="search">
+// <input type="submit">
+// <input type="tel">
+// <input type="text">
+// <input type="time">
+// <input type="url">
+// <input type="week">
+// TODO: need to go through and see whats reasonably supported here
+const (
+	InputTypeNumber        InputType = "number"
+	InputTypeText          InputType = "text"
+	InputTypePasswrod      InputType = "password"
+	InputTypeButton        InputType = "button"
+	InputTypeCheckbox      InputType = "checkbox"
+	InputTypeDate          InputType = "date"
+	InputTypeDateTimeLocal InputType = "datetime-local"
+	InputTypeFile          InputType = "file"
+	InputTypeHidden        InputType = "hidden"
+	InputTypeImage         InputType = "image"
+	InputTypeMonth         InputType = "month"
+	InputTypeRadio         InputType = "radio"
+	InputTypeRange         InputType = "range"
+	InputTypeReset         InputType = "reset"
+	InputTypeSearch        InputType = "search"
+	InputTypeSubmit        InputType = "submit"
+	InputTypeTel           InputType = "tel"
+	InputTypeTime          InputType = "time"
+	InputTypeUrl           InputType = "url"
+	InputTypeWeek          InputType = "week"
+)
+
+type InputProps struct {
+	Classes     templ.CSSClasses
+	Value       string
+	Type        InputType
+	Name        []string
+	Required    bool
+	DisplayName string
+	Placeholder string
+	Error       string
+}
+
+func Input(props InputProps) templ.Component {
+	inputName := GenerateNestedJsonFormPropName(props.Name)
+	return inputTemplate(props, inputName)
+}
+
+templ inputTemplate(props InputProps, inputName string) {
+	<div class={ props.Classes, InputStyles() }>
+		<label style="padding-right:10px">{ props.DisplayName }</label>
+		<input
+ 			id={ inputName }
+ 			type={ string(props.Type) }
+ 			style="padding:5px"
+ 			name={ inputName }
+ 			value={ props.Value }
+ 			placeholder={ props.Placeholder }
+		/>
+		if props.Error != "" {
+			<span style="padding-right:10px; color:red;">{ props.Error }</span>
+		}
+	</div>
+}
+
+css TextAreaStyles() {
+	background: '#ffffff';
+}
+
+type TextAreaProps struct {
+	Classes         templ.CSSClasses
+	DisplayName     string
+	Value           string
+	Error           string
+	MarkdownPreview bool
+	FormID          string
+
+	ID          string
+	Name        []string
+	Rows        int
+	Cols        int
+	Placeholder string
+	MaxLenght   int
+	Disabled    bool
+	ReadOnly    bool
+	Autofocus   bool
+	Required    bool
+	DirName     string
+}
+
+func TextArea(props TextAreaProps) templ.Component {
+	textAreaName := GenerateNestedJsonFormPropName(props.Name)
+
+	return textAreaTemplate(props, textAreaName)
+}
+
+templ textAreaTemplate(props TextAreaProps, textAreaName string) {
+	//if props.MarkdownPreview {
+	//	hx-trigger="keyup changed delay:500ms, description"
+	//	hx-post="/markdown"
+	//	hx-target={ fmt.Sprintf("#%s-markdown-preview", props.ID) }
+	//	hx-swap="innerHTML"
+	//	hx-ext="markdown-preview"
+	//}
+	<div
+ 		class={ props.Classes, TextAreaStyles() }
+	>
+		<label for={ props.ID }>{ props.DisplayName }</label>
+		<br/>
+		<div
+ 			style="display: flex; flex-flow: row nowrap; "
+		>
+			<textarea
+ 				id={ fmt.Sprintf("%s-textarea", props.ID) }
+ 				style="max-width: 50%; flex-grow: 1;"
+ 				name={ textAreaName }
+ 				if props.Placeholder != "" {
+					placeholder={ props.Placeholder }
+				}
+ 				if props.Rows != 0 {
+					rows={ fmt.Sprint(props.Rows) }
+				}
+ 				if props.Cols != 0 {
+					cols={ fmt.Sprint(props.Cols) }
+				}
+ 				if props.MaxLenght != 0 {
+					maxlenght={ fmt.Sprint(props.MaxLenght) }
+				}
+ 				if props.DirName != "" {
+					dirname={ props.DirName }
+				}
+ 				disabled?={ props.Disabled }
+ 				readonly?={ props.ReadOnly }
+ 				autofocus?={ props.Autofocus }
+ 				required?={ props.Required }
+ 				if props.MarkdownPreview {
+					hx-trigger="keyup changed delay:500ms"
+					hx-post="/markdown"
+					hx-target={ fmt.Sprintf("#%s-markdown-preview", props.ID) }
+					hx-swap="innerHTML"
+					hx-ext="markdown-preview"
+				}
+			>
+				{ props.Value }
+			</textarea>
+			if props.MarkdownPreview {
+				<div
+ 					id={ fmt.Sprintf("%s-markdown-preview", props.ID) }
+ 					style="width: 50%; border: solid white 1px; flex-grow: 1; padding: 10px;"
+				>
+					@RenderMarkdown(props.Value)
+				</div>
+			}
+		</div>
+		if props.Error != "" {
+			<span style="padding-right:10px; color:red;">{ props.Error }</span>
+		}
+	</div>
+}
