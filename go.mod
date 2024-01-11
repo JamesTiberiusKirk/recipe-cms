@@ -3,7 +3,7 @@ module github.com/JamesTiberiusKirk/recipe-cms
 go 1.21
 
 require (
-	github.com/a-h/templ v0.2.501
+	github.com/a-h/templ v0.2.513
 	github.com/labstack/echo/v4 v4.11.3
 	github.com/sirupsen/logrus v1.9.3
 	github.com/yuin/goldmark v1.6.0
