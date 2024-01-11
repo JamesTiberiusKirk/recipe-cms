@@ -52,7 +52,7 @@ func navBar() templ.Component {
 	})
 }
 
-func darktheme() templ.Component {
+func lighttheme() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -65,11 +65,59 @@ func darktheme() templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<style>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<style type=\"text/css\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Var5 := `
+            table {
+                border: solid 1px black;
+            }
+            table tbody {
+                text-align: center;
+            }
+            a.button {
+                -webkit-appearance: button;
+                -moz-appearance: button;
+                appearance: button;
+
+                text-decoration: none;
+                color: initial;
+            }
+        `
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</style>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if !templ_7745c5c3_IsBuffer {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteTo(templ_7745c5c3_W)
+		}
+		return templ_7745c5c3_Err
+	})
+}
+
+func darktheme() templ.Component {
+	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
+		if !templ_7745c5c3_IsBuffer {
+			templ_7745c5c3_Buffer = templ.GetBuffer()
+			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var6 == nil {
+			templ_7745c5c3_Var6 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<style type=\"text/css\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var7 := `
             body {
                 background-color: #1a1a1a;
                 color: #ffffff;
@@ -91,7 +139,7 @@ func darktheme() templ.Component {
                 border: solid 1px white;
             }
         `
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -106,6 +154,176 @@ func darktheme() templ.Component {
 	})
 }
 
+func generalStyles() templ.Component {
+	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
+		if !templ_7745c5c3_IsBuffer {
+			templ_7745c5c3_Buffer = templ.GetBuffer()
+			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var8 == nil {
+			templ_7745c5c3_Var8 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<style>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var9 := `
+            .root__header {
+                display: block;
+                padding: 20px;
+                width: 50%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .root__header_row {
+                display: flex;
+                flex-direction: row;
+            }
+
+            .root__header_row a {
+                padding-right: 10px;
+            }
+
+            .root__container {
+                flex-direction: column;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        `
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</style>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if !templ_7745c5c3_IsBuffer {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteTo(templ_7745c5c3_W)
+		}
+		return templ_7745c5c3_Err
+	})
+}
+
+func htmxConfig() templ.ComponentScript {
+	return templ.ComponentScript{
+		Name: `__templ_htmxConfig_43b5`,
+		Function: `function __templ_htmxConfig_43b5(){console.log("hello world")
+
+    // htmx.logAll();
+
+    htmx.config.defaultSettleDelay = 0;
+    //document.addEventListener('htmx:afterRequest', function (event) {
+    //    console.log(event)
+    //})
+    document.addEventListener('htmx:beforeOnLoad', function (event) {
+        // console.log("htmx:beforeOnLoad CUSTOM", event)
+
+        const res = event.detail.xhr
+        const isValidationRoute = (event.detail.requestConfig.path.search("validate"))
+
+        if (isValidationRoute) {
+            if (res.status === 400) {
+                // console.log("status === 400")
+                event.detail.shouldSwap = true;
+                event.detail.isError = false;
+            }
+
+            if (res.status === 200) {
+                // console.log("status === 200")
+            }
+        }
+
+        // Bellow is an example of creating your own custom attibutes
+        // In this example I have created attibutes which dynamically enables or disables (buttons) when using validation routes
+        // This same could be expanded for a lot of other behaviour
+        // However, this should not be overused as it could already be covered in htmx
+        // AND because too much js here will just render the whole point of htmx nil
+        if (isValidationRoute) {
+            if (res.status === 400) {
+                const disableOnErrorTargetId = event.srcElement.getAttribute("disableOnError")
+                if (disableOnErrorTargetId) {
+                    const targetIdParsed = disableOnErrorTargetId.replace("#", "")
+                    const target = document.getElementById(targetIdParsed)
+                    if (target) target.setAttribute("disabled", true)
+                }
+            }
+
+            if (res.status === 200) {
+                const enableOnValidTargetId = event.srcElement.getAttribute("enableOnValid")
+                if (enableOnValidTargetId) {
+                    const targetIdParsed = enableOnValidTargetId.replace("#", "")
+                    const target = document.getElementById(targetIdParsed)
+                    if (target) target.removeAttribute("disabled")
+                }
+            }
+        }
+    });
+
+
+
+    htmx.defineExtension('markdown-preview', {
+        onEvent: function (name, evt) {
+            if (name === "htmx:configRequest"){
+                console.log("markdown configRequest",evt)
+                evt.detail.headers['Content-Type'] = "text/plain";
+            }
+        },
+
+        encodeParameters : function(xhr, parameters, elt) {
+            console.log("markdown elt.value:", elt.value)
+            if (elt.tagName !== "FORM"){
+                xhr.overrideMimeType('text/plain');
+                return encodeURIComponent(elt.value)
+            }
+        }
+    });
+
+    htmx.defineExtension('json-enc-nested', {
+        onEvent: function (name, evt) {
+            if (name === "htmx:configRequest" ){
+                console.log("json-enc-nested:",evt)
+            }
+            if (name === "htmx:configRequest" &&
+                (evt.srcElement.tagName === "FORM" ||
+                   evt.srcElement.form != undefined) ) {
+                console.log("json-enc-nested:",evt)
+                evt.detail.headers['Content-Type'] = "application/json";
+            } 
+        },
+
+        encodeParameters : function(xhr, parameters, elt) {
+            console.log("json-enc-nested elt:")
+            console.dir(elt)
+
+            //if (elt.tagName !== "FORM" || (elt.form === undefined)){
+            //    return 
+            //}
+
+            if (elt.form === undefined) {
+                return 
+            }
+
+            let jsonEnc = $(elt.form).serializeJSON()
+            console.log("json-enc-nested",jsonEnc)
+
+            xhr.overrideMimeType('application/json');
+            return JSON.stringify(jsonEnc);
+        }
+    });}`,
+		Call:       templ.SafeScript(`__templ_htmxConfig_43b5`),
+		CallInline: templ.SafeScriptInline(`__templ_htmxConfig_43b5`),
+	}
+}
+
 func Layout() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
@@ -114,57 +332,29 @@ func Layout() templ.Component {
 			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var6 == nil {
-			templ_7745c5c3_Var6 = templ.NopComponent
+		templ_7745c5c3_Var10 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var10 == nil {
+			templ_7745c5c3_Var10 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<html><head><link rel=\"stylesheet\" href=\"/assets/styles.css\"></head><body><script src=\"/assets/htmx.org@1.9.6\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<html><head><link rel=\"stylesheet\" href=\"/assets/styles.css\"></head>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Var7 := ``
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
+		templ_7745c5c3_Err = templ.RenderScriptItems(ctx, templ_7745c5c3_Buffer, htmxConfig())
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</script><script src=\"/assets/hyperscript.org@0.9.12\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body onload=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Var8 := ``
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
+		var templ_7745c5c3_Var11 templ.ComponentScript = htmxConfig()
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11.Call)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</script><script src=\"/assets/loading-states.js\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Var9 := ``
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</script><script src=\"/assets/json-enc.js\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Var10 := ``
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</script><script src=\"/assets/jquery-3.7.1.min.js\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Var11 := ``
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</script><script src=\"/assets/serializeForm.js\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><script src=\"/assets/htmx.org@1.9.6\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -173,181 +363,48 @@ func Layout() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</script><style>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</script><script src=\"/assets/hyperscript.org@0.9.12\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Var13 := `
-                            table {
-                                border: solid 1px black;
-                            }
-                            table tbody {
-                                text-align: center;
-                            }
-                            a.button {
-                                -webkit-appearance: button;
-                                -moz-appearance: button;
-                                appearance: button;
-
-                                text-decoration: none;
-                                color: initial;
-                            }
-                        `
+		templ_7745c5c3_Var13 := ``
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</style>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</script><script src=\"/assets/loading-states.js\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = darktheme().Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<style>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Var14 := `
-                            .root__header {
-                                display: block;
-                                padding: 20px;
-                                width: 50%;
-                                margin-left: auto;
-                                margin-right: auto;
-                            }
-
-                            .root__header_row {
-                                display: flex;
-                                flex-direction: row;
-                            }
-
-                            .root__header_row a {
-                                padding-right: 10px;
-                            }
-
-                            .root__container {
-                                flex-direction: column;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                margin-left: auto;
-                                margin-right: auto;
-                            }
-                        `
+		templ_7745c5c3_Var14 := ``
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var14)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</style><script>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</script><script src=\"/assets/json-enc.js\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Var15 := `
-                            // htmx.logAll();
-
-                            htmx.config.defaultSettleDelay = 0;
-                            //document.addEventListener('htmx:afterRequest', function (event) {
-                            //    console.log(event)
-                            //})
-                            document.addEventListener('htmx:beforeOnLoad', function (event) {
-                                // console.log("htmx:beforeOnLoad CUSTOM", event)
-
-                                const res = event.detail.xhr
-                                const isValidationRoute = (event.detail.requestConfig.path.search("validate"))
-
-                                if (isValidationRoute) {
-                                    if (res.status === 400) {
-                                        // console.log("status === 400")
-                                        event.detail.shouldSwap = true;
-                                        event.detail.isError = false;
-                                    }
-
-                                    if (res.status === 200) {
-                                        // console.log("status === 200")
-                                    }
-                                }
-
-                                // Bellow is an example of creating your own custom attibutes
-                                // In this example I have created attibutes which dynamically enables or disables (buttons) when using validation routes
-                                // This same could be expanded for a lot of other behaviour
-                                // However, this should not be overused as it could already be covered in htmx
-                                // AND because too much js here will just render the whole point of htmx nil
-                                if (isValidationRoute) {
-                                    if (res.status === 400) {
-                                        const disableOnErrorTargetId = event.srcElement.getAttribute("disableOnError")
-                                        if (disableOnErrorTargetId) {
-                                            const targetIdParsed = disableOnErrorTargetId.replace("#", "")
-                                            const target = document.getElementById(targetIdParsed)
-                                            if (target) target.setAttribute("disabled", true)
-                                        }
-                                    }
-
-                                    if (res.status === 200) {
-                                        const enableOnValidTargetId = event.srcElement.getAttribute("enableOnValid")
-                                        if (enableOnValidTargetId) {
-                                            const targetIdParsed = enableOnValidTargetId.replace("#", "")
-                                            const target = document.getElementById(targetIdParsed)
-                                            if (target) target.removeAttribute("disabled")
-                                        }
-                                    }
-                                }
-                            });
-
-
-
-                            htmx.defineExtension('markdown-preview', {
-                                onEvent: function (name, evt) {
-                                    if (name === "htmx:configRequest"){
-                                        console.log("markdown configRequest",evt)
-                                        evt.detail.headers['Content-Type'] = "text/plain";
-                                    }
-                                },
-
-                                encodeParameters : function(xhr, parameters, elt) {
-                                    console.log("markdown elt.value:", elt.value)
-                                    if (elt.tagName !== "FORM"){
-                                        xhr.overrideMimeType('text/plain');
-                                        return encodeURIComponent(elt.value)
-                                    }
-                                }
-                            });
-
-                            htmx.defineExtension('json-enc-nested', {
-                                onEvent: function (name, evt) {
-                                    if (name === "htmx:configRequest" ){
-                                        console.log("json-enc-nested:",evt)
-                                    }
-                                    if (name === "htmx:configRequest" &&
-                                        (evt.srcElement.tagName === "FORM" ||
-                                           evt.srcElement.form != undefined) ) {
-                                        console.log("json-enc-nested:",evt)
-                                        evt.detail.headers['Content-Type'] = "application/json";
-                                    } 
-                                },
-
-                                encodeParameters : function(xhr, parameters, elt) {
-                                    console.log("json-enc-nested elt:")
-                                    console.dir(elt)
-
-                                    //if (elt.tagName !== "FORM" || (elt.form === undefined)){
-                                    //    return 
-                                    //}
-
-                                    if (elt.form === undefined) {
-                                        return 
-                                    }
-
-                                    let jsonEnc = $(elt.form).serializeJSON()
-                                    console.log("json-enc-nested",jsonEnc)
-
-                                    xhr.overrideMimeType('application/json');
-                                    return JSON.stringify(jsonEnc);
-                                }
-                            });
-                        `
+		templ_7745c5c3_Var15 := ``
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var15)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</script><script src=\"/assets/jquery-3.7.1.min.js\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var16 := ``
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var16)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</script><script src=\"/assets/serializeForm.js\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var17 := ``
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var17)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -355,7 +412,19 @@ func Layout() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
+		templ_7745c5c3_Err = lighttheme().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = darktheme().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
 		templ_7745c5c3_Err = navBar().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = generalStyles().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -363,7 +432,7 @@ func Layout() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ_7745c5c3_Var6.Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = templ_7745c5c3_Var10.Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
