@@ -3,14 +3,12 @@ package recipe
 import (
 	"fmt"
 	"net/http"
-	"net/url"
 
 	"github.com/JamesTiberiusKirk/recipe-cms/common"
 	"github.com/JamesTiberiusKirk/recipe-cms/models"
 	"github.com/JamesTiberiusKirk/recipe-cms/registry"
 	"github.com/JamesTiberiusKirk/recipe-cms/site/components"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
 )
 
@@ -23,10 +21,7 @@ func InitRecipeHandler(app *echo.Group, rr *registry.Recipe) {
 		recipeRegistry: rr,
 	}
 
-	app.Use(middleware.BodyDump(func(c echo.Context, reqBody, resBody []byte) {
-		s, _ := url.QueryUnescape(string(reqBody))
-		logrus.Info("REQ BODY ", s)
-	}))
+	app.Use(common.UseBodyLogger())
 
 	app.GET("/:recipe_id", common.UseTemplContext(h.Page))
 	app.POST("/:recipe_id", common.UseTemplContext(h.Page))

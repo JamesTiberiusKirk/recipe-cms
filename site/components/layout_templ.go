@@ -215,10 +215,8 @@ func generalStyles() templ.Component {
 
 func htmxConfig() templ.ComponentScript {
 	return templ.ComponentScript{
-		Name: `__templ_htmxConfig_43b5`,
-		Function: `function __templ_htmxConfig_43b5(){console.log("hello world")
-
-    // htmx.logAll();
+		Name: `__templ_htmxConfig_c8ed`,
+		Function: `function __templ_htmxConfig_c8ed(){// htmx.logAll();
 
     htmx.config.defaultSettleDelay = 0;
     //document.addEventListener('htmx:afterRequest', function (event) {
@@ -304,9 +302,7 @@ func htmxConfig() templ.ComponentScript {
             console.log("json-enc-nested elt:")
             console.dir(elt)
 
-            //if (elt.tagName !== "FORM" || (elt.form === undefined)){
-            //    return 
-            //}
+            // elt.tagName !== "FORM" 
 
             if (elt.form === undefined) {
                 return 
@@ -319,8 +315,8 @@ func htmxConfig() templ.ComponentScript {
             return JSON.stringify(jsonEnc);
         }
     });}`,
-		Call:       templ.SafeScript(`__templ_htmxConfig_43b5`),
-		CallInline: templ.SafeScriptInline(`__templ_htmxConfig_43b5`),
+		Call:       templ.SafeScript(`__templ_htmxConfig_c8ed`),
+		CallInline: templ.SafeScriptInline(`__templ_htmxConfig_c8ed`),
 	}
 }
 

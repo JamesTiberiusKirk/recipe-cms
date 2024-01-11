@@ -84,8 +84,6 @@ templ generalStyles() {
 }
 
 script htmxConfig() {
-    console.log("hello world")
-
     // htmx.logAll();
 
     htmx.config.defaultSettleDelay = 0;
@@ -172,9 +170,7 @@ script htmxConfig() {
             console.log("json-enc-nested elt:")
             console.dir(elt)
 
-            //if (elt.tagName !== "FORM" || (elt.form === undefined)){
-            //    return 
-            //}
+            // elt.tagName !== "FORM" 
 
             if (elt.form === undefined) {
                 return 

@@ -1,0 +1,74 @@
+package recipe
+
+import "fmt"
+import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
+import "github.com/JamesTiberiusKirk/recipe-cms/models"
+
+css recipeViewStyles() {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 100%;
+}
+
+templ recipeView(props recipeFormProps) {
+	<div style="width: 100%;">
+		<div class={ recipeViewStyles() }>
+			<div>
+				<h1>{ props.Recipe.Name }</h1>
+				<h5 style="transform: translateY(-25px);">By { props.Recipe.Author.Name }</h5>
+			</div>
+			<button
+ 				style="width: 80px; height: 30px; margin-top: 20px;"
+ 				hx-get={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
+ 				hx-select={ "#" + recipeContainerID + "_inner" }
+ 				hx-target={ "#" + recipeContainerID }
+ 				hx-swap="innerHTML"
+ 				hx-push-url="true"
+			>
+				EDIT
+			</button>
+		</div>
+		<div>
+			@components.RenderMarkdown(props.Recipe.Intro)
+		</div>
+		<div>
+			@components.RenderMarkdown(props.Recipe.Description)
+		</div>
+		<div style="display:flex; flex-flow: row wrap; align-content: stretch; width:100%;">
+			@ingredientTable("Ingredients:",props.Recipe.Ingredients)
+			<span style="width:10px"></span>
+			@ingredientTable("Seasonings:",props.Recipe.Seasonings)
+		</div>
+		<div>
+			@components.RenderMarkdown(props.Recipe.Instructions)
+		</div>
+		<div>
+			@components.RenderMarkdown(props.Recipe.Closing)
+		</div>
+	</div>
+}
+
+templ ingredientTable(title string, ingredients []models.Ingredient) {
+	<div>
+		<h2>{ title }</h2>
+		<table style="width: 100%; padding:15px;">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Name</th>
+					<th>Amount</th>
+				</tr>
+			</thead>
+			<tbody>
+				for index, i := range ingredients {
+					<tr>
+						<td>{ fmt.Sprint(index+1) }</td>
+						<td>{ i.Name }</td>
+						<td>{ fmt.Sprintf("%d %s",i.Amount, i.Unit.DisplayName) }</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}

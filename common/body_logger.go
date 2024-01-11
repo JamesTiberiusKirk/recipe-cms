@@ -1,18 +1,17 @@
 package common
 
 import (
-	"encoding/json"
-	"log"
+	"net/url"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"github.com/sirupsen/logrus"
 )
 
-func UseBodyLogger(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(ctx echo.Context) (err error) {
-		requestData := make(map[string]interface{})
-		_ = json.NewDecoder(ctx.Request().Body).Decode(&requestData)
-		log.Print(requestData)
-		log.Print(ctx.Response())
-		return next(ctx)
-	}
+func UseBodyLogger() echo.MiddlewareFunc {
+	return middleware.BodyDump(func(c echo.Context, reqBody, resBody []byte) {
+		s, _ := url.QueryUnescape(string(reqBody))
+		logrus.Info("REQ BODY ", s)
+		// logrus.Info("RES BODY ", string(resBody))
+	})
 }
