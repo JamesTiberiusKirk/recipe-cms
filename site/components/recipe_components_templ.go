@@ -88,7 +88,7 @@ func ingredientTempl(props IngredientProps, nameFormName []string, amountFormNam
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div style=\"margin:5px\"><img width=\"20\" height=\"20\" src=\"/assets/cross.svg\" _=\"on click remove first &lt;div.ingredient/&gt;\"></div></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div style=\"margin:5px\"><img width=\"20\" height=\"20\" src=\"/assets/cross.svg\" _=\"on click remove me.parentElement.parentElement\"></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
