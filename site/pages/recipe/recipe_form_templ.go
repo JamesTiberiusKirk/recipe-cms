@@ -119,6 +119,22 @@ func recipeForm(props recipeFormProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.TextArea(components.TextAreaProps{
+			ID:              "introduction",
+			FormID:          recipeFormID,
+			Value:           props.Recipe.Intro,
+			Rows:            5,
+			DisplayName:     "Intro:",
+			Name:            []string{"recipe", "intro"},
+			MarkdownPreview: true,
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<br><br>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = components.TextArea(components.TextAreaProps{
 			ID:              "description",
 			FormID:          recipeFormID,
 			Value:           props.Recipe.Description,
@@ -206,6 +222,22 @@ func recipeForm(props recipeFormProps) templ.Component {
 			Rows:            10,
 			DisplayName:     "Instructions:",
 			Name:            []string{"recipe", "instructions"},
+			MarkdownPreview: true,
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<br>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = components.TextArea(components.TextAreaProps{
+			ID:              "closing",
+			FormID:          recipeFormID,
+			Value:           props.Recipe.Closing,
+			Rows:            5,
+			DisplayName:     "Closing thoughts:",
+			Name:            []string{"recipe", "closing"},
 			MarkdownPreview: true,
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {

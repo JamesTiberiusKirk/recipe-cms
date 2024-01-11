@@ -45,6 +45,24 @@ templ recipeForm(props recipeFormProps) {
 					DONE
 				</button>
 			</div>
+			// TODO: figure out how I wanna handle tags
+			//@components.Input(components.InputProps{
+			//	Value: props.Recipe.Tags,
+			//	DisplayName: "Tags:",
+			//	Name: []string{"recipe", "tags"},
+			//	Type: components.InputTypeText,
+			//})
+			<br/>
+			@components.TextArea(components.TextAreaProps{
+					ID: "introduction",
+					FormID: recipeFormID,
+					Value: props.Recipe.Intro,
+					Rows: 5,
+					DisplayName: "Intro:",
+					Name: []string{"recipe", "intro"},
+					MarkdownPreview: true,
+				})
+			<br/>
 			<br/>
 			@components.TextArea(components.TextAreaProps{
 					ID: "description",
@@ -111,6 +129,16 @@ templ recipeForm(props recipeFormProps) {
 					Rows: 10,
 					DisplayName: "Instructions:",
 					Name: []string{"recipe", "instructions"},
+					MarkdownPreview: true,
+				})
+			<br/>
+			@components.TextArea(components.TextAreaProps{
+					ID: "closing",
+					FormID: recipeFormID,
+					Value: props.Recipe.Closing,
+					Rows: 5,
+					DisplayName: "Closing thoughts:",
+					Name: []string{"recipe", "closing"},
 					MarkdownPreview: true,
 				})
 			<br/>
