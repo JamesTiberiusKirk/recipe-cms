@@ -13,17 +13,16 @@ css recipeFromStyles() {
 	width: 100%;
 }
 
+const (
+	recipeFormID = "recipe_form"
+)
+
 templ recipeForm(props recipeFormProps) {
 	<div
  		class={ recipeFromStyles() }
 	>
-		//hx-post={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
-		//hx-target={ recipeContainerID }
-		//hx-select={ recipeContainerID }
-		//hx-swap="outerHTML"
-		//hx-trigger="click from:#submit-all"
 		<form
- 			id={ recipeContainerID }
+ 			id={ recipeFormID }
  			name="recipe"
  			hx-ext="json-enc-nested"
 		>
@@ -119,10 +118,10 @@ templ recipeForm(props recipeFormProps) {
  				id="submit-all"
  				style="width: 100%; height: 30px;"
  				hx-post={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
+ 				hx-include={ "#" + recipeFormID }
+ 				hx-select={ "#" + recipeContainerID + "_inner" }
  				hx-target={ "#" + recipeContainerID }
- 				hx-select={ "#" + recipeContainerID }
  				hx-swap="innerHTML"
- 				hx-include="#recipe_form"
 			>
 				Update	
 			</button>

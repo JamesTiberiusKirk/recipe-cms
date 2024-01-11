@@ -33,7 +33,6 @@ func recipePageCSS() templ.CSSClass {
 
 const (
 	recipeContainerID = "recipe_container"
-	recipeFormID      = "recipe_form"
 )
 
 func recipePage(data recipePageData) templ.Component {
