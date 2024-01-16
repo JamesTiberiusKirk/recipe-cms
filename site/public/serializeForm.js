@@ -97,7 +97,6 @@
           return String(str);
         },
         number: function (str) {
-          console.log("converting to number");
           return Number(str);
         },
         boolean: function (str) {
@@ -110,6 +109,9 @@
         },
         array: function (str) {
           return JSON.parse(str);
+        },
+        splitStringByComma: function (str) {
+          return str.split(",").map(s=>s.trim()).filter(s=>s===""?false:true)
         },
         object: function (str) {
           return JSON.parse(str);

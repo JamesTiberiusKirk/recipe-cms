@@ -23,11 +23,11 @@ func Ingredient(props IngredientProps) templ.Component {
 
 templ ingredientTempl(props IngredientProps, nameFormName []string, amountFormName []string, unitFormName string) {
 	<div
- 		if props.ID !="" {
+		if props.ID !="" {
 			id={ props.ID }
 		}
- 		style="padding-top:20px; display:flex; justify-content: space-evenly;"
- 		class="ingredient"
+		style="padding-top:20px; display:flex; justify-content: space-evenly;"
+		class="ingredient"
 	>
 		@Input(InputProps{
 					Value: props.Ingredient.Name,
@@ -44,15 +44,52 @@ templ ingredientTempl(props IngredientProps, nameFormName []string, amountFormNa
 		@UnitForm(unitFormName,props.Ingredient.Unit, props.AvailableUnits)
 		<div style="margin:5px">
 			<img
- 				width="20"
- 				height="20"
- 				src="/assets/cross.svg"
- 				_="on click remove me.parentElement.parentElement"
+				width="20"
+				height="20"
+				src="/assets/cross.svg"
+				_="on click remove me.parentElement.parentElement"
 			/>
 		</div>
 	</div>
 }
 
-script navigateTo(url templ.SafeURL) {
+script JSNavigateTo(url templ.SafeURL) {
 	window.location = url
+}
+
+type TagsProps struct {
+	BaseHTMLProps
+	Tags  []string
+	Name  []string
+	Error string
+}
+
+func Tags(props TagsProps) templ.Component {
+	assembledVal := ""
+	for i, t := range props.Tags {
+		if len(props.Tags) > i+1 {
+			assembledVal += t + ", "
+		} else {
+			assembledVal += t
+		}
+	}
+	inputName := GenerateNestedJsonFormPropName(Append(props.Name, ":splitStringByComma"))
+	return tags(props, inputName, assembledVal)
+}
+
+templ tags(props TagsProps,inputName string, assembledVal string) {
+	<div { props.GetBaseHTMLProps()... } style="display: flex; width: 400px;">
+		<label style="padding-right: 10px;">Tags:</label>
+		<input
+			id={ props.ID + "_input" }
+			type={ string(InputTypeText) }
+			style="width: 100%; padding: 5px;"
+			name={ inputName }
+			value={ assembledVal }
+			placeholder="tag1, tag2, tag3"
+		/>
+		if props.Error != "" {
+			<span style="padding-right:10px; color:red;">{ props.Error }</span>
+		}
+	</div>
 }

@@ -55,7 +55,6 @@ const (
 )
 
 type InputProps struct {
-	Classes     templ.CSSClasses
 	Value       string
 	Type        InputType
 	Name        []string
@@ -63,6 +62,7 @@ type InputProps struct {
 	DisplayName string
 	Placeholder string
 	Error       string
+	Classes     templ.CSSClasses
 }
 
 func Input(props InputProps) templ.Component {
@@ -74,12 +74,12 @@ templ inputTemplate(props InputProps, inputName string) {
 	<div class={ props.Classes, InputStyles() }>
 		<label style="padding-right:10px">{ props.DisplayName }</label>
 		<input
- 			id={ inputName }
- 			type={ string(props.Type) }
- 			style="padding:5px"
- 			name={ inputName }
- 			value={ props.Value }
- 			placeholder={ props.Placeholder }
+			id={ inputName }
+			type={ string(props.Type) }
+			style="padding: 5px;"
+			name={ inputName }
+			value={ props.Value }
+			placeholder={ props.Placeholder }
 		/>
 		if props.Error != "" {
 			<span style="padding-right:10px; color:red;">{ props.Error }</span>
@@ -119,45 +119,38 @@ func TextArea(props TextAreaProps) templ.Component {
 }
 
 templ textAreaTemplate(props TextAreaProps, textAreaName string) {
-	//if props.MarkdownPreview {
-	//	hx-trigger="keyup changed delay:500ms, description"
-	//	hx-post="/markdown"
-	//	hx-target={ fmt.Sprintf("#%s-markdown-preview", props.ID) }
-	//	hx-swap="innerHTML"
-	//	hx-ext="markdown-preview"
-	//}
 	<div
- 		class={ props.Classes, TextAreaStyles() }
+		class={ props.Classes, TextAreaStyles() }
 	>
 		<label for={ props.ID }>{ props.DisplayName }</label>
 		<br/>
 		<div
- 			style="display: flex; flex-flow: row nowrap; "
+			style="display: flex; flex-flow: row nowrap; "
 		>
 			<textarea
- 				id={ fmt.Sprintf("%s-textarea", props.ID) }
- 				style="max-width: 50%; flex-grow: 1;"
- 				name={ textAreaName }
- 				if props.Placeholder != "" {
+				id={ fmt.Sprintf("%s-textarea", props.ID) }
+				style="max-width: 50%; flex-grow: 1;"
+				name={ textAreaName }
+				if props.Placeholder != "" {
 					placeholder={ props.Placeholder }
 				}
- 				if props.Rows != 0 {
+				if props.Rows != 0 {
 					rows={ fmt.Sprint(props.Rows) }
 				}
- 				if props.Cols != 0 {
+				if props.Cols != 0 {
 					cols={ fmt.Sprint(props.Cols) }
 				}
- 				if props.MaxLenght != 0 {
+				if props.MaxLenght != 0 {
 					maxlenght={ fmt.Sprint(props.MaxLenght) }
 				}
- 				if props.DirName != "" {
+				if props.DirName != "" {
 					dirname={ props.DirName }
 				}
- 				disabled?={ props.Disabled }
- 				readonly?={ props.ReadOnly }
- 				autofocus?={ props.Autofocus }
- 				required?={ props.Required }
- 				if props.MarkdownPreview {
+				disabled?={ props.Disabled }
+				readonly?={ props.ReadOnly }
+				autofocus?={ props.Autofocus }
+				required?={ props.Required }
+				if props.MarkdownPreview {
 					hx-trigger="keyup changed delay:500ms"
 					hx-post="/markdown"
 					hx-target={ fmt.Sprintf("#%s-markdown-preview", props.ID) }
@@ -169,8 +162,8 @@ templ textAreaTemplate(props TextAreaProps, textAreaName string) {
 			</textarea>
 			if props.MarkdownPreview {
 				<div
- 					id={ fmt.Sprintf("%s-markdown-preview", props.ID) }
- 					style="width: 50%; border: solid white 1px; flex-grow: 1; padding: 10px;"
+					id={ fmt.Sprintf("%s-markdown-preview", props.ID) }
+					style="width: 50%; border: solid white 1px; flex-grow: 1; padding: 10px;"
 				>
 					@RenderMarkdown(props.Value)
 				</div>

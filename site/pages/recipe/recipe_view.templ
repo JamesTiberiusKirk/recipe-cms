@@ -11,6 +11,20 @@ css recipeViewStyles() {
 	width: 100%;
 }
 
+css tagStyle() {
+	pointer-events: none;
+	background-color: #60580a;
+	border: none;
+	padding: 5px 10px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	margin-right: 8px;
+	margin-left: -1px;
+	margin-bottom: 5px;
+	border-radius: 100px;
+}
+
 templ recipeView(props recipeFormProps) {
 	<div style="width: 100%;">
 		<div class={ recipeViewStyles() }>
@@ -19,15 +33,25 @@ templ recipeView(props recipeFormProps) {
 				<h5 style="transform: translateY(-25px);">By { props.Recipe.Author.Name }</h5>
 			</div>
 			<button
- 				style="width: 80px; height: 30px; margin-top: 20px;"
- 				hx-get={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
- 				hx-select={ "#" + recipeContainerID + "_inner" }
- 				hx-target={ "#" + recipeContainerID }
- 				hx-swap="innerHTML"
- 				hx-push-url="true"
+				style="width: 80px; height: 30px; margin-top: 20px;"
+				hx-get={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
+				hx-select={ "#" + recipeContainerID + "_inner" }
+				hx-target={ "#" + recipeContainerID }
+				hx-swap="innerHTML"
+				hx-push-url="true"
 			>
 				EDIT
 			</button>
+		</div>
+		<div>
+			<p>
+				Tags:
+				for _, t := range props.Recipe.Tags {
+					<span class={ tagStyle() }>
+						{ t }
+					</span>
+				}
+			</p>
 		</div>
 		<div>
 			@components.RenderMarkdown(props.Recipe.Intro)

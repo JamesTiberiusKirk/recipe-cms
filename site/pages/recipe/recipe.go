@@ -9,7 +9,6 @@ import (
 	"github.com/JamesTiberiusKirk/recipe-cms/registry"
 	"github.com/JamesTiberiusKirk/recipe-cms/site/components"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 )
 
 type RecipeHandler struct {
@@ -36,7 +35,6 @@ type RecipeRequestData struct {
 }
 
 func (h *RecipeHandler) Page(c *common.TemplContext) error {
-
 	reqData := RecipeRequestData{}
 	echo.QueryParamsBinder(c)
 	err := c.Bind(&reqData)
@@ -44,12 +42,9 @@ func (h *RecipeHandler) Page(c *common.TemplContext) error {
 		return err
 	}
 
-	logrus.Infof("recipeID: %s\n", reqData.RecipeID)
-	logrus.Infof("recipe: %v\n", reqData.Recipe)
-
 	data := recipePageData{
 		Units: models.DefaultSystemUnits,
-		Edit:  (c.QueryParam("edit") == "true"),
+		Edit:  (c.QueryParam("edit") == "true" || reqData.RecipeID == "new"),
 	}
 
 	status := http.StatusOK
@@ -70,27 +65,20 @@ func (h *RecipeHandler) Page(c *common.TemplContext) error {
 
 	switch c.Request().Method {
 	case http.MethodPost:
-		logrus.Infof("content type: %s", c.Request().Header.Get("Content-Type"))
-
 		if c.Request().Header.Get("Content-Type") != "application/json" {
 			break
 		}
 
-		// TODO: perform db update
 		if reqData.Recipe != nil {
 			data.Recipe = *reqData.Recipe
 			if reqData.RecipeID != "new" {
 				data.Recipe.ID = reqData.RecipeID
 			}
 
-			logrus.Info("upserting")
-			upserted, wasUpserted, err := h.recipeRegistry.Upsert(data.Recipe)
+			upserted, _, err := h.recipeRegistry.Upsert(data.Recipe)
 			if err != nil {
 				return echo.NewHTTPError(500, "error upserting")
 			}
-
-			logrus.Info("UPSERTED", wasUpserted, upserted)
-			logrus.Info("ID", reqData.RecipeID)
 
 			if reqData.RecipeID == "new" {
 				c.Response().Header().Set("HX-Redirect", fmt.Sprintf("/recipe/%s?edit=true", upserted.ID))
@@ -98,19 +86,19 @@ func (h *RecipeHandler) Page(c *common.TemplContext) error {
 			}
 			data.Recipe = upserted
 		}
-
 	}
 
 	if len(data.Recipe.Ingredients) <= 0 {
-		logrus.Info("ingredients empty so assing an empty")
-		data.Recipe.Ingredients = []models.Ingredient{
-			{},
-		}
+		data.Recipe.Ingredients = []models.Ingredient{{}}
 	}
 
-	logrus.Info("sending back endit", data.Edit)
-	logrus.Info("req data", reqData.Edit)
-	logrus.Info("c.QueryParam", c.QueryParam("edit"))
+	if len(data.Recipe.Seasonings) <= 0 {
+		data.Recipe.Seasonings = []models.Ingredient{{}}
+	}
+
+	if reqData.RecipeID == "new" {
+		data.Recipe.ID = "new"
+	}
 
 	return c.TEMPL(status, recipePage(data))
 }

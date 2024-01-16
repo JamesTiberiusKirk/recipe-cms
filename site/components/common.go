@@ -11,6 +11,25 @@ import (
 	"github.com/yuin/goldmark"
 )
 
+type BaseHTMLProps struct {
+	ID      string
+	Classes templ.CSSClasses
+	Styles  templ.SafeCSS
+}
+
+type BaseFormProps struct {
+	BaseHTMLProps
+	Name []string
+}
+
+func (p BaseHTMLProps) GetBaseHTMLProps() templ.Attributes {
+	return templ.Attributes{
+		"id":    p.ID,
+		"class": p.Classes,
+		"style": p.Styles,
+	}
+}
+
 func GenerateNestedJsonFormPropName(name []string) (s string) {
 	for i, n := range name {
 		if i == 0 {
@@ -46,4 +65,8 @@ func Unsafe(html string) templ.Component {
 		_, err = io.WriteString(w, html)
 		return
 	})
+}
+
+func Append[T any](array []T, vals ...T) []T {
+	return append(array, vals...)
 }

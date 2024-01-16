@@ -72,7 +72,6 @@ const (
 )
 
 type InputProps struct {
-	Classes     templ.CSSClasses
 	Value       string
 	Type        InputType
 	Name        []string
@@ -80,6 +79,7 @@ type InputProps struct {
 	DisplayName string
 	Placeholder string
 	Error       string
+	Classes     templ.CSSClasses
 }
 
 func Input(props InputProps) templ.Component {
@@ -142,7 +142,7 @@ func inputTemplate(props InputProps, inputName string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" style=\"padding:5px\" name=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" style=\"padding: 5px;\" name=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -278,7 +278,7 @@ func textAreaTemplate(props TextAreaProps, textAreaName string) templ.Component 
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(props.DisplayName)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/form_components.templ`, Line: 131, Col: 45}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/form_components.templ`, Line: 124, Col: 45}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -419,7 +419,7 @@ func textAreaTemplate(props TextAreaProps, textAreaName string) templ.Component 
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(props.Value)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/form_components.templ`, Line: 167, Col: 17}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/form_components.templ`, Line: 160, Col: 17}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -463,7 +463,7 @@ func textAreaTemplate(props TextAreaProps, textAreaName string) templ.Component 
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(props.Error)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/form_components.templ`, Line: 179, Col: 61}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/form_components.templ`, Line: 172, Col: 61}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
