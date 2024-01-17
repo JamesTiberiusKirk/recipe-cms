@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/knadh/goyesql"
+	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
 )
 
@@ -64,13 +66,6 @@ func (d *dbc) SchemaUp() error {
 	tx := d.DB.MustBegin()
 
 	tx.MustExec(sq.Query)
-
-	files, err := os.ReadDir("./sql/migrations")
-	if err != nil {
-		logrus.Errorf("Error opening migrations directory: %s", err.Error())
-		panic(err)
-	}
-
 	tx.MustExec(`
 		CREATE TABLE IF NOT EXISTS migrations (
 			id      SERIAL PRIMARY KEY,
@@ -80,9 +75,9 @@ func (d *dbc) SchemaUp() error {
 		VALUES (1, $1)
 		ON CONFLICT (id)
 		DO UPDATE SET version = EXCLUDED.version;
-	`, len(files)+1)
+	`, countMigrations())
 
-	err = tx.Commit()
+	err := tx.Commit()
 	if err != nil {
 		if err := tx.Rollback(); err != nil {
 			logrus.Error("Rollback error")
@@ -92,6 +87,38 @@ func (d *dbc) SchemaUp() error {
 	}
 
 	return nil
+}
+
+func listFilesFilter(root, pattern string) ([]string, error) {
+	var matches []string
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return nil
+		}
+		if matched, err := filepath.Match(pattern, filepath.Base(path)); err != nil {
+			return err
+		} else if matched {
+			matches = append(matches, path)
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return matches, nil
+}
+
+func countMigrations() int {
+	files, err := listFilesFilter("./sql/migrations", "*.sql")
+	if err != nil {
+		logrus.Errorf("Error opening migrations directory: %s", err.Error())
+		panic(err)
+	}
+
+	return len(files)
 }
 
 func sortArray(arr []int) []int {
@@ -160,6 +187,14 @@ func applyMigration(dbc *dbc) {
 		}
 
 		split := strings.Split(file.Name(), ".")
+		if len(split) == 2 {
+			continue
+		}
+
+		if split[1] != "sql" {
+			continue
+		}
+
 		level, err := strconv.Atoi(split[0])
 		if err != nil {
 			logrus.Errorf("Could not parse migrations: %s", err.Error())
@@ -221,10 +256,7 @@ func applyMigration(dbc *dbc) {
 	}
 }
 
-func main() {
-	logrus.Info("------------------------------------------------------------")
-	logrus.Info("MIGRATOR")
-
+func connectDB() (string, *dbc) {
 	dbUrl := os.Getenv("DB_URL")
 
 	dbclient, err := newDBClient(dbUrl)
@@ -236,18 +268,30 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	return url, dbclient
+}
 
-	action := flag.String("action", "bar", "provide actuion to be executed")
+func main() {
+	logrus.Info("------------------------------------------------------------")
+	logrus.Info("MIGRATOR")
+
+	action := flag.String("action", "", "[count-migrations|schema-up|schema-down|migrate]")
 	flag.Parse()
 
 	switch *action {
+	case "count-migrations":
+		logrus.Info("Available migrations")
+		logrus.Info(countMigrations())
 	case "schema-up":
+		url, dbclient := connectDB()
 		logrus.Infof("Applying schema up to db: %s", url)
 		applySchemaUp(dbclient)
 	case "schema-down":
+		url, dbclient := connectDB()
 		logrus.Infof("Applying schema down to db: %s", url)
 		applySchemaDown(dbclient)
 	case "migrate":
+		url, dbclient := connectDB()
 		logrus.Infof("Applying migration to db: %s", url)
 		applyMigration(dbclient)
 	default:
