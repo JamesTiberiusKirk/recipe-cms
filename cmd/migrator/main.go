@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/joho/godotenv"
 	"github.com/knadh/goyesql"
 	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
@@ -69,8 +70,9 @@ func (d *dbc) SchemaUp() error {
 	tx.MustExec(`
 		CREATE TABLE IF NOT EXISTS migrations (
 			id      SERIAL PRIMARY KEY,
-			version INTEGER NOT NULL,
-		);
+			version INTEGER NOT NULL
+		);`)
+	tx.MustExec(`
 		INSERT INTO migrations (id, version)
 		VALUES (1, $1)
 		ON CONFLICT (id)
@@ -268,6 +270,7 @@ func connectDB() (string, *dbc) {
 	if err != nil {
 		panic(err)
 	}
+
 	return url, dbclient
 }
 
@@ -277,6 +280,11 @@ func main() {
 
 	action := flag.String("action", "", "[count-migrations|schema-up|schema-down|migrate]")
 	flag.Parse()
+
+	err := godotenv.Load()
+	if err != nil {
+		logrus.Info("No .env getting from actual env")
+	}
 
 	switch *action {
 	case "count-migrations":
