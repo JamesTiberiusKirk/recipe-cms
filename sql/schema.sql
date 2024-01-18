@@ -1,4 +1,12 @@
 -- name: schema_up
+CREATE TABLE IF NOT EXISTS unit (
+    name            VARCHAR(255) PRIMARY KEY,
+    display_name    VARCHAR(255) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS "user" (
+    name        VARCHAR(255) PRIMARY KEY,
+    password    VARCHAR(255) NOT NULL
+);
 CREATE TABLE IF NOT EXISTS recipe (
     id              VARCHAR(255) PRIMARY KEY,
     name            VARCHAR(255) NOT NULL,
@@ -21,8 +29,8 @@ CREATE TABLE IF NOT EXISTS ingredient (
     amount      INTEGER,
     unit_name   VARCHAR(255),
     
-    PRIMARY KEY (recipe_id, array_index, field) ON DELETE CASCADE,
-    FOREIGN KEY (recipe_id) REFERENCES recipe (id),
+    PRIMARY KEY (recipe_id, array_index, field),
+    FOREIGN KEY (recipe_id) REFERENCES recipe (id) ON DELETE CASCADE,
     FOREIGN KEY (unit_name) REFERENCES unit (name)
 );
 CREATE TABLE IF NOT EXISTS tag (
@@ -31,14 +39,6 @@ CREATE TABLE IF NOT EXISTS tag (
 
     PRIMARY KEY (recipe_id, tag_name),
     FOREIGN KEY (recipe_id) REFERENCES recipe (id)
-);
-CREATE TABLE IF NOT EXISTS "user" (
-    name        VARCHAR(255) PRIMARY KEY,
-    password    VARCHAR(255) NOT NULL
-);
-CREATE TABLE IF NOT EXISTS unit (
-    name            VARCHAR(255) PRIMARY KEY,
-    display_name    VARCHAR(255) NOT NULL
 );
 INSERT INTO unit (name, display_name) VALUES
     ('kg', 'kg'),

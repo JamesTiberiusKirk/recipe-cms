@@ -7,12 +7,12 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type Recipe struct {
+type MockRecipe struct {
 	data []models.Recipe
 }
 
-func NewRecipeRegistry() *Recipe {
-	return &Recipe{
+func NewMockRecipeRegistry() *MockRecipe {
+	return &MockRecipe{
 		data: []models.Recipe{
 			{
 				ID:          "test-id",
@@ -77,11 +77,11 @@ func NewRecipeRegistry() *Recipe {
 	}
 }
 
-func (r *Recipe) GetAll() ([]models.Recipe, error) {
+func (r *MockRecipe) GetAll() ([]models.Recipe, error) {
 	return r.data, nil
 }
 
-func (r *Recipe) GetOneByID(id string) (*models.Recipe, error) {
+func (r *MockRecipe) GetOneByID(id string) (*models.Recipe, error) {
 	for _, recipe := range r.data {
 		if id == recipe.ID {
 			return &recipe, nil
@@ -90,7 +90,7 @@ func (r *Recipe) GetOneByID(id string) (*models.Recipe, error) {
 	return nil, nil
 }
 
-func (r *Recipe) Upsert(upsert models.Recipe) (models.Recipe, bool, error) {
+func (r *MockRecipe) Upsert(upsert models.Recipe) (models.Recipe, bool, error) {
 	logrus.Infof("upserting %v", upsert)
 	if upsert.ID == "" {
 		upsert.ID = fmt.Sprint("test-id", len(r.data))

@@ -1,6 +1,16 @@
 -- name: upsert_recipe
 INSERT INTO recipe (id, name, intro, description, instructions, length_total, length_hands_on, closing, version, author_name)
-VALUES (:your_recipe_id, :your_recipe_name, :intro_text, :description_text, :instructions_text, :total_length_value, :hands_on_length_value, :closing_text, 1, :author_name)
+VALUES (
+    :id,
+    :name,
+    :intro,
+    :description,
+    :instructions,
+    :total_length,
+    :hands_on_length,
+    :closing,
+    :version,
+    :author_name)
 ON CONFLICT (id) DO UPDATE
     SET
 COALESCE(NULLIF(EXCLUDED.command, ''), chat_journies.command),
@@ -13,7 +23,6 @@ COALESCE(NULLIF(EXCLUDED.command, ''), chat_journies.command),
         closing =           COALESCE(NULLIF(EXCLUDED.closing, ''), recipe.closing,
         version =           COALESCE(NULLIF(EXCLUDED.version, ''), recipe.version
         author_name =       COALESCE(NULLIF(EXCLUDED.author_name, ''), recipe.author_name;
-
 
 -- name: insert_tags
 INSERT INTO tag (recipe_id, tag_name)

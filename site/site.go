@@ -14,10 +14,10 @@ import (
 )
 
 type Site struct {
-	recipreRegistry *registry.Recipe
+	recipreRegistry registry.IRecipe
 }
 
-func NewSite(rr *registry.Recipe) *Site {
+func NewSite(rr registry.IRecipe) *Site {
 	return &Site{
 		recipreRegistry: rr,
 	}

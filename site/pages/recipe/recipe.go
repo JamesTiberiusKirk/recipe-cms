@@ -12,10 +12,10 @@ import (
 )
 
 type RecipeHandler struct {
-	recipeRegistry *registry.Recipe
+	recipeRegistry registry.IRecipe
 }
 
-func InitRecipeHandler(app *echo.Group, rr *registry.Recipe) {
+func InitRecipeHandler(app *echo.Group, rr registry.IRecipe) {
 	h := &RecipeHandler{
 		recipeRegistry: rr,
 	}
