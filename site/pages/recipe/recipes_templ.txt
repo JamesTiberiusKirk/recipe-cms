@@ -1,0 +1,7 @@
+<table class=\"mx-auto\"><thead><tr><th>#</th><th>ID</th><th>Name</th></tr></thead> <tbody>
+<tr><td>
+</td><td><a href=\"
+\">
+</a></td><td>
+</td></tr>
+</tbody></table>

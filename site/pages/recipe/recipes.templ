@@ -10,19 +10,23 @@ type recipesPageData struct {
 
 templ recipesPage(data recipesPageData) {
 	@components.Layout() {
-		<table>
-			<tr>
-				<th>#</th>
-				<th>ID</th>
-				<th>Name</th>
-			</tr>
-			for i, r := range data.recipes {
+		<table class="mx-auto">
+			<thead>
 				<tr>
-					<td>{ fmt.Sprint(i+1) }</td>
-					<td><a href={ templ.SafeURL("/recipe/" + r.ID) }>{ r.ID }</a></td>
-					<td>{ r.Name }</td>
+					<th>#</th>
+					<th>ID</th>
+					<th>Name</th>
 				</tr>
-			}
+			</thead>
+			<tbody>
+				for i, r := range data.recipes {
+					<tr>
+						<td>{ fmt.Sprint(i+1) }</td>
+						<td><a href={ templ.SafeURL("/recipe/" + r.ID) }>{ r.ID }</a></td>
+						<td>{ r.Name }</td>
+					</tr>
+				}
+			</tbody>
 		</table>
 	}
 }

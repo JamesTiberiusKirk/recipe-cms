@@ -23,11 +23,8 @@ func Ingredient(props IngredientProps) templ.Component {
 
 templ ingredientTempl(props IngredientProps, nameFormName []string, amountFormName []string, unitFormName string) {
 	<div
-		if props.ID !="" {
-			id={ props.ID }
-		}
-		style="padding-top:20px; display:flex; justify-content: space-evenly;"
-		class="ingredient"
+		id={ props.ID }
+		class="ingredient pt-5 flex justify-evenly"
 	>
 		@Input(InputProps{
 					Value: props.Ingredient.Name,
@@ -42,7 +39,7 @@ templ ingredientTempl(props IngredientProps, nameFormName []string, amountFormNa
 					Type: InputTypeNumber,
 				})
 		@UnitForm(unitFormName,props.Ingredient.Unit, props.AvailableUnits)
-		<div style="margin:5px">
+		<div class="m-2">
 			<img
 				width="20"
 				height="20"
@@ -78,18 +75,18 @@ func Tags(props TagsProps) templ.Component {
 }
 
 templ tags(props TagsProps,inputName string, assembledVal string) {
-	<div { props.GetBaseHTMLProps()... } style="display: flex; width: 400px;">
-		<label style="padding-right: 10px;">Tags:</label>
+	<div { props.GetBaseHTMLProps()... } class="flex w-2/3">
+		<label class="pr-5">Tags:</label>
 		<input
 			id={ props.ID + "_input" }
 			type={ string(InputTypeText) }
-			style="width: 100%; padding: 5px;"
+			class="w-full p-2"
 			name={ inputName }
 			value={ assembledVal }
 			placeholder="tag1, tag2, tag3"
 		/>
 		if props.Error != "" {
-			<span style="padding-right:10px; color:red;">{ props.Error }</span>
+			<span class="pr-6 text-red-400">{ props.Error }</span>
 		}
 	</div>
 }

@@ -1,0 +1,17 @@
+<div class=\"w-full\"><form id=\"
+\" name=\"recipe\" hx-ext=\"json-enc-nested\"><div class=\"flex flex-row space-between justify-between mb-2\">
+<button class=\"btn mb-1\" hx-post=\"
+\" hx-include=\"#recipe_form\" hx-select=\"
+\" hx-target=\"
+\" hx-swap=\"innerHTML\" hx-push-url=\"true\">DONE</button></div>
+<br>
+<br><br>
+<br><br><br>Ingredients:<div id=\"ingredients\">
+</div><br><button hx-get=\"/recipe/ingredient\" hx-swap=\"beforeend\" hx-target=\"#ingredients\" hx-select=\"#ingredient\" class=\"w-full btn bg-red-400 hover:bg-red-500\">Add ingredient</button><br><br><br>Seasonings:<div id=\"seasonings\">
+</div><br><button hx-get=\"/recipe/ingredient?type=seasoning\" hx-swap=\"beforeend\" hx-target=\"#seasonings\" hx-select=\"#seasoning\" class=\"w-full btn bg-red-400 hover:bg-red-500\">Add Seasoning </button><br><br>
+<br>
+<br><button id=\"submit-all\" class=\"w-full btn\" hx-post=\"
+\" hx-include=\"
+\" hx-select=\"
+\" hx-target=\"
+\" hx-swap=\"innerHTML\">Update\t</button></form></div>

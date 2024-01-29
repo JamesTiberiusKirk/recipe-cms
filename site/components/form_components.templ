@@ -2,10 +2,6 @@ package components
 
 import "fmt"
 
-css InputStyles() {
-	background: '#ffffff';
-}
-
 type InputType string
 
 // <input type="button">
@@ -71,24 +67,20 @@ func Input(props InputProps) templ.Component {
 }
 
 templ inputTemplate(props InputProps, inputName string) {
-	<div class={ props.Classes, InputStyles() }>
-		<label style="padding-right:10px">{ props.DisplayName }</label>
+	<div class={ props.Classes }>
+		<label class="pr-5">{ props.DisplayName }</label>
 		<input
 			id={ inputName }
 			type={ string(props.Type) }
-			style="padding: 5px;"
+			class="p-2"
 			name={ inputName }
 			value={ props.Value }
 			placeholder={ props.Placeholder }
 		/>
 		if props.Error != "" {
-			<span style="padding-right:10px; color:red;">{ props.Error }</span>
+			<span class="pr-6 text-red-400">{ props.Error }</span>
 		}
 	</div>
-}
-
-css TextAreaStyles() {
-	background: '#ffffff';
 }
 
 type TextAreaProps struct {
@@ -120,16 +112,16 @@ func TextArea(props TextAreaProps) templ.Component {
 
 templ textAreaTemplate(props TextAreaProps, textAreaName string) {
 	<div
-		class={ props.Classes, TextAreaStyles() }
+		class={ props.Classes }
 	>
 		<label for={ props.ID }>{ props.DisplayName }</label>
 		<br/>
 		<div
-			style="display: flex; flex-flow: row nowrap; "
+			class="flex flex-row flex-nowrap"
 		>
 			<textarea
 				id={ fmt.Sprintf("%s-textarea", props.ID) }
-				style="max-width: 50%; flex-grow: 1;"
+				class="grow w-2/5"
 				name={ textAreaName }
 				if props.Placeholder != "" {
 					placeholder={ props.Placeholder }
@@ -163,14 +155,14 @@ templ textAreaTemplate(props TextAreaProps, textAreaName string) {
 			if props.MarkdownPreview {
 				<div
 					id={ fmt.Sprintf("%s-markdown-preview", props.ID) }
-					style="width: 50%; border: solid white 1px; flex-grow: 1; padding: 10px;"
+					class="grow w-3/5 rounded-md border-2 border-white p-3"
 				>
 					@RenderMarkdown(props.Value)
 				</div>
 			}
 		</div>
 		if props.Error != "" {
-			<span style="padding-right:10px; color:red;">{ props.Error }</span>
+			<span class="pr-6 text-red-400">{ props.Error }</span>
 		}
 	</div>
 }

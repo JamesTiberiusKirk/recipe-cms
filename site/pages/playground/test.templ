@@ -4,14 +4,14 @@ import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
 
 templ testPage() {
 	@components.Layout() {
-		<div style="width: 100%">
+		<div class="w-full">
 			<form
- 				id="recipe_form"
- 				name="recipe"
- 				hx-ext="json-enc-nested"
- 				hx-post
- 				hx-swap="outerHTML"
- 				hx-trigger="click from:#submit-all"
+				id="recipe_form"
+				name="recipe"
+				hx-ext="json-enc-nested"
+				hx-post
+				hx-swap="outerHTML"
+				hx-trigger="click from:#submit-all"
 			>
 				@components.TextArea(components.TextAreaProps{
 					ID:"test_area",

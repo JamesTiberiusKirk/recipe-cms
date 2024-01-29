@@ -1,0 +1,22 @@
+<div class=\"w-full\"><div class=\"w-full flex flex-row space-between\"><div><h1>
+</h1><h6>By 
+</h6></div><div class=\"ml-auto pt-2\"><button class=\"btn\" hx-get=\"
+\" hx-select=\"
+\" hx-target=\"
+\" hx-swap=\"innerHTML\" hx-push-url=\"true\">EDIT</button></div></div><div><p class=\"my-5\">Tags: 
+<span class=\"rounded-full bg-red-500 hover:bg-red-700 font-bold py-1 px-2 ml-1\">
+</span>
+</p></div><div class=\"py-5\">
+</div><div class=\"py-5\">
+</div><div class=\"w-full flex flex-row flex-wrap justify-around items-stretch\">
+<span class=\"w-5\"></span>
+</div><div class=\"py-5\">
+</div><div class=\"py-5\">
+</div></div>
+<div><h2>
+</h2><table class=\"w-full p-5\"><thead><tr><th>#</th><th>Name</th><th>Amount</th></tr></thead> <tbody>
+<tr><td>
+</td><td>
+</td><td>
+</td></tr>
+</tbody></table></div>

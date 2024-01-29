@@ -1,0 +1,66 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@layer base {
+    h1 {
+        @apply text-5xl;
+    }
+    h2 {
+        @apply text-3xl;
+    }
+    h3 {
+        @apply text-2xl;
+    }
+    h4 {
+        @apply text-xl;
+    }
+    h4 {
+        @apply text-lg;
+    }
+    h5 {
+        @apply text-base;
+    }
+    h6 {
+        @apply text-sm;
+    }
+
+
+    a {
+        @apply dark:text-red-500 hover:underline;
+    }
+    p {
+        @apply dark:text-white;
+    }
+    table {
+        @apply border-2 dark:border-white table-auto border-separate p-2;
+    }
+
+
+    .inputStyles{
+        @apply bg-gray-600 rounded-md border-2 border-white p-3;
+    }
+
+    input {
+        @apply inputStyles;
+    }
+    textarea {
+        @apply inputStyles;
+    }
+    select {
+        @apply inputStyles;
+    }
+
+
+    .btn {
+        @apply bg-red-500 hover:bg-red-700 font-bold py-2 px-4 rounded-full;
+    }
+
+    ul {
+        @apply list-disc list-inside;
+    }
+
+    ol {
+        @apply list-decimal list-inside;
+    }
+}

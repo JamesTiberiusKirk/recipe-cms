@@ -1,9 +1,15 @@
-install_dep:
-	go install https://github.com/cespare/reflex@latest
+run: run_server run_styles
 
-run_dev: 
-	reflex -d none -sr '.*\.(go|sql|templ)' -- templ generate && go run ./main.go
-	# reflex -d none -sr '.*\.(go|sql|html|css)' -- go run ./main.go
+run_server:
+	npm run tw:watch
 
-get: 
-	go get ./...
+run_styles:
+	templ generate --watch --proxy="http://127.0.0.1:5000" --cmd="go run main.go"
+
+gen: 
+	templ generate
+	npm run tw
+
+
+kill_server:
+	kill -9 $(lsof -ti:5000)

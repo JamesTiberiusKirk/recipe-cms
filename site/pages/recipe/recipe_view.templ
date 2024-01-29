@@ -4,70 +4,51 @@ import "fmt"
 import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
 import "github.com/JamesTiberiusKirk/recipe-cms/models"
 
-css recipeViewStyles() {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	width: 100%;
-}
-
-css tagStyle() {
-	pointer-events: none;
-	background-color: #60580a;
-	border: none;
-	padding: 5px 10px;
-	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-	margin-right: 8px;
-	margin-left: -1px;
-	margin-bottom: 5px;
-	border-radius: 100px;
-}
-
 templ recipeView(props recipeFormProps) {
-	<div style="width: 100%;">
-		<div class={ recipeViewStyles() }>
+	<div class="w-full">
+		<div class="w-full flex flex-row space-between">
 			<div>
 				<h1>{ props.Recipe.Name }</h1>
-				<h5 style="transform: translateY(-25px);">By { props.Recipe.Author.Name }</h5>
+				<h6>By { props.Recipe.Author.Name }</h6>
 			</div>
-			<button
-				style="width: 80px; height: 30px; margin-top: 20px;"
-				hx-get={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
-				hx-select={ "#" + recipeContainerID + "_inner" }
-				hx-target={ "#" + recipeContainerID }
-				hx-swap="innerHTML"
-				hx-push-url="true"
-			>
-				EDIT
-			</button>
+			<div class="ml-auto pt-2">
+				<button
+					class="btn"
+					hx-get={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
+					hx-select={ "#" + recipeContainerID + "_inner" }
+					hx-target={ "#" + recipeContainerID }
+					hx-swap="innerHTML"
+					hx-push-url="true"
+				>
+					EDIT
+				</button>
+			</div>
 		</div>
 		<div>
-			<p>
+			<p class="my-5">
 				Tags:
 				for _, t := range props.Recipe.Tags {
-					<span class={ tagStyle() }>
+					<span class="rounded-full bg-red-500 hover:bg-red-700 font-bold py-1 px-2 ml-1">
 						{ t }
 					</span>
 				}
 			</p>
 		</div>
-		<div>
+		<div class="py-5">
 			@components.RenderMarkdown(props.Recipe.Intro)
 		</div>
-		<div>
+		<div class="py-5">
 			@components.RenderMarkdown(props.Recipe.Description)
 		</div>
-		<div style="display:flex; flex-flow: row wrap; align-content: stretch; width:100%;">
+		<div class="w-full flex flex-row flex-wrap justify-around items-stretch">
 			@ingredientTable("Ingredients:",props.Recipe.Ingredients)
-			<span style="width:10px"></span>
+			<span class="w-5"></span>
 			@ingredientTable("Seasonings:",props.Recipe.Seasonings)
 		</div>
-		<div>
+		<div class="py-5">
 			@components.RenderMarkdown(props.Recipe.Instructions)
 		</div>
-		<div>
+		<div class="py-5">
 			@components.RenderMarkdown(props.Recipe.Closing)
 		</div>
 	</div>
@@ -76,7 +57,7 @@ templ recipeView(props recipeFormProps) {
 templ ingredientTable(title string, ingredients []models.Ingredient) {
 	<div>
 		<h2>{ title }</h2>
-		<table style="width: 100%; padding:15px;">
+		<table class="w-full p-5">
 			<thead>
 				<tr>
 					<th>#</th>

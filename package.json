@@ -1,0 +1,15 @@
+{
+  "name": "recipe-cms",
+  "version": "1.0.0",
+  "description": "",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "tw:watch": "tailwindcss -i ./site/input.css -o ./site/public/tailwind.css --watch",
+    "tw": "tailwindcss -i ./site/input.css -o ./site/public/tailwind.css"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  }
+}

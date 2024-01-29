@@ -1,0 +1,12 @@
+<div id=\"
+\" class=\"ingredient pt-5 flex justify-evenly\">
+<div class=\"m-2\"><img width=\"20\" height=\"20\" src=\"/assets/cross.svg\" _=\"on click remove me.parentElement.parentElement\"></div></div>
+<div
+ class=\"flex w-2/3\"><label class=\"pr-5\">Tags:</label> <input id=\"
+\" type=\"
+\" class=\"w-full p-2\" name=\"
+\" value=\"
+\" placeholder=\"tag1, tag2, tag3\"> 
+<span class=\"pr-6 text-red-400\">
+</span>
+</div>
