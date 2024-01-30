@@ -1,1 +1,0 @@
-<style>\n\th1 {\n\t\t@apply text-red-500;\n\t}\n\t</style>

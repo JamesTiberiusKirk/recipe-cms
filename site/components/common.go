@@ -9,6 +9,7 @@ import (
 	"github.com/a-h/templ"
 	"github.com/sirupsen/logrus"
 	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
 )
 
 type BaseHTMLProps struct {
@@ -50,7 +51,12 @@ func GenerateNestedJsonFormPropName(name []string) (s string) {
 
 func RenderMarkdown(markdown string) templ.Component {
 	var buf bytes.Buffer
-	if err := goldmark.Convert([]byte(markdown), &buf); err != nil {
+
+	md := goldmark.New(
+		goldmark.WithExtensions(extension.GFM),
+	)
+
+	if err := md.Convert([]byte(markdown), &buf); err != nil {
 		logrus.Errorf("failed to convert markdown to HTML: %v", err)
 	}
 

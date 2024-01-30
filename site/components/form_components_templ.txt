@@ -2,7 +2,7 @@
 \"><label class=\"pr-5\">
 </label> <input id=\"
 \" type=\"
-\" class=\"p-2\" name=\"
+\" class=\"p-2 h-12\" name=\"
 \" value=\"
 \" placeholder=\"
 \"> 

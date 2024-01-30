@@ -70,7 +70,7 @@ templ recipeForm(props recipeFormProps) {
 			<br/>
 			<br/>
 			<br/>
-			Ingredients:
+			<h2>Ingredients:</h2>
 			<div id="ingredients">
 				for _, ingr := range props.Recipe.Ingredients {
 					@components.Ingredient(components.IngredientProps{
@@ -94,7 +94,7 @@ templ recipeForm(props recipeFormProps) {
 			<br/>
 			<br/>
 			<br/>
-			Seasonings:
+			<h2>Seasonings:</h2>
 			<div id="seasonings">
 				for _, ingr := range props.Recipe.Seasonings {
 					@components.Ingredient(components.IngredientProps{

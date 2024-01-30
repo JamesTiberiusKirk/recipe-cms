@@ -20,7 +20,7 @@ func InitRecipeHandler(app *echo.Group, rr registry.IRecipe) {
 		recipeRegistry: rr,
 	}
 
-	app.Use(common.UseBodyLogger())
+	// app.Use(common.UseBodyLogger())
 
 	app.GET("/:recipe_id", common.UseTemplContext(h.Page))
 	app.POST("/:recipe_id", common.UseTemplContext(h.Page))

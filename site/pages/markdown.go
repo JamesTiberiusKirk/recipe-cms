@@ -13,8 +13,6 @@ import (
 func InitMarkdownRenderer(app *echo.Group) {
 	h := MarkdownRenderer{}
 
-	app.Use(common.UseBodyLogger())
-
 	app.POST("/markdown", common.UseTemplContext(h.Handle))
 	app.GET("/markdown", common.UseTemplContext(h.Handle))
 }
