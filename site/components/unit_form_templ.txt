@@ -1,8 +1,0 @@
-<select class=\"w-14 h-12\" name=\"
-\">
-<option value=\"
-\"
- selected
->
-</option>
-</select>

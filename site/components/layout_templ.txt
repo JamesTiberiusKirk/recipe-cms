@@ -1,6 +1,0 @@
-<header class=\"block w-1/2 mx-auto\"><div class=\"flex\"><a class=\"\" href=\"/recipe\">Recipes</a> <a class=\"pl-1\" href=\"/recipe/new\">Add Recipe</a></div></header>
-<html class=\"dark\"><head><link rel=\"stylesheet\" href=\"/assets/styles.css\"><link rel=\"stylesheet\" href=\"/assets/tailwind.css\"></head>
-<body class=\"dark:bg-gray-800 dark:text-white\" onload=\"
-\"><script src=\"/assets/htmx.org@1.9.6\"></script><script src=\"/assets/hyperscript.org@0.9.12\"></script><script src=\"/assets/loading-states.js\"></script><script src=\"/assets/json-enc.js\"></script><script src=\"/assets/jquery-3.7.1.min.js\"></script><script src=\"/assets/serializeForm.js\"></script>
-<div class=\"mx-auto w-3/4\">
-</div></body></html>

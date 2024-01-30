@@ -4,7 +4,7 @@ import "github.com/JamesTiberiusKirk/recipe-cms/models"
 import "github.com/JamesTiberiusKirk/recipe-cms/common"
 
 templ UnitForm(formNamePrefix string, selected models.Unit, units []models.Unit) {
-	<select class="w-14 h-12" name={ formNamePrefix + "[unit]:object" }>
+	<select class="w-18 h-12" name={ formNamePrefix + "[unit]:object" }>
 		for  _, unit := range units {
 			<option value={ common.ToJson(unit) } selected?={ selected.Name == unit.Name }>
 				{ unit.DisplayName }
