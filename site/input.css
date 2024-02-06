@@ -33,7 +33,7 @@
         @apply dark:text-white;
     }
     table {
-        @apply border-2 dark:border-white table-auto border-separate p-2;
+        @apply border-2 dark:border-white table-auto border-separate;
     }
 
 

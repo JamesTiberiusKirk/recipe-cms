@@ -36,7 +36,7 @@ type RecipeRequestData struct {
 
 func (h *RecipeHandler) Page(c *common.TemplContext) error {
 	reqData := RecipeRequestData{}
-	echo.QueryParamsBinder(c)
+	// echo.QueryParamsBinder(c)
 	err := c.Bind(&reqData)
 	if err != nil {
 		return err

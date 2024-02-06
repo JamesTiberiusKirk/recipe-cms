@@ -1,57 +1,92 @@
 -- name: schema_up
 CREATE TABLE IF NOT EXISTS unit (
-    name            VARCHAR(255) PRIMARY KEY,
-    display_name    VARCHAR(255) NOT NULL
+    unit_name       TEXT PRIMARY KEY,
+    display_name    TEXT NOT NULL
 );
-CREATE TABLE IF NOT EXISTS "user" (
-    name        VARCHAR(255) PRIMARY KEY,
-    password    VARCHAR(255) NOT NULL
+CREATE TABLE IF NOT EXISTS author (
+    author_name TEXT PRIMARY KEY,
+    password    TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS recipe (
-    id              VARCHAR(255) PRIMARY KEY,
-    name            VARCHAR(255) NOT NULL,
-    intro           VARCHAR(255),
-    description     VARCHAR(255),
-    instructions    VARCHAR(255),
-    length_total    VARCHAR(255),
-    length_hands_on VARCHAR(255),
-    closing         VARCHAR(255),
-    version         INTEGER,
-    author_name     VARCHAR(255),
+    id              TEXT PRIMARY KEY,
+    recipe_name     TEXT NOT NULL,
+    intro           TEXT,
+    description     TEXT,
+    instructions    TEXT,
+    length_total    TEXT,
+    length_hands_on TEXT,
+    closing         TEXT,
+    recipe_version  INTEGER,
+    author_name     TEXT,
+    images          TEXT[],
 
-    FOREIGN KEY (author_name) REFERENCES "user" (name)
+    FOREIGN KEY (author_name) REFERENCES author (author_name)
 );
 CREATE TABLE IF NOT EXISTS ingredient (
-    recipe_id   VARCHAR(255) NOT NULL,
+    recipe_id   TEXT         NOT NULL,
     array_index INTEGER      NOT NULL,
-    field       VARCHAR(255) NOT NULL,
-    name        VARCHAR(255) NOT NULL,
-    amount      INTEGER,
-    unit_name   VARCHAR(255),
+    field       TEXT         NOT NULL,
+
+    ingredient_name     TEXT         NOT NULL,
+    amount              INTEGER,
+    unit_name           TEXT,
     
     PRIMARY KEY (recipe_id, array_index, field),
     FOREIGN KEY (recipe_id) REFERENCES recipe (id) ON DELETE CASCADE,
-    FOREIGN KEY (unit_name) REFERENCES unit (name)
+    FOREIGN KEY (unit_name) REFERENCES unit (unit_name)
 );
 CREATE TABLE IF NOT EXISTS tag (
-    recipe_id   VARCHAR(255) REFERENCES recipe(id) ON DELETE CASCADE,
-    tag_name    VARCHAR(255),
+    recipe_id   TEXT,
+    tag_name    TEXT,
 
     PRIMARY KEY (recipe_id, tag_name),
-    FOREIGN KEY (recipe_id) REFERENCES recipe (id)
+    FOREIGN KEY (recipe_id) REFERENCES recipe (id) ON DELETE CASCADE
 );
-INSERT INTO unit (name, display_name) VALUES
+CREATE INDEX tag_index ON tag (tag_name);
+INSERT INTO unit (unit_name, display_name) VALUES
     ('kg', 'kg'),
     ('g', 'g'),
     ('l', 'l'),
     ('ml', 'ml'),
-    ('unit', 'unit');
+    ('unit', 'unit'),
+    ('part', 'part');
+
+INSERT INTO author (author_name, password) VALUES
+    ('TestUser', 'testPass');
+INSERT INTO recipe (id, recipe_name, intro, description, instructions, length_total, length_hands_on, closing, recipe_version, author_name, images) VALUES
+    (
+        'testid-1234',
+        'Chilly con carne',
+        E'## title of the introduction\n This is a cool recipe',
+        E'### Description\n - point 1 \n - point 2 ',
+        E'### Instructions\n 1. step 1 \n 2. step 2 ',
+        '8 hours',
+        '20 minutes',
+        E'This a cool recipe',
+        1,
+        'TestUser',
+        ARRAY['https://thecozycook.com/wp-content/uploads/2022/11/Chili-Con-Carne-f2.jpg','https://www.ocado.com/cmscontent/recipe_image_large/36025764.jpg?brD4', 'https://www.foodleclub.com/wp-content/uploads/2020/09/chili-con-carne-1.jpg']
+    );
+INSERT INTO ingredient (recipe_id, array_index, field, ingredient_name, amount, unit_name) VALUES 
+    ( 'testid-1234', 0, 'INGREDIENT', 'Beef mince 5%', 500, 'g' ),
+    ( 'testid-1234', 1, 'INGREDIENT', 'Tomato can', 1, 'unit' ),
+    ( 'testid-1234', 2, 'INGREDIENT', 'Red bell pepper', 100, 'g' ),
+    ( 'testid-1234', 3, 'INGREDIENT', 'White onion', 100, 'g' ),
+    ( 'testid-1234', 4, 'INGREDIENT', 'Kidney beans can', 1, 'unit' ),
+    ( 'testid-1234', 0, 'SEASONING', 'Paprika', 5, 'part' ),
+    ( 'testid-1234', 1, 'SEASONING', 'Cumin', 1, 'part' ),
+    ( 'testid-1234', 2, 'SEASONING', 'Salt', 1, 'part' ),
+    ( 'testid-1234', 3, 'SEASONING', 'Pepper', 1, 'part' );
+INSERT INTO tag (recipe_id, tag_name) VALUES 
+    ( 'testid-1234', 'slow cooker'),
+    ( 'testid-1234', 'low kcal'),
+    ( 'testid-1234', 'beef'),
+    ( 'testid-1234', 'fiber');
+
 
 -- name: schema_down
 DROP TABLE IF EXISTS ingredient;
 DROP TABLE IF EXISTS unit;
 DROP TABLE IF EXISTS tag;
-DROP TABLE IF EXISTS auth_user;
 DROP TABLE IF EXISTS recipe;
-DROP TABLE IF EXISTS migrations;
-
+DROP TABLE IF EXISTS author;

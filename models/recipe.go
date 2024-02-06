@@ -1,29 +1,30 @@
 package models
 
 type User struct {
-	Name string `json:"name"`
+	Name string `json:"name" goscanql:"name"`
 }
 
 type Recipe struct {
-	ID            string       `json:"id"`
-	Name          string       `json:"name"`
-	Intro         string       `json:"intro"`
-	Description   string       `json:"description"`
-	Ingredients   []Ingredient `json:"ingredients"`
-	Seasonings    []Ingredient `json:"seasonings"`
-	Instructions  string       `json:"instructions"`
-	LengthTotal   string       `json:"length_total"`
-	LengthHandsOn string       `json:"length_hands_on"`
-	Closing       string       `json:"closing"`
-	Tags          []string     `json:"tags"`
-	Version       int          `json:"version"`
-	Author        User         `json:"author"`
+	ID            string       `json:"id"              goscanql:"id"`
+	Name          string       `json:"name"            goscanql:"recipename"`
+	Intro         string       `json:"intro"           goscanql:"intro"`
+	Description   string       `json:"description"     goscanql:"description"`
+	Ingredients   []Ingredient `json:"ingredients"     goscanql:"ingredients"`
+	Seasonings    []Ingredient `json:"seasonings"      goscanql:"seasonings"`
+	Instructions  string       `json:"instructions"    goscanql:"instructions"`
+	LengthTotal   string       `json:"length_total"    goscanql:"lengthtotal"`
+	LengthHandsOn string       `json:"length_hands_on" goscanql:"lengthhandson"`
+	Closing       string       `json:"closing"         goscanql:"closing"`
+	Tags          []string     `json:"tags"            goscanql:"tags"`
+	RecipeVersion int          `json:"recipe_version"  goscanql:"recipeversion"`
+	AuthorName    string       `json:"author_name"     goscanql:"authorname"`
+	Images        []string     `json:"images"          goscanql:"images"`
 }
 
 type Ingredient struct {
-	Name   string `json:"name"`
-	Amount int    `json:"amount"`
-	Unit   Unit   `json:"unit"`
+	Name   string `json:"name"   goscanql:"ingredientname"`
+	Amount int    `json:"amount" goscanql:"amount"`
+	Unit   Unit   `json:"unit"   goscanql:"unit"`
 }
 
 var (
@@ -52,8 +53,8 @@ var (
 )
 
 type Unit struct {
-	DisplayName string `json:"display_name"`
-	Name        string `json:"name"`
+	DisplayName string `json:"display_name" goscanql:"displayname"`
+	Name        string `json:"unit_name"    goscanql:"unitname"`
 }
 
 // TODO: need to make a converter here

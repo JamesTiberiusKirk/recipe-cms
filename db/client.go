@@ -13,6 +13,11 @@ type DB struct {
 	queries goyesql.Queries
 }
 
+type Transaction struct {
+	QueryName QueryName
+	Args      any
+}
+
 func Connect(dbUrl string) (*DB, error) {
 	db, err := sqlx.Connect("postgres", dbUrl)
 	if err != nil {
@@ -30,8 +35,14 @@ func Connect(dbUrl string) (*DB, error) {
 type QueryName string
 
 const (
-	QueryNameUpsertRecipe QueryName = "upsert_recipe"
-	QueryNameInsertTags   QueryName = "insert_tags"
+	GetAllRecipesByTagName  QueryName = "get_all_recipes_by_tag_name"
+	GetAllRecipes           QueryName = "get_all_recipes"
+	GetRecipeByID           QueryName = "get_recipes_by_id"
+	UpsertRecipe            QueryName = "upsert_recipe"
+	DeleteAllTagsByRecipeID QueryName = "delete_all_tags_by_recipe_id"
+	InsertTag               QueryName = "insert_tag"
+	DeleteIngredient        QueryName = "delete_ingredient"
+	UpsertIngredients       QueryName = "upsert_ingredients"
 )
 
 // GetQuery - returns query based on name

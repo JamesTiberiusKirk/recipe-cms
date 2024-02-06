@@ -20,14 +20,34 @@ func InitRecipesHandler(app *echo.Group, rr registry.IRecipe) {
 	app.GET("", common.UseTemplContext(h.Page))
 }
 
+type RecipesRequestData struct {
+	Tag string `query:"tag"`
+}
+
 func (h *RecipesHandler) Page(c *common.TemplContext) error {
-	recipes, err := h.recipeRegistry.GetAll()
+
+	reqData := RecipesRequestData{}
+	// echo.QueryParamsBinder(c)
+	err := c.Bind(&reqData)
 	if err != nil {
 		return err
 	}
 
-	data := recipesPageData{
-		recipes: recipes,
+	data := recipesPageData{}
+
+	if reqData.Tag != "" {
+		recipes, err := h.recipeRegistry.GetAllByTagName(reqData.Tag)
+		if err != nil {
+			return err
+		}
+		data.recipes = recipes
+
+	} else {
+		recipes, err := h.recipeRegistry.GetAll()
+		if err != nil {
+			return err
+		}
+		data.recipes = recipes
 	}
 
 	return c.TEMPL(http.StatusOK, recipesPage(data))

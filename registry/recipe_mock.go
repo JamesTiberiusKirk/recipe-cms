@@ -68,10 +68,8 @@ func NewMockRecipeRegistry() *MockRecipe {
 				Intro:         "the sukkiest of the recipes",
 				Closing:       "never make this",
 				Tags:          []string{"meat", "proteine", "keto", "veganunfriendly"},
-				Version:       0,
-				Author: models.User{
-					Name: "Test User",
-				},
+				RecipeVersion: 0,
+				AuthorName:    "Test User",
 			},
 		},
 	}

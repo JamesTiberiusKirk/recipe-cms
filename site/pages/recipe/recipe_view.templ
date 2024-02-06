@@ -3,13 +3,14 @@ package recipe
 import "fmt"
 import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
 import "github.com/JamesTiberiusKirk/recipe-cms/models"
+import "net/url"
 
 templ recipeView(props recipeFormProps) {
 	<div class="w-full">
 		<div class="w-full flex flex-row space-between">
 			<div>
 				<h1>{ props.Recipe.Name }</h1>
-				<h6>By { props.Recipe.Author.Name }</h6>
+				<h6>By { props.Recipe.AuthorName }</h6>
 			</div>
 			<div class="ml-auto pt-2">
 				<button
@@ -24,13 +25,16 @@ templ recipeView(props recipeFormProps) {
 				</button>
 			</div>
 		</div>
+		if len(props.Recipe.Images) > 0 {
+			<div class="w-full h-fit"><img class="w-full h-20 object-cover" src={ props.Recipe.Images[0] }/></div>
+		}
 		<div>
 			<p class="my-5">
 				Tags:
 				for _, t := range props.Recipe.Tags {
-					<span class="rounded-full bg-red-500 hover:bg-red-700 font-bold py-1 px-2 ml-1">
+					<a href={ templ.SafeURL(fmt.Sprintf("/recipe?tag=%s", url.QueryEscape(t))) } class="rounded-full bg-red-500 hover:bg-red-700 font-bold py-1 px-2 ml-1 dark:decoration-none dark:text-white">
 						{ t }
-					</span>
+					</a>
 				}
 			</p>
 		</div>
@@ -57,7 +61,7 @@ templ recipeView(props recipeFormProps) {
 templ ingredientTable(title string, ingredients []models.Ingredient) {
 	<div>
 		<h2>{ title }</h2>
-		<table class="w-full p-5">
+		<table class="border-spacing-4 w-full p-5">
 			<thead>
 				<tr>
 					<th>#</th>

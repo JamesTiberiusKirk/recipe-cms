@@ -1,32 +1,27 @@
 package recipe
 
 import "github.com/JamesTiberiusKirk/recipe-cms/models"
-import "fmt"
 import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
 
 type recipesPageData struct {
+	error   string
 	recipes []models.Recipe
 }
 
 templ recipesPage(data recipesPageData) {
 	@components.Layout() {
-		<table class="mx-auto">
-			<thead>
-				<tr>
-					<th>#</th>
-					<th>ID</th>
-					<th>Name</th>
-				</tr>
-			</thead>
-			<tbody>
-				for i, r := range data.recipes {
-					<tr>
-						<td>{ fmt.Sprint(i+1) }</td>
-						<td><a href={ templ.SafeURL("/recipe/" + r.ID) }>{ r.ID }</a></td>
-						<td>{ r.Name }</td>
-					</tr>
+		<div class="flex flex-col p-4 ">
+			for _, r := range data.recipes {
+				if len(r.Images) > 0 {
+					<div class="pt-2">
+						<img class="rounded-lg" width="200px" src={ r.Images[0] }/>
+					</div>
 				}
-			</tbody>
-		</table>
+				<a href={ templ.SafeURL("/recipe/" + r.ID) }>
+					{ r.ID }
+				</a>
+				<p>{ r.Name }</p>
+			}
+		</div>
 	}
 }
