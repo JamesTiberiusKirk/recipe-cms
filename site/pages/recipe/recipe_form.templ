@@ -15,12 +15,12 @@ const (
 
 templ recipeForm(props recipeFormProps) {
 	<div
-		class="w-full"
+ 		class="w-full flex flex-col"
 	>
 		<form
-			id={ recipeFormID }
-			name="recipe"
-			hx-ext="json-enc-nested"
+ 			id={ recipeFormID }
+ 			name="recipe"
+ 			hx-ext="json-enc-nested"
 		>
 			<div class="flex flex-row space-between justify-between mb-2">
 				@components.Input(components.InputProps{
@@ -30,13 +30,13 @@ templ recipeForm(props recipeFormProps) {
 					Type: components.InputTypeText,
 				})
 				<button
-					class="btn mb-1"
-					hx-post={ fmt.Sprintf("/recipe/%s", props.Recipe.ID) }
-					hx-include="#recipe_form"
-					hx-select={ "#" + recipeContainerID + "_inner" }
-					hx-target={ "#" + recipeContainerID }
-					hx-swap="innerHTML"
-					hx-push-url="true"
+ 					class="btn mb-1"
+ 					hx-post={ fmt.Sprintf("/recipe/%s", props.Recipe.ID) }
+ 					hx-include="#recipe_form"
+ 					hx-select={ "#" + recipeContainerID + "_inner" }
+ 					hx-target={ "#" + recipeContainerID }
+ 					hx-swap="innerHTML"
+ 					hx-push-url="true"
 				>
 					DONE
 				</button>
@@ -83,11 +83,11 @@ templ recipeForm(props recipeFormProps) {
 			</div>
 			<br/>
 			<button
-				hx-get="/recipe/ingredient"
-				hx-swap="beforeend"
-				hx-target="#ingredients"
-				hx-select="#ingredient"
-				class="w-full btn bg-red-400 hover:bg-red-500"
+ 				hx-get="/recipe/ingredient"
+ 				hx-swap="beforeend"
+ 				hx-target="#ingredients"
+ 				hx-select="#ingredient"
+ 				class="w-full btn bg-red-400 hover:bg-red-500"
 			>
 				Add ingredient
 			</button>
@@ -107,11 +107,11 @@ templ recipeForm(props recipeFormProps) {
 			</div>
 			<br/>
 			<button
-				hx-get="/recipe/ingredient?type=seasoning"
-				hx-swap="beforeend"
-				hx-target="#seasonings"
-				hx-select="#seasoning"
-				class="w-full btn bg-red-400 hover:bg-red-500"
+ 				hx-get="/recipe/ingredient?type=seasoning"
+ 				hx-swap="beforeend"
+ 				hx-target="#seasonings"
+ 				hx-select="#seasoning"
+ 				class="w-full btn bg-red-400 hover:bg-red-500"
 			>
 				Add Seasoning 
 			</button>
@@ -136,16 +136,85 @@ templ recipeForm(props recipeFormProps) {
 					MarkdownPreview: true,
 				})
 			<br/>
-			<button
-				id="submit-all"
-				class="w-full btn"
-				hx-post={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
-				hx-include={ "#" + recipeFormID }
-				hx-select={ "#" + recipeContainerID + "_inner" }
-				hx-target={ "#" + recipeContainerID }
-				hx-swap="innerHTML"
+			<div
+ 				id="images_list"
+ 				class="flex flex-col  border-2 border-white rounded-md"
+ 				hx-get
+ 				hx-trigger="images_update from:body"
+ 				hx-target="#images_list"
+ 				hx-select="#images_list"
+ 				hx-swap="outerHTML"
 			>
-				Update	
+				for _, image :=range props.Recipe.Images {
+					<div class="flex flex-row p-2 border-b border-1 border-white">
+						<img src={ image } class="w-1/5"/>
+						<a class="p-6 my-auto w-1/5">{ image }</a>
+						<button
+ 							class="ml-auto p-4"
+ 							_={ "on click navigator.clipboard.writeText('" + image + "')" }
+						>
+							Copy
+						</button>
+						<button
+ 							hx-on="click"
+ 							hx-delete={ "/recipe/image/" + image }
+ 							_="on click remove me.parentElement"
+						>
+							<img
+ 								class="mx-auto"
+ 								width="20"
+ 								height="20"
+ 								src="/assets/cross.svg"
+							/>
+						</button>
+					</div>
+				}
+			</div>
+		</form>
+		@imageForm(imageFormProps{RecipeID: props.Recipe.ID, Images: props.Recipe.Images})
+		<br/>
+		<button
+ 			id="submit-all"
+ 			class="w-full btn"
+ 			hx-post={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
+ 			hx-include={ "#" + recipeFormID }
+ 			hx-select={ "#" + recipeContainerID + "_inner" }
+ 			hx-target={ "#" + recipeContainerID }
+ 			hx-swap="innerHTML"
+		>
+			Update	
+		</button>
+	</div>
+}
+
+type imageFormProps struct {
+	RecipeID string
+	Images   []string
+}
+
+templ imageForm(props imageFormProps) {
+	<div id="image_form_div" class="flex flex-col">
+		<h3>Image upload</h3>
+		<form
+ 			id="image_form"
+ 			hx-encoding="multipart/form-data"
+ 			hx-post="/recipe/image"
+ 			class="flex flex-col"
+ 			hx-swap="outerHTML"
+ 			hx-select="#image_form_div"
+ 			hx-target="#image_form_div"
+ 			onsubmit="htmx.trigger(htmx.find('body'),'images_update')"
+		>
+			<input hidden type="text" name="recipe_id" value={ props.RecipeID }/>
+			<br/>
+			<input type="file" name="files" multiple required accept="image/*"/>
+			<br/>
+			<button
+ 				type="submit"
+ 				class="w-full btn bg-red-400 hover:bg-red-500"
+ 				form="image_form"
+			>
+				Replace pictures
 			</button>
 		</form>
 	</div>

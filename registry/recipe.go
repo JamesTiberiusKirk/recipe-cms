@@ -144,6 +144,12 @@ func (r *Recipe) Upsert(upsert models.Recipe) (models.Recipe, bool, error) {
 		})
 	}
 
+	// NOTE: so that COALESCE would work with the array
+	var images any
+	if len(upsert.Images) > 0 {
+		images = pq.Array(upsert.Images)
+	}
+
 	transactions := []db.Transaction{
 		{
 			QueryName: db.UpsertRecipe,
@@ -158,41 +164,63 @@ func (r *Recipe) Upsert(upsert models.Recipe) (models.Recipe, bool, error) {
 				"closing":       upsert.Closing,
 				"recipeversion": upsert.RecipeVersion,
 				"authorname":    upsert.AuthorName,
-				"images":        pq.Array(upsert.Images),
+				"images":        images,
 			},
 		},
-		{
-			QueryName: db.DeleteAllTagsByRecipeID,
-			Args: map[string]any{
-				"recipeid": upsert.ID,
+	}
+
+	if len(tagsInsertArgs) > 0 {
+		transactions = append(transactions,
+			db.Transaction{
+				QueryName: db.DeleteAllTagsByRecipeID,
+				Args: map[string]any{
+					"recipeid": upsert.ID,
+				},
 			},
-		},
-		{
-			QueryName: db.InsertTag,
-			Args:      tagsInsertArgs,
-		},
-		{
-			QueryName: db.DeleteIngredient,
-			Args: map[string]any{
-				"recipeid": upsert.ID,
-				"field":    "INGREDIENT",
+		)
+		transactions = append(transactions,
+			db.Transaction{
+				QueryName: db.InsertTag,
+				Args:      tagsInsertArgs,
 			},
-		},
-		{
-			QueryName: db.UpsertIngredients,
-			Args:      ingredientInsertArgs,
-		},
-		{
-			QueryName: db.DeleteIngredient,
-			Args: map[string]any{
-				"recipeid": upsert.ID,
-				"field":    "SEASONING",
+		)
+	}
+
+	if len(ingredientInsertArgs) > 0 {
+
+		transactions = append(transactions,
+			db.Transaction{
+				QueryName: db.DeleteIngredient,
+				Args: map[string]any{
+					"recipeid": upsert.ID,
+					"field":    "INGREDIENT",
+				},
 			},
-		},
-		{
-			QueryName: db.UpsertIngredients,
-			Args:      seasoningInsertArgs,
-		},
+		)
+		transactions = append(transactions,
+			db.Transaction{
+				QueryName: db.UpsertIngredients,
+				Args:      ingredientInsertArgs,
+			},
+		)
+	}
+
+	if len(ingredientInsertArgs) > 0 {
+		transactions = append(transactions,
+			db.Transaction{
+				QueryName: db.DeleteIngredient,
+				Args: map[string]any{
+					"recipeid": upsert.ID,
+					"field":    "SEASONING",
+				},
+			},
+		)
+		transactions = append(transactions,
+			db.Transaction{
+				QueryName: db.UpsertIngredients,
+				Args:      seasoningInsertArgs,
+			},
+		)
 	}
 
 	trx := r.dbc.DB.MustBegin()
@@ -204,8 +232,6 @@ func (r *Recipe) Upsert(upsert models.Recipe) (models.Recipe, bool, error) {
 			logrus.Errorf("error getting query %s: %s", t.QueryName, err.Error())
 			return models.Recipe{}, false, fmt.Errorf("error getting query: %w", err)
 		}
-
-		fmt.Println(q)
 
 		switch args := t.Args.(type) {
 		case []map[string]any:
@@ -238,5 +264,5 @@ func (r *Recipe) Upsert(upsert models.Recipe) (models.Recipe, bool, error) {
 		return models.Recipe{}, false, fmt.Errorf("error committing transaction: %w", err)
 	}
 
-	return upsert, false, nil
+	return upsert, true, nil
 }

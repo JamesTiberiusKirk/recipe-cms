@@ -1,9 +1,12 @@
 package site
 
 import (
+	"log"
+	"os"
 	"strings"
 
 	"github.com/JamesTiberiusKirk/recipe-cms/common"
+	"github.com/JamesTiberiusKirk/recipe-cms/config"
 	"github.com/JamesTiberiusKirk/recipe-cms/registry"
 	"github.com/JamesTiberiusKirk/recipe-cms/site/pages"
 	"github.com/JamesTiberiusKirk/recipe-cms/site/pages/playground"
@@ -15,17 +18,31 @@ import (
 
 type Site struct {
 	recipreRegistry registry.IRecipe
+	config          config.Config
 }
 
-func NewSite(rr registry.IRecipe) *Site {
+func NewSite(rr registry.IRecipe, config config.Config) *Site {
 	return &Site{
 		recipreRegistry: rr,
+		config:          config,
 	}
 }
 
 func (s *Site) Start(addr string) error {
+	_, err := os.Stat(s.config.Volume)
+	if os.IsNotExist(err) {
+		log.Fatalf("mounted volume does not exist, path: %s, err: %s", s.config.Volume, err.Error())
+	}
+	if err != nil {
+		log.Fatalf("error getting mounted volume stat: %s, err: %s", s.config.Volume, err.Error())
+	}
+
 	// Echo instance
 	e := echo.New()
+
+	e.Use(
+		setCfg(s.config),
+	)
 
 	// Middleware
 	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
@@ -38,11 +55,19 @@ func (s *Site) Start(addr string) error {
 		LogValuesFunc: func(c echo.Context, values middleware.RequestLoggerValues) error {
 
 			// logging excludes
+			if strings.Contains(values.URI, "/images") {
+				return nil
+			}
+
 			if strings.Contains(values.URI, "/assets") {
 				return nil
 			}
 
 			if strings.Contains(values.URI, "/favicon.ico") {
+				return nil
+			}
+
+			if strings.Contains(values.URI, "/_templ/reload/events") {
 				return nil
 			}
 
@@ -70,10 +95,11 @@ func (s *Site) Start(addr string) error {
 	e.Use(middleware.Gzip())
 	e.Use(middleware.Recover())
 
+	e.Static("/images", s.config.Volume)
 	e.Static("/assets", "./site/public/")
 
 	// 404
-	e.GET("/*", common.UseTemplContext(pages.HandleNotFound))
+	e.RouteNotFound("/*", common.UseTemplContext(pages.HandleNotFound))
 
 	pages.InitIndexHandler(e.Group(""))
 	recipe.InitRecipeHandler(e.Group("/recipe"), s.recipreRegistry)
@@ -108,4 +134,13 @@ func initLogger() {
 		DisableLevelTruncation: true,
 		PadLevelText:           true,
 	})
+}
+
+func setCfg(cfg config.Config) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			c.Set("cfg", cfg)
+			return next(c)
+		}
+	}
 }

@@ -109,8 +109,7 @@ ON CONFLICT (id) DO UPDATE SET
     closing =           COALESCE(NULLIF(EXCLUDED.closing, ''),         recipe.closing),
     recipe_version =    COALESCE(NULLIF(EXCLUDED.recipe_version, 0),   recipe.recipe_version),
     author_name =       COALESCE(NULLIF(EXCLUDED.author_name, ''),     recipe.author_name),
-    images = CASE WHEN array_length(EXCLUDED.images, 0) IS NULL THEN
-        recipe.images ELSE recipe.images END; -- TODO test this for an actual upsert 
+    images =            COALESCE(EXCLUDED.images, recipe.images); -- doing the check for this in go
 
 -- name: delete_all_tags_by_recipe_id
 DELETE FROM tag WHERE recipe_id = :recipeid;

@@ -2,3 +2,4 @@ bin/
 .env
 .db-mount/
 node_modules/
+mounted-volume/

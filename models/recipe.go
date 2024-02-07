@@ -22,7 +22,7 @@ type Recipe struct {
 }
 
 type Ingredient struct {
-	Name   string `json:"name"   goscanql:"ingredientname"`
+	Name   string `json:"name"   goscanql:"name"`
 	Amount int    `json:"amount" goscanql:"amount"`
 	Unit   Unit   `json:"unit"   goscanql:"unit"`
 }
@@ -53,7 +53,7 @@ var (
 )
 
 type Unit struct {
-	DisplayName string `json:"display_name" goscanql:"displayname"`
+	DisplayName string `json:"display_name" goscanql:"name"`
 	Name        string `json:"unit_name"    goscanql:"unitname"`
 }
 

@@ -21,12 +21,12 @@ const (
 templ recipePage(data recipePageData) {
 	@components.Layout() {
 		<div
-			id={ recipeContainerID }
-			class="w-full"
+ 			id={ recipeContainerID }
+ 			class="w-full"
 		>
 			<div
-				id={ recipeContainerID + "_inner" }
-				class="w-full"
+ 				id={ recipeContainerID + "_inner" }
+ 				class="w-full"
 			>
 				if data.Edit {
 					@recipeForm(recipeFormProps{

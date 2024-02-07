@@ -16,9 +16,9 @@ func main() {
 		panic(err)
 	}
 
+	// recipeRegistry := registry.NewMockRecipeRegistry()
 	recipeRegistry := registry.NewRecipe(dbc)
 
-	// recipeRegistry := registry.NewMockRecipeRegistry()
-	s := site.NewSite(recipeRegistry)
+	s := site.NewSite(recipeRegistry, conf)
 	s.Start("localhost:5000")
 }
