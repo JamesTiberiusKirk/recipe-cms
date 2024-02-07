@@ -32,7 +32,7 @@ templ recipeView(props recipeFormProps) {
 			<p class="my-5">
 				Tags:
 				for _, t := range props.Recipe.Tags {
-					<a href={ templ.SafeURL(fmt.Sprintf("/recipe?tag=%s", url.QueryEscape(t))) } class="rounded-full bg-red-500 hover:bg-red-700 font-bold py-1 px-2 ml-1 dark:decoration-none dark:text-white">
+					<a href={ templ.SafeURL(fmt.Sprintf("/recipes?tag=%s", url.QueryEscape(t))) } class="rounded-full bg-red-500 hover:bg-red-700 font-bold py-1 px-2 ml-1 dark:decoration-none dark:text-white">
 						{ t }
 					</a>
 				}

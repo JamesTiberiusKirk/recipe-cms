@@ -77,7 +77,7 @@ func (s *Site) Start(addr string) error {
 
 	pages.InitIndexHandler(e.Group(""))
 	recipe.InitRecipeHandler(e.Group("/recipe"), s.recipreRegistry)
-	recipe.InitRecipesHandler(e.Group("/recipe"), s.recipreRegistry)
+	recipe.InitRecipesHandler(e.Group("/recipes"), s.recipreRegistry)
 	pages.InitMarkdownRenderer(e.Group(""))
 	playground.InitTestRoute(e.Group("/pg"))
 
