@@ -13,6 +13,6 @@ COPY --from=builder /build/recipe-cms /app/
 COPY --from=builder /build/sql/ /app/sql/
 WORKDIR /app
 
-EXPOSE 80
+EXPOSE 8080
 
 ENTRYPOINT ["./recipe-cms"]
