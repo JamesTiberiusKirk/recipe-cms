@@ -84,6 +84,8 @@ func (h *RecipeHandler) Page(c *common.TemplContext) error {
 				data.Recipe.ID = reqData.RecipeID
 			}
 
+			logrus.Infof("%+v", data.Recipe.Images)
+
 			upserted, _, err := h.recipeRegistry.Upsert(data.Recipe)
 			if err != nil {
 				return echo.NewHTTPError(500, "error upserting")
@@ -127,14 +129,10 @@ func (h *RecipeHandler) Ingredient(c *common.TemplContext) error {
 }
 
 func (h *RecipeHandler) Image(c *common.TemplContext) error {
-	logrus.Info("Uploading image")
-
 	cfg, ok := c.Get("cfg").(config.Config)
 	if !ok {
 		return fmt.Errorf("could not get config from context")
 	}
-
-	logrus.Infof("vol %s", cfg.Volume)
 
 	form, err := c.MultipartForm()
 	if err != nil {
@@ -143,7 +141,6 @@ func (h *RecipeHandler) Image(c *common.TemplContext) error {
 	files := form.File["files"]
 
 	recipeID := form.Value["recipe_id"][0]
-	logrus.Infof("recipe id %s", recipeID)
 
 	recipePath := fmt.Sprintf("%s/%s", cfg.Volume, recipeID)
 	if _, err := os.Stat(recipePath); os.IsNotExist(err) {
@@ -171,7 +168,6 @@ func (h *RecipeHandler) Image(c *common.TemplContext) error {
 		fileSplit := strings.Split(file.Filename, ".")
 		fileName := fmt.Sprintf("%s/%s.%s", recipeID, uuid.New(), fileSplit[len(fileSplit)-1])
 		filePath := fmt.Sprintf("%s/%s", cfg.Volume, fileName)
-		logrus.Infof("filepath %s", filePath)
 
 		dst, err := os.Create(filePath)
 		if err != nil {
@@ -188,9 +184,17 @@ func (h *RecipeHandler) Image(c *common.TemplContext) error {
 		fileNames = append(fileNames, "/images/"+fileName)
 	}
 
-	logrus.Infof("fileURLs %+v", fileNames)
+	if c.QueryParam("type") == "add" {
+		recipe, err := h.recipeRegistry.GetOneByID(recipeID)
+		if err != nil {
+			logrus.Errorf("error getting existing recipe %s", err.Error())
+			return fmt.Errorf("error getting existing recipe %w", err)
+		}
 
-	recipe, upserted, err := h.recipeRegistry.Upsert(models.Recipe{
+		fileNames = append(recipe.Images, fileNames...)
+	}
+
+	_, upserted, err := h.recipeRegistry.Upsert(models.Recipe{
 		ID:     recipeID,
 		Images: fileNames,
 	})
@@ -203,9 +207,8 @@ func (h *RecipeHandler) Image(c *common.TemplContext) error {
 		logrus.Infof("NOT UPSERTED")
 	}
 
-	logrus.Infof("recipe %+v, upserted %+v", recipe, upserted)
-
 	// TODO: need to figure out how to manage an id of new
+	// TODO: delete pictures which are getting replaces
 
 	return c.TEMPL(http.StatusOK, imageForm(imageFormProps{
 		RecipeID: recipeID,

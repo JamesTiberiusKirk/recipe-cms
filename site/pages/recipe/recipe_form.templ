@@ -21,6 +21,7 @@ templ recipeForm(props recipeFormProps) {
  			id={ recipeFormID }
  			name="recipe"
  			hx-ext="json-enc-nested"
+ 			hx-trigger="recipe_form_submit from:body"
 		>
 			<div class="flex flex-row space-between justify-between mb-2">
 				@components.Input(components.InputProps{
@@ -32,7 +33,7 @@ templ recipeForm(props recipeFormProps) {
 				<button
  					class="btn mb-1"
  					hx-post={ fmt.Sprintf("/recipe/%s", props.Recipe.ID) }
- 					hx-include="#recipe_form"
+ 					hx-include={ "#" + recipeFormID }
  					hx-select={ "#" + recipeContainerID + "_inner" }
  					hx-target={ "#" + recipeContainerID }
  					hx-swap="innerHTML"
@@ -138,7 +139,7 @@ templ recipeForm(props recipeFormProps) {
 			<br/>
 			<div
  				id="images_list"
- 				class="flex flex-col  border-2 border-white rounded-md"
+ 				class="sortable flex flex-col  border-2 border-white rounded-md"
  				hx-get
  				hx-trigger="images_update from:body"
  				hx-target="#images_list"
@@ -148,6 +149,7 @@ templ recipeForm(props recipeFormProps) {
 				for _, image :=range props.Recipe.Images {
 					<div class="flex flex-row p-2 border-b border-1 border-white">
 						<img src={ image } class="w-1/5"/>
+						<input value={ image } name="recipe[images][]" type="hidden"/>
 						<a class="p-6 my-auto w-1/5">{ image }</a>
 						<button
  							class="ml-auto p-4"
@@ -170,20 +172,22 @@ templ recipeForm(props recipeFormProps) {
 					</div>
 				}
 			</div>
+			// TODO: this button only works inside the form, figure out how to put it at the botton
+			<button
+ 				class="w-full btn mt-5"
+ 				hx-post={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
+ 				hx-include={ "#" + recipeFormID }
+ 				hx-select={ "#" + recipeContainerID + "_inner" }
+ 				hx-target={ "#" + recipeContainerID }
+ 				hx-swap="innerHTML"
+			>
+				Update	
+			</button>
 		</form>
+		<div class="mt-5 mb-5 border-white border-2 "></div>
 		@imageForm(imageFormProps{RecipeID: props.Recipe.ID, Images: props.Recipe.Images})
 		<br/>
-		<button
- 			id="submit-all"
- 			class="w-full btn"
- 			hx-post={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
- 			hx-include={ "#" + recipeFormID }
- 			hx-select={ "#" + recipeContainerID + "_inner" }
- 			hx-target={ "#" + recipeContainerID }
- 			hx-swap="innerHTML"
-		>
-			Update	
-		</button>
+		@htmxSortable()
 	</div>
 }
 
@@ -203,19 +207,49 @@ templ imageForm(props imageFormProps) {
  			hx-swap="outerHTML"
  			hx-select="#image_form_div"
  			hx-target="#image_form_div"
- 			onsubmit="htmx.trigger(htmx.find('body'),'images_update')"
 		>
 			<input hidden type="text" name="recipe_id" value={ props.RecipeID }/>
 			<br/>
 			<input type="file" name="files" multiple required accept="image/*"/>
 			<br/>
-			<button
- 				type="submit"
- 				class="w-full btn bg-red-400 hover:bg-red-500"
- 				form="image_form"
-			>
-				Replace pictures
-			</button>
+			<div class="flex flex-row">
+				<button
+ 					type="submit"
+ 					hx-post="/recipe/image?type=replace"
+ 					class="mr-2 w-full btn bg-red-400 hover:bg-red-500"
+ 					form="image_form"
+ 					onclick="setTimeout(()=>{htmx.trigger(htmx.find('body'),'images_update')}, 100)"
+				>
+					Replace pictures
+				</button>
+				<button
+ 					type="submit"
+ 					hx-post="/recipe/image?type=add"
+ 					class="ml-2 w-full btn bg-red-400 hover:bg-red-500"
+ 					form="image_form"
+ 					onclick="setTimeout(()=>{htmx.trigger(htmx.find('body'),'images_update')}, 100)"
+				>
+					Add pictures
+				</button>
+			</div>
 		</form>
 	</div>
+}
+
+script htmxSortable() {
+htmx.onLoad(function(content) {
+    var sortables = content.querySelectorAll(".sortable");
+    for (var i = 0; i < sortables.length; i++) {
+      var sortable = sortables[i];
+      var sortableInstance = new Sortable(sortable, {
+          animation: 150,
+          ghostClass: 'blue-background-class',
+      });
+
+      // Re-enable sorting on the `htmx:afterSwap` event
+      sortable.addEventListener("htmx:afterSwap", function() {
+        sortableInstance.option("disabled", false);
+      });
+    }
+})
 }

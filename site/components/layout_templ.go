@@ -36,8 +36,8 @@ func navBar() templ.Component {
 
 func onLoad() templ.ComponentScript {
 	return templ.ComponentScript{
-		Name: `__templ_onLoad_7ab5`,
-		Function: `function __templ_onLoad_7ab5(){// htmx.logAll();
+		Name: `__templ_onLoad_90f9`,
+		Function: `function __templ_onLoad_90f9(){// htmx.logAll();
 
 	htmx.config.defaultSettleDelay = 0;
 	//document.addEventListener('htmx:afterRequest', function (event) {
@@ -105,9 +105,6 @@ func onLoad() templ.ComponentScript {
 
 	htmx.defineExtension('json-enc-nested', {
 		onEvent: function (name, evt) {
-			if (name === "htmx:configRequest" ){
-				console.log("json-enc-nested:",evt)
-			}
 			if (name === "htmx:configRequest" &&
 				(evt.srcElement.tagName === "FORM" ||
 				 evt.srcElement.form != undefined) ) {
@@ -136,8 +133,8 @@ func onLoad() templ.ComponentScript {
 	// 	}
 	// };
 }`,
-		Call:       templ.SafeScript(`__templ_onLoad_7ab5`),
-		CallInline: templ.SafeScriptInline(`__templ_onLoad_7ab5`),
+		Call:       templ.SafeScript(`__templ_onLoad_90f9`),
+		CallInline: templ.SafeScriptInline(`__templ_onLoad_90f9`),
 	}
 }
 
@@ -171,7 +168,7 @@ func Layout() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><script src=\"/assets/htmx.org@1.9.6\"></script><script src=\"/assets/hyperscript.org@0.9.12\"></script><script src=\"/assets/loading-states.js\"></script><script src=\"/assets/json-enc.js\"></script><script src=\"/assets/jquery-3.7.1.min.js\"></script><script src=\"/assets/serializeForm.js\"></script>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><script src=\"/assets/htmx.org@1.9.6\"></script><script src=\"/assets/hyperscript.org@0.9.12\"></script><script src=\"/assets/loading-states.js\"></script><script src=\"/assets/json-enc.js\"></script><script src=\"/assets/jquery-3.7.1.min.js\"></script><script src=\"/assets/serializeForm.js\"></script><script src=\"/assets/Sortable.js\"></script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

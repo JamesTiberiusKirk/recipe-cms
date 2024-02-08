@@ -44,7 +44,7 @@ func recipeForm(props recipeFormProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" name=\"recipe\" hx-ext=\"json-enc-nested\"><div class=\"flex flex-row space-between justify-between mb-2\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" name=\"recipe\" hx-ext=\"json-enc-nested\" hx-trigger=\"recipe_form_submit from:body\"><div class=\"flex flex-row space-between justify-between mb-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -65,7 +65,15 @@ func recipeForm(props recipeFormProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-include=\"#recipe_form\" hx-select=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-include=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString("#" + recipeFormID))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-select=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -186,7 +194,7 @@ func recipeForm(props recipeFormProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<br><div id=\"images_list\" class=\"flex flex-col  border-2 border-white rounded-md\" hx-get hx-trigger=\"images_update from:body\" hx-target=\"#images_list\" hx-select=\"#images_list\" hx-swap=\"outerHTML\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<br><div id=\"images_list\" class=\"sortable flex flex-col  border-2 border-white rounded-md\" hx-get hx-trigger=\"images_update from:body\" hx-target=\"#images_list\" hx-select=\"#images_list\" hx-swap=\"outerHTML\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -199,14 +207,22 @@ func recipeForm(props recipeFormProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"w-1/5\"> <a class=\"p-6 my-auto w-1/5\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"w-1/5\"> <input value=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(image))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" name=\"recipe[images][]\" type=\"hidden\"> <a class=\"p-6 my-auto w-1/5\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(image)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 150, Col: 42}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 152, Col: 42}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -233,15 +249,7 @@ func recipeForm(props recipeFormProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></form>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = imageForm(imageFormProps{RecipeID: props.Recipe.ID, Images: props.Recipe.Images}).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<br><button id=\"submit-all\" class=\"w-full btn\" hx-post=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><button class=\"w-full btn mt-5\" hx-post=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -273,7 +281,23 @@ func recipeForm(props recipeFormProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-swap=\"innerHTML\">Update\t</button></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-swap=\"innerHTML\">Update\t</button></form><div class=\"mt-5 mb-5 border-white border-2 \"></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = imageForm(imageFormProps{RecipeID: props.Recipe.ID, Images: props.Recipe.Images}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<br>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = htmxSortable().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -302,7 +326,7 @@ func imageForm(props imageFormProps) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"image_form_div\" class=\"flex flex-col\"><h3>Image upload</h3><form id=\"image_form\" hx-encoding=\"multipart/form-data\" hx-post=\"/recipe/image\" class=\"flex flex-col\" hx-swap=\"outerHTML\" hx-select=\"#image_form_div\" hx-target=\"#image_form_div\" onsubmit=\"htmx.trigger(htmx.find(&#39;body&#39;),&#39;images_update&#39;)\"><input hidden type=\"text\" name=\"recipe_id\" value=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"image_form_div\" class=\"flex flex-col\"><h3>Image upload</h3><form id=\"image_form\" hx-encoding=\"multipart/form-data\" hx-post=\"/recipe/image\" class=\"flex flex-col\" hx-swap=\"outerHTML\" hx-select=\"#image_form_div\" hx-target=\"#image_form_div\"><input hidden type=\"text\" name=\"recipe_id\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -310,7 +334,7 @@ func imageForm(props imageFormProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><br><input type=\"file\" name=\"files\" multiple required accept=\"image/*\"><br><button type=\"submit\" class=\"w-full btn bg-red-400 hover:bg-red-500\" form=\"image_form\">Replace pictures</button></form></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><br><input type=\"file\" name=\"files\" multiple required accept=\"image/*\"><br><div class=\"flex flex-row\"><button type=\"submit\" hx-post=\"/recipe/image?type=replace\" class=\"mr-2 w-full btn bg-red-400 hover:bg-red-500\" form=\"image_form\" onclick=\"setTimeout(()=&gt;{htmx.trigger(htmx.find(&#39;body&#39;),&#39;images_update&#39;)}, 100)\">Replace pictures</button> <button type=\"submit\" hx-post=\"/recipe/image?type=add\" class=\"ml-2 w-full btn bg-red-400 hover:bg-red-500\" form=\"image_form\" onclick=\"setTimeout(()=&gt;{htmx.trigger(htmx.find(&#39;body&#39;),&#39;images_update&#39;)}, 100)\">Add pictures</button></div></form></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -319,4 +343,28 @@ func imageForm(props imageFormProps) templ.Component {
 		}
 		return templ_7745c5c3_Err
 	})
+}
+
+func htmxSortable() templ.ComponentScript {
+	return templ.ComponentScript{
+		Name: `__templ_htmxSortable_9ffc`,
+		Function: `function __templ_htmxSortable_9ffc(){htmx.onLoad(function(content) {
+    var sortables = content.querySelectorAll(".sortable");
+    for (var i = 0; i < sortables.length; i++) {
+      var sortable = sortables[i];
+      var sortableInstance = new Sortable(sortable, {
+          animation: 150,
+          ghostClass: 'blue-background-class',
+      });
+
+      // Re-enable sorting on the ` + "`" + `htmx:afterSwap` + "`" + ` event
+      sortable.addEventListener("htmx:afterSwap", function() {
+        sortableInstance.option("disabled", false);
+      });
+    }
+})
+}`,
+		Call:       templ.SafeScript(`__templ_htmxSortable_9ffc`),
+		CallInline: templ.SafeScriptInline(`__templ_htmxSortable_9ffc`),
+	}
 }
