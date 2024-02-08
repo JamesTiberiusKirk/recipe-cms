@@ -8,10 +8,10 @@ import (
 )
 
 type Config struct {
-	DbURL  string
-	Debug  bool
-	Volume string
-	Port   string
+	DbURL    string
+	Debug    bool
+	Volume   string
+	HTTPPort string
 }
 
 func GetConfig() Config {
@@ -21,13 +21,13 @@ func GetConfig() Config {
 	}
 
 	conf := Config{
-		DbURL:  os.Getenv("DB_URL"),
-		Debug:  (os.Getenv("Debug") == "true"),
-		Volume: os.Getenv("VOLUME"),
-		Port:   os.Getenv("PORT"),
+		DbURL:    os.Getenv("DB_URL"),
+		Debug:    (os.Getenv("Debug") == "true"),
+		Volume:   os.Getenv("VOLUME"),
+		HTTPPort: os.Getenv("HTTP_PORT"),
 	}
 
-	if conf.Volume == "" || conf.DbURL == "" || conf.Port == "" {
+	if conf.Volume == "" || conf.DbURL == "" || conf.HTTPPort == "" {
 		logrus.Fatalf("One or more of the required env variables are not set conf: %+v", conf)
 	}
 
