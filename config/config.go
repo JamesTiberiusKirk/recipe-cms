@@ -29,6 +29,7 @@ func GetConfig() Config {
 
 	if conf.Volume == "" || conf.DbURL == "" || conf.HTTPPort == "" {
 		logrus.Fatalf("One or more of the required env variables are not set conf: %+v", conf)
+		panic("")
 	}
 
 	return conf
