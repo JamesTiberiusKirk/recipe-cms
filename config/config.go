@@ -11,6 +11,7 @@ type Config struct {
 	DbURL  string
 	Debug  bool
 	Volume string
+	Port   string
 }
 
 func GetConfig() Config {
@@ -23,9 +24,10 @@ func GetConfig() Config {
 		DbURL:  os.Getenv("DB_URL"),
 		Debug:  (os.Getenv("Debug") == "true"),
 		Volume: os.Getenv("VOLUME"),
+		Port:   os.Getenv("PORT"),
 	}
 
-	if conf.Volume == "" || conf.DbURL == "" {
+	if conf.Volume == "" || conf.DbURL == "" || conf.Port == "" {
 		logrus.Fatalf("One or more of the required env variables are not set conf: %+v", conf)
 	}
 

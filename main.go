@@ -20,5 +20,5 @@ func main() {
 	recipeRegistry := registry.NewRecipe(dbc)
 
 	s := site.NewSite(recipeRegistry, conf)
-	s.Start("localhost:5000")
+	s.Start("localhost" + conf.Port)
 }
