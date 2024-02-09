@@ -326,7 +326,7 @@ func imageForm(props imageFormProps) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"image_form_div\" class=\"flex flex-col\"><h3>Image upload</h3><form id=\"image_form\" hx-encoding=\"multipart/form-data\" hx-post=\"/recipe/image\" class=\"flex flex-col\" hx-swap=\"outerHTML\" hx-select=\"#image_form_div\" hx-target=\"#image_form_div\"><input hidden type=\"text\" name=\"recipe_id\" value=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"image_form_div\" class=\"flex flex-col\"><h3>Image upload</h3><form id=\"image_form\" hx-encoding=\"multipart/form-data\" hx-post=\"/recipe/image\" class=\"flex flex-col\" hx-swap=\"outerHTML\" hx-select=\"#image_form_div\" hx-target=\"#image_form_div\" _=\"on htmx:xhr:progress(loaded, total) set load to (loaded/total)*100 if load != Infinity set #progress.value to load\"><input hidden type=\"text\" name=\"recipe_id\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -334,7 +334,7 @@ func imageForm(props imageFormProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><br><input type=\"file\" name=\"files\" multiple required accept=\"image/*\"><br><div class=\"flex flex-row\"><button type=\"submit\" hx-post=\"/recipe/image?type=replace\" class=\"mr-2 w-full btn bg-red-400 hover:bg-red-500\" form=\"image_form\" onclick=\"setTimeout(()=&gt;{htmx.trigger(htmx.find(&#39;body&#39;),&#39;images_update&#39;)}, 100)\">Replace pictures</button> <button type=\"submit\" hx-post=\"/recipe/image?type=add\" class=\"ml-2 w-full btn bg-red-400 hover:bg-red-500\" form=\"image_form\" onclick=\"setTimeout(()=&gt;{htmx.trigger(htmx.find(&#39;body&#39;),&#39;images_update&#39;)}, 100)\">Add pictures</button></div></form></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><br><input type=\"file\" name=\"files\" multiple required accept=\"image/*\"><br><progress class=\"h-4 w-full progress:rounded-lg progress-unfilled:bg-[#F2F2F2] progress-filled:bg-red-600\" id=\"progress\" value=\"0\" max=\"100\"></progress><br><div class=\"flex flex-row\"><button type=\"submit\" hx-post=\"/recipe/image?type=replace\" class=\"mr-2 w-full btn bg-red-400 hover:bg-red-500\" form=\"image_form\" _=\"on htmx:afterRequest send images_update to &lt;body/&gt;\">Replace pictures</button> <button type=\"submit\" hx-post=\"/recipe/image?type=add\" class=\"ml-2 w-full btn bg-red-400 hover:bg-red-500\" form=\"image_form\" _=\"on htmx:afterRequest send images_update to &lt;body/&gt;\">Add pictures</button></div></form></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -347,24 +347,24 @@ func imageForm(props imageFormProps) templ.Component {
 
 func htmxSortable() templ.ComponentScript {
 	return templ.ComponentScript{
-		Name: `__templ_htmxSortable_9ffc`,
-		Function: `function __templ_htmxSortable_9ffc(){htmx.onLoad(function(content) {
-    var sortables = content.querySelectorAll(".sortable");
-    for (var i = 0; i < sortables.length; i++) {
-      var sortable = sortables[i];
-      var sortableInstance = new Sortable(sortable, {
-          animation: 150,
-          ghostClass: 'blue-background-class',
-      });
+		Name: `__templ_htmxSortable_5b13`,
+		Function: `function __templ_htmxSortable_5b13(){htmx.onLoad(function(content) {
+		var sortables = content.querySelectorAll(".sortable");
+		for (var i = 0; i < sortables.length; i++) {
+		  var sortable = sortables[i];
+		  var sortableInstance = new Sortable(sortable, {
+			  animation: 150,
+			  ghostClass: 'blue-background-class',
+		  });
 
-      // Re-enable sorting on the ` + "`" + `htmx:afterSwap` + "`" + ` event
-      sortable.addEventListener("htmx:afterSwap", function() {
-        sortableInstance.option("disabled", false);
-      });
-    }
-})
+		  // Re-enable sorting on the ` + "`" + `htmx:afterSwap` + "`" + ` event
+		  sortable.addEventListener("htmx:afterSwap", function() {
+			sortableInstance.option("disabled", false);
+		  });
+		}
+	})
 }`,
-		Call:       templ.SafeScript(`__templ_htmxSortable_9ffc`),
-		CallInline: templ.SafeScriptInline(`__templ_htmxSortable_9ffc`),
+		Call:       templ.SafeScript(`__templ_htmxSortable_5b13`),
+		CallInline: templ.SafeScriptInline(`__templ_htmxSortable_5b13`),
 	}
 }

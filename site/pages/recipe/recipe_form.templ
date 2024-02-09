@@ -207,10 +207,18 @@ templ imageForm(props imageFormProps) {
  			hx-swap="outerHTML"
  			hx-select="#image_form_div"
  			hx-target="#image_form_div"
+ 			_="on htmx:xhr:progress(loaded, total) set load to (loaded/total)*100 if load != Infinity set #progress.value to load"
 		>
 			<input hidden type="text" name="recipe_id" value={ props.RecipeID }/>
 			<br/>
 			<input type="file" name="files" multiple required accept="image/*"/>
+			<br/>
+			<progress
+ 				class="h-4 w-full progress:rounded-lg progress-unfilled:bg-[#F2F2F2] progress-filled:bg-red-600"
+ 				id="progress"
+ 				value="0"
+ 				max="100"
+			></progress>
 			<br/>
 			<div class="flex flex-row">
 				<button
@@ -218,7 +226,7 @@ templ imageForm(props imageFormProps) {
  					hx-post="/recipe/image?type=replace"
  					class="mr-2 w-full btn bg-red-400 hover:bg-red-500"
  					form="image_form"
- 					onclick="setTimeout(()=>{htmx.trigger(htmx.find('body'),'images_update')}, 100)"
+ 					_="on htmx:afterRequest send images_update to <body/>"
 				>
 					Replace pictures
 				</button>
@@ -227,7 +235,7 @@ templ imageForm(props imageFormProps) {
  					hx-post="/recipe/image?type=add"
  					class="ml-2 w-full btn bg-red-400 hover:bg-red-500"
  					form="image_form"
- 					onclick="setTimeout(()=>{htmx.trigger(htmx.find('body'),'images_update')}, 100)"
+ 					_="on htmx:afterRequest send images_update to <body/>"
 				>
 					Add pictures
 				</button>
@@ -237,19 +245,19 @@ templ imageForm(props imageFormProps) {
 }
 
 script htmxSortable() {
-htmx.onLoad(function(content) {
-    var sortables = content.querySelectorAll(".sortable");
-    for (var i = 0; i < sortables.length; i++) {
-      var sortable = sortables[i];
-      var sortableInstance = new Sortable(sortable, {
-          animation: 150,
-          ghostClass: 'blue-background-class',
-      });
+	htmx.onLoad(function(content) {
+		var sortables = content.querySelectorAll(".sortable");
+		for (var i = 0; i < sortables.length; i++) {
+		  var sortable = sortables[i];
+		  var sortableInstance = new Sortable(sortable, {
+			  animation: 150,
+			  ghostClass: 'blue-background-class',
+		  });
 
-      // Re-enable sorting on the `htmx:afterSwap` event
-      sortable.addEventListener("htmx:afterSwap", function() {
-        sortableInstance.option("disabled", false);
-      });
-    }
-})
+		  // Re-enable sorting on the `htmx:afterSwap` event
+		  sortable.addEventListener("htmx:afterSwap", function() {
+			sortableInstance.option("disabled", false);
+		  });
+		}
+	})
 }
