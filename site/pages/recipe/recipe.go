@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 
@@ -61,7 +62,7 @@ func (h *RecipeHandler) Page(c *common.TemplContext) error {
 	}
 
 	if data.Edit && !data.IsAuthenticated {
-		return c.Redirect(http.StatusSeeOther, "/auth/login")
+		return c.Redirect(http.StatusSeeOther, "/auth/login?source="+url.QueryEscape(c.Request().URL.String()))
 	}
 
 	status := http.StatusOK

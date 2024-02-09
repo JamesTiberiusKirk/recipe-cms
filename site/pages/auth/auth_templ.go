@@ -17,7 +17,6 @@ type loginPageProps struct {
 		username string
 		password string
 	}
-	popups         []components.Popup
 	loginAttempted bool
 	success        bool
 	username       string
@@ -42,7 +41,7 @@ func loginPage(props loginPageProps) templ.Component {
 				templ_7745c5c3_Buffer = templ.GetBuffer()
 				defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"login\" class=\"mx-auto flex flex-col \"><h1>Login Page</h1><form hx-post hx-select=\"#login\" hx-target=\"#login\" hx-swap=\"outerHTML\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"login\" class=\"mx-auto w-1/2\"><h1 class=\"mb-6 text-center\">Login Page</h1><div class=\" p-4 rounded-md border-2 border-white\"><form hx-post hx-select=\"#login\" hx-target=\"#login\" hx-swap=\"outerHTML\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -85,7 +84,7 @@ func loginPage(props loginPageProps) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -94,7 +93,7 @@ func loginPage(props loginPageProps) templ.Component {
 			}
 			return templ_7745c5c3_Err
 		})
-		templ_7745c5c3_Err = components.Layout(props.popups...).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Layout().Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

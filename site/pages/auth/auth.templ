@@ -7,48 +7,49 @@ type loginPageProps struct {
 		username string
 		password string
 	}
-	popups         []components.Popup
 	loginAttempted bool
 	success        bool
 	username       string
 }
 
 templ loginPage(props loginPageProps) {
-	@components.Layout(props.popups...) {
-		<div id="login" class="mx-auto flex flex-col ">
-			<h1>Login Page</h1>
-			<form
- 				hx-post
- 				hx-select="#login"
- 				hx-target="#login"
- 				hx-swap="outerHTML"
-			>
-				@components.Input(components.InputProps{
+	@components.Layout() {
+		<div id="login" class="mx-auto w-1/2">
+			<h1 class="mb-6 text-center">Login Page</h1>
+			<div class=" p-4 rounded-md border-2 border-white">
+				<form
+ 					hx-post
+ 					hx-select="#login"
+ 					hx-target="#login"
+ 					hx-swap="outerHTML"
+				>
+					@components.Input(components.InputProps{
 					Error: props.errors.username,
 					Value: props.username,
 					Name: []string{"username"},
 					DisplayName: "Username",
 					Type: components.InputTypeText,
 				})
-				<br/>
-				@components.Input(components.InputProps{
+					<br/>
+					@components.Input(components.InputProps{
 					Error: props.errors.password,
 					Name: []string{"password"},
 					DisplayName: "Password",
 					Type: components.InputTypePasswrod,
 				})
-				<button type="submit" class="btn">Login</button>
-			</form>
-			if props.loginAttempted && !props.success {
-				<p>
-					<span class="text-red-600">
-						Wrong creds! 
-					</span>
-				</p>
-			}
-			if props.loginAttempted && props.success {
-				<p class="text-green-800">Success!</p>
-			}
+					<button type="submit" class="btn">Login</button>
+				</form>
+				if props.loginAttempted && !props.success {
+					<p>
+						<span class="text-red-600">
+							Wrong creds! 
+						</span>
+					</p>
+				}
+				if props.loginAttempted && props.success {
+					<p class="text-green-800">Success!</p>
+				}
+			</div>
 		</div>
 	}
 }

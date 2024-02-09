@@ -3,6 +3,7 @@ package components
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -11,6 +12,19 @@ import (
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
 )
+
+type HxTriggerOptions struct {
+	ToastError   string `json:"toast_error,omitempty"`
+	ToastWarning string `json:"toast_warning,omitempty"`
+	ToastSuccess string `json:"toast_success,omitempty"`
+	ToastInfo    string `json:"toast_info,omitempty"`
+}
+
+// ToJson json encodes the struct, ignores err
+func (t HxTriggerOptions) ToJson() string {
+	bytes, _ := json.Marshal(t)
+	return string(bytes)
+}
 
 type BaseHTMLProps struct {
 	ID      string

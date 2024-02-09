@@ -107,22 +107,91 @@ script onLoad() {
 	// 		window.location.reload();
 	// 	}
 	// };
+
+	// NOTE: not actually intended to have multiple at once 
+	// Might need to completly set the toast from js if i want it to work like a stack 
+	const toaster = (e) => {showToast(e.type, e.detail.value)} 
+	htmx.on("toast_danger", toaster)
+	htmx.on("toast_warning", toaster)
+	htmx.on("toast_success", toaster)
+	htmx.on("toast_info", toaster)
+
+        function showToast(type, message) {
+		el = document.getElementById(type)
+		document.getElementById(type+"_text").innerHTML = message
+		el.classList.remove("hidden");
+		setTimeout(function () {
+			el.classList.add("hidden");
+			document.getElementById(type+"-text").innerHTML = ""
+		}, 5000);
+        }
 }
 
-type PopupType string
-
-const (
-	PopupTypeInfo    PopupType = "info"
-	PopupTypeError   PopupType = "error"
-	PopupTypeSuccess PopupType = "success"
-)
-
-type Popup struct {
-	Type    PopupType
-	Message string
+script dismissToast(id string) {
+	document.getElementById(id).classList.add("hidden");
+	document.getElementById(id+"_text").innerHTML = "";
 }
 
-templ Layout(popups ...Popup) {
+templ toasts() {
+	<div
+ 		id="toast_danger"
+ 		class="hidden z-10 absolute bottom-0 left-1/2 -translate-x-1/2 my-auto"
+	>
+		<div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+			<span id="toast_danger_text" class="block sm:inline pr-6"></span>
+			<span onclick={ dismissToast("toast-danger") } class="absolute top-0 bottom-0 right-0 px-4 py-3">
+				<svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+					<title>Close</title>
+					<path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"></path>
+				</svg>
+			</span>
+		</div>
+	</div>
+	<div
+ 		id="toast_warning"
+ 		class="hidden z-10 absolute bottom-0 left-1/2 -translate-x-1/2 my-auto"
+	>
+		<div class="mb-4 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
+			<span id="toast_warning_text" class="block sm:inline pr-6"></span>
+			<span onclick={ dismissToast("toast-warning") } class="absolute top-0 bottom-0 right-0 px-4 py-3">
+				<svg class="fill-current h-6 w-6 text-yellow-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+					<title>Close</title>
+					<path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"></path>
+				</svg>
+			</span>
+		</div>
+	</div>
+	<div
+ 		id="toast_success"
+ 		class="hidden z-10 absolute bottom-0 left-1/2 -translate-x-1/2 my-auto"
+	>
+		<div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+			<span id="toast_success_text" class="block sm:inline pr-6"></span>
+			<span onclick={ dismissToast("toast-success") } class="absolute top-0 bottom-0 right-0 px-4 py-3">
+				<svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+					<title>Close</title>
+					<path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"></path>
+				</svg>
+			</span>
+		</div>
+	</div>
+	<div
+ 		id="toast_info"
+ 		class="hidden z-10 absolute bottom-0 left-1/2 -translate-x-1/2 my-auto"
+	>
+		<div class="mb-4 bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative" role="alert">
+			<span id="toast_info_text" class="block sm:inline pr-6"></span>
+			<span onclick={ dismissToast("toast-info") } class="absolute top-0 bottom-0 right-0 px-4 py-3">
+				<svg class="fill-current h-6 w-6 text-blue-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+					<title>Close</title>
+					<path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"></path>
+				</svg>
+			</span>
+		</div>
+	</div>
+}
+
+templ Layout() {
 	<html class="dark">
 		<head>
 			<link rel="stylesheet" href="/assets/styles.css"/>
@@ -136,30 +205,11 @@ templ Layout(popups ...Popup) {
 			<script src="/assets/jquery-3.7.1.min.js"></script>
 			<script src="/assets/serializeForm.js"></script>
 			<script src="/assets/Sortable.js"></script>
-			// TODO: rework this bc its not that useful because of hx-swap probably using swap-oob header?
-			for _, p :=range popups {
-				switch p.Type {
-					case PopupTypeInfo:
-						<div class="flex items-center bg-blue-500 text-white text-sm font-bold px-4 py-3" role="alert">
-							<svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z"></path></svg>
-							<p>{ p.Message }</p>
-						</div>
-					case PopupTypeError:
-						<div class="flex items-center bg-blue-500 text-white text-sm font-bold px-4 py-3" role="alert">
-							<svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z"></path></svg>
-							<p>{ p.Message }</p>
-						</div>
-					case PopupTypeSuccess:
-						<div class="flex items-center bg-blue-500 text-white text-sm font-bold px-4 py-3" role="alert">
-							<svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z"></path></svg>
-							<p>{ p.Message }</p>
-						</div>
-				}
-			}
 			@navBar()
 			<div class="mx-auto w-3/4">
 				{ children... }
 			</div>
+			@toasts()
 		</body>
 	</html>
 }
