@@ -5,8 +5,9 @@ import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
 import "fmt"
 
 type recipeFormProps struct {
-	Recipe         models.Recipe
-	AvailableUnits []models.Unit
+	Recipe          models.Recipe
+	AvailableUnits  []models.Unit
+	IsAuthenticated bool
 }
 
 const (

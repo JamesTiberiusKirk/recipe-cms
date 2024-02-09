@@ -12,6 +12,7 @@ import (
 	"github.com/JamesTiberiusKirk/recipe-cms/models"
 	"github.com/JamesTiberiusKirk/recipe-cms/registry"
 	"github.com/JamesTiberiusKirk/recipe-cms/site/components"
+	"github.com/JamesTiberiusKirk/recipe-cms/site/session"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
@@ -19,11 +20,13 @@ import (
 
 type RecipeHandler struct {
 	recipeRegistry registry.IRecipe
+	session        *session.Manager
 }
 
-func InitRecipeHandler(app *echo.Group, rr registry.IRecipe) {
+func InitRecipeHandler(app *echo.Group, rr registry.IRecipe, s *session.Manager) {
 	h := &RecipeHandler{
 		recipeRegistry: rr,
+		session:        s,
 	}
 
 	// app.Use(common.UseBodyLogger())
@@ -52,8 +55,13 @@ func (h *RecipeHandler) Page(c *common.TemplContext) error {
 	}
 
 	data := recipePageData{
-		Units: models.DefaultSystemUnits,
-		Edit:  (c.QueryParam("edit") == "true" || reqData.RecipeID == "new"),
+		Units:           models.DefaultSystemUnits,
+		Edit:            (c.QueryParam("edit") == "true" || reqData.RecipeID == "new"),
+		IsAuthenticated: h.session.IsAuthenticated(c),
+	}
+
+	if data.Edit && !data.IsAuthenticated {
+		return c.Redirect(http.StatusSeeOther, "/auth/login")
 	}
 
 	status := http.StatusOK

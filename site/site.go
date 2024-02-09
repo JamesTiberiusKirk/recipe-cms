@@ -9,8 +9,10 @@ import (
 	"github.com/JamesTiberiusKirk/recipe-cms/config"
 	"github.com/JamesTiberiusKirk/recipe-cms/registry"
 	"github.com/JamesTiberiusKirk/recipe-cms/site/pages"
+	"github.com/JamesTiberiusKirk/recipe-cms/site/pages/auth"
 	"github.com/JamesTiberiusKirk/recipe-cms/site/pages/playground"
 	"github.com/JamesTiberiusKirk/recipe-cms/site/pages/recipe"
+	"github.com/JamesTiberiusKirk/recipe-cms/site/session"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
@@ -19,12 +21,14 @@ import (
 type Site struct {
 	recipreRegistry registry.IRecipe
 	config          config.Config
+	sessions        *session.Manager
 }
 
 func NewSite(rr registry.IRecipe, config config.Config) *Site {
 	return &Site{
 		recipreRegistry: rr,
 		config:          config,
+		sessions:        session.New(),
 	}
 }
 
@@ -101,8 +105,10 @@ func (s *Site) Start(addr string) error {
 	// 404
 	e.RouteNotFound("/*", common.UseTemplContext(pages.HandleNotFound))
 
+	auth.InitAuthHandler(e.Group("/auth"), s.sessions)
+
 	pages.InitIndexHandler(e.Group(""))
-	recipe.InitRecipeHandler(e.Group("/recipe"), s.recipreRegistry)
+	recipe.InitRecipeHandler(e.Group("/recipe"), s.recipreRegistry, s.sessions)
 	recipe.InitRecipesHandler(e.Group("/recipes"), s.recipreRegistry)
 	pages.InitMarkdownRenderer(e.Group(""))
 	playground.InitTestRoute(e.Group("/pg"))

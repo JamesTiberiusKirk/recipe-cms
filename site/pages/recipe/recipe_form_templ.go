@@ -15,8 +15,9 @@ import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
 import "fmt"
 
 type recipeFormProps struct {
-	Recipe         models.Recipe
-	AvailableUnits []models.Unit
+	Recipe          models.Recipe
+	AvailableUnits  []models.Unit
+	IsAuthenticated bool
 }
 
 const (
@@ -222,7 +223,7 @@ func recipeForm(props recipeFormProps) templ.Component {
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(image)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 152, Col: 42}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 153, Col: 42}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {

@@ -1,0 +1,43 @@
+package auth
+
+import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
+
+type loginPageProps struct {
+	loginAttempted bool
+	success        bool
+	username       string
+}
+
+templ loginPage(props loginPageProps) {
+	@components.Layout() {
+		<div id="login" class="mx-auto flex flex-col ">
+			<h1>Login Page</h1>
+			<form
+ 				hx-post
+ 				hx-select="#login"
+ 				hx-target="#login"
+ 				hx-swap="outerHTML"
+			>
+				@components.Input(components.InputProps{
+					Value: props.username,
+					Name: []string{"username"},
+					DisplayName: "Username",
+					Type: components.InputTypeText,
+				})
+				<br/>
+				@components.Input(components.InputProps{
+					Name: []string{"password"},
+					DisplayName: "Password",
+					Type: components.InputTypePasswrod,
+				})
+				<button type="submit" class="btn">Login</button>
+			</form>
+			if props.loginAttempted && !props.success {
+				<p class="text-red-800">Wrong creds!</p>
+			}
+			if props.loginAttempted && props.success {
+				<p class="text-green-800">Success!</p>
+			}
+		</div>
+	}
+}
