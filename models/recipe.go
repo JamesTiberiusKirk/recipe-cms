@@ -1,7 +1,8 @@
 package models
 
 type User struct {
-	Name string `json:"name" goscanql:"name"`
+	Username string `json:"name"     goscanql:"name"`
+	Password string `json:"password" goscanql:"password"`
 }
 
 type Recipe struct {

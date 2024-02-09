@@ -19,15 +19,17 @@ import (
 )
 
 type Site struct {
+	userRegistry    registry.IUser
 	recipreRegistry registry.IRecipe
 	config          config.Config
 	sessions        *session.Manager
 }
 
-func NewSite(rr registry.IRecipe, config config.Config) *Site {
+func NewSite(conf config.Config, rr registry.IRecipe, ur registry.IUser) *Site {
 	return &Site{
+		config:          conf,
 		recipreRegistry: rr,
-		config:          config,
+		userRegistry:    ur,
 		sessions:        session.New(),
 	}
 }
@@ -105,7 +107,7 @@ func (s *Site) Start(addr string) error {
 	// 404
 	e.RouteNotFound("/*", common.UseTemplContext(pages.HandleNotFound))
 
-	auth.InitAuthHandler(e.Group("/auth"), s.sessions)
+	auth.InitAuthHandler(e.Group("/auth"), s.sessions, s.userRegistry)
 
 	pages.InitIndexHandler(e.Group(""))
 	recipe.InitRecipeHandler(e.Group("/recipe"), s.recipreRegistry, s.sessions)

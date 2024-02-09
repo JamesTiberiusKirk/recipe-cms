@@ -19,8 +19,9 @@ func main() {
 
 	// recipeRegistry := registry.NewMockRecipeRegistry()
 	recipeRegistry := registry.NewRecipe(dbc)
+	user := registry.NewUser(dbc)
 
-	s := site.NewSite(recipeRegistry, conf)
+	s := site.NewSite(conf, recipeRegistry, user)
 
 	logrus.Info(conf.HTTPPort)
 

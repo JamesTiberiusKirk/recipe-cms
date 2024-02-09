@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS unit (
     display_name    TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS author (
-    author_name TEXT PRIMARY KEY,
+    username    TEXT PRIMARY KEY,
     password    TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS recipe (
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS recipe (
     author_name     TEXT,
     images          TEXT[],
 
-    FOREIGN KEY (author_name) REFERENCES author (author_name)
+    FOREIGN KEY (author_name) REFERENCES author (username)
 );
 CREATE TABLE IF NOT EXISTS ingredient (
     recipe_id   TEXT         NOT NULL,
@@ -51,7 +51,7 @@ INSERT INTO unit (unit_name, display_name) VALUES
     ('unit', 'unit'),
     ('part', 'part');
 
-INSERT INTO author (author_name, password) VALUES
+INSERT INTO author (username, password) VALUES
     ('TestUser', 'testPass');
 INSERT INTO recipe (id, recipe_name, intro, description, instructions, length_total, length_hands_on, closing, recipe_version, author_name, images) VALUES
     (

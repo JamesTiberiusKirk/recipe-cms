@@ -13,6 +13,11 @@ import "bytes"
 import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
 
 type loginPageProps struct {
+	errors struct {
+		username string
+		password string
+	}
+	popups         []components.Popup
 	loginAttempted bool
 	success        bool
 	username       string
@@ -42,6 +47,7 @@ func loginPage(props loginPageProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			templ_7745c5c3_Err = components.Input(components.InputProps{
+				Error:       props.errors.username,
 				Value:       props.username,
 				Name:        []string{"username"},
 				DisplayName: "Username",
@@ -55,6 +61,7 @@ func loginPage(props loginPageProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			templ_7745c5c3_Err = components.Input(components.InputProps{
+				Error:       props.errors.password,
 				Name:        []string{"password"},
 				DisplayName: "Password",
 				Type:        components.InputTypePasswrod,
@@ -67,7 +74,7 @@ func loginPage(props loginPageProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if props.loginAttempted && !props.success {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<p class=\"text-red-800\">Wrong creds!</p>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<p><span class=\"text-red-600\">Wrong creds! </span></p>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -87,7 +94,7 @@ func loginPage(props loginPageProps) templ.Component {
 			}
 			return templ_7745c5c3_Err
 		})
-		templ_7745c5c3_Err = components.Layout().Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Layout(props.popups...).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

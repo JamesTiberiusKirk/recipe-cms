@@ -3,13 +3,18 @@ package auth
 import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
 
 type loginPageProps struct {
+	errors struct {
+		username string
+		password string
+	}
+	popups         []components.Popup
 	loginAttempted bool
 	success        bool
 	username       string
 }
 
 templ loginPage(props loginPageProps) {
-	@components.Layout() {
+	@components.Layout(props.popups...) {
 		<div id="login" class="mx-auto flex flex-col ">
 			<h1>Login Page</h1>
 			<form
@@ -19,6 +24,7 @@ templ loginPage(props loginPageProps) {
  				hx-swap="outerHTML"
 			>
 				@components.Input(components.InputProps{
+					Error: props.errors.username,
 					Value: props.username,
 					Name: []string{"username"},
 					DisplayName: "Username",
@@ -26,6 +32,7 @@ templ loginPage(props loginPageProps) {
 				})
 				<br/>
 				@components.Input(components.InputProps{
+					Error: props.errors.password,
 					Name: []string{"password"},
 					DisplayName: "Password",
 					Type: components.InputTypePasswrod,
@@ -33,7 +40,11 @@ templ loginPage(props loginPageProps) {
 				<button type="submit" class="btn">Login</button>
 			</form>
 			if props.loginAttempted && !props.success {
-				<p class="text-red-800">Wrong creds!</p>
+				<p>
+					<span class="text-red-600">
+						Wrong creds! 
+					</span>
+				</p>
 			}
 			if props.loginAttempted && props.success {
 				<p class="text-green-800">Success!</p>
