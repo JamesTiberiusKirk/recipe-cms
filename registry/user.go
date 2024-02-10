@@ -5,7 +5,6 @@ import (
 	"github.com/JamesTiberiusKirk/recipe-cms/models"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/rustedturnip/goscanql"
-	"github.com/sirupsen/logrus"
 )
 
 type IUser interface {
@@ -24,9 +23,8 @@ func NewUser(dbc *db.DB) *User {
 
 // NOTE: trying out squirrel here
 func (u *User) GetOneByUsername(username string) (models.User, error) {
-	usersq := sq.Select("username, password").From("author").Where("username = $1", username)
-	q, aggs, _ := usersq.ToSql()
-	logrus.Info(q, aggs)
+	usersq := sq.StatementBuilder.PlaceholderFormat(sq.Dollar).
+		Select("username, password").From("author").Where(sq.Eq{"username": username})
 
 	rows, err := usersq.RunWith(u.dbc.DB).Query()
 	if err != nil {
