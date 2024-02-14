@@ -1,20 +1,34 @@
 package session
 
 import (
+	"fmt"
+
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo/v4"
+	"github.com/sirupsen/logrus"
+	"github.com/teris-io/shortid"
 )
 
 const (
-	sessionName     = "session"
-	sessionLifeSpan = 216000 // 1 hour
+	sessionName                  = "session"
+	sessionLifeSpan              = 216000 // 1 hour
+	shortcodeLoginSessionDefault = "unauthed"
 )
 
 // Manager maintains a record of open sessions.
 type Manager struct {
 	Jar *sessions.CookieStore
 }
+
+var (
+	// NOTE: temporary store, ideally we need something like redis or
+	// memcache which would also have a TTL on the record
+	// tbh having this in mem wodnt even be too bad, we just need to cleanup
+	// TODO: either way ill need to wrap this in an interface and dependency wrapper
+	// so then it can be swapped out for whatever store mechanism we want
+	shortcodeLoginSessions = map[string]string{}
+)
 
 // New returns an instantiated session manager.
 func New() *Manager {
@@ -40,6 +54,52 @@ func (m *Manager) InitSession(username string, c echo.Context) {
 	_ = sess.Save(c.Request(), c.Response())
 }
 
+// InitShortCodeSess initialises a short code session on for the original device.
+func (m *Manager) InitShortCodeSess(c echo.Context) string {
+	short := shortid.MustGenerate()
+
+	sess, _ := m.Jar.Get(c.Request(), sessionName)
+
+	sess.Options = &sessions.Options{
+		Path:     "/",
+		MaxAge:   60 * 15, // 15 minutes
+		HttpOnly: true,
+	}
+
+	sess.Values["shortid"] = short
+	shortcodeLoginSessions[short] = shortcodeLoginSessionDefault
+
+	_ = sess.Save(c.Request(), c.Response())
+
+	return short
+}
+
+// AuthShortCodeSess runs for the second device with the session already ongoing.
+// to run for second device already logged in.
+func (m *Manager) AuthShortCodeSess(short string, c echo.Context) error {
+	if m.IsAuthenticated(c, false) {
+		return fmt.Errorf("not authenticated")
+	}
+
+	usernameInShort, ok := shortcodeLoginSessions[short]
+	if !ok {
+		return fmt.Errorf("no short code session")
+	}
+
+	if usernameInShort != shortcodeLoginSessionDefault {
+		return fmt.Errorf("shortcode session already claimed")
+	}
+
+	username, err := m.GetUser(c)
+	if err != nil {
+		logrus.Errorf("error getting username %s", err.Error())
+		return fmt.Errorf("error getting user %w", err)
+	}
+
+	shortcodeLoginSessions[short] = username
+	return nil
+}
+
 // TerminateSession will cease tracking the session for the current user.
 func (m *Manager) TerminateSession(c echo.Context) {
 	sess, _ := m.Jar.Get(c.Request(), sessionName)
@@ -50,9 +110,45 @@ func (m *Manager) TerminateSession(c echo.Context) {
 
 // IsAuthenticated checks that a provided request is born from an active session.
 // As long as there is an active session, true is returned, else false.
-func (m *Manager) IsAuthenticated(c echo.Context) bool {
-	sess, _ := m.Jar.Get(c.Request(), sessionName)
-	return sess.Values["username"] != nil
+func (m *Manager) IsAuthenticated(c echo.Context, checkAndLoginShortSession bool) bool {
+	sess, err := m.Jar.Get(c.Request(), sessionName)
+	if err != nil {
+		return false
+	}
+
+	if sess.Values["username"] == nil && checkAndLoginShortSession {
+		if sess.Values["shortid"] == nil {
+			return false
+		}
+
+		short, ok := sess.Values["shortid"].(string)
+		if !ok {
+			return false
+		}
+
+		usernameInShort, ok := shortcodeLoginSessions[short]
+		if !ok {
+			return false
+		}
+
+		if usernameInShort == "" {
+			return false
+		}
+
+		if usernameInShort != shortcodeLoginSessionDefault {
+			return false
+		}
+
+		m.InitSession(usernameInShort, c)
+		delete(shortcodeLoginSessions, short)
+
+		return true
+	}
+
+	if sess.Values["username"] == nil {
+		return false
+	}
+	return true
 }
 
 // GetUser checks that a provided request is born from an active session.

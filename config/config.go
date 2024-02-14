@@ -12,6 +12,7 @@ type Config struct {
 	Debug    bool
 	Volume   string
 	HTTPPort string
+	Host     string
 }
 
 func GetConfig() Config {
@@ -25,11 +26,14 @@ func GetConfig() Config {
 		Debug:    (os.Getenv("Debug") == "true"),
 		Volume:   os.Getenv("VOLUME"),
 		HTTPPort: os.Getenv("HTTP_PORT"),
+		Host:     os.Getenv("HOST"),
 	}
 
-	if conf.Volume == "" || conf.DbURL == "" || conf.HTTPPort == "" {
+	if conf.Volume == "" ||
+		conf.DbURL == "" ||
+		conf.HTTPPort == "" ||
+		conf.Host == "" {
 		logrus.Fatalf("One or more of the required env variables are not set conf: %+v", conf)
-		panic("")
 	}
 
 	return conf

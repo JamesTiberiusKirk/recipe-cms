@@ -2,6 +2,10 @@ package common
 
 import "reflect"
 
+// HasNonZeroField - Using reflection this function checks if any of the fields in a struct are set,
+// if they are the cuntion returns true.
+//
+//	Useful for returning error if any of the items in the error struct are present.
 func HasNonZeroField(s interface{}) bool {
 	v := reflect.ValueOf(s)
 	if v.Kind() == reflect.Ptr {

@@ -1,14 +1,17 @@
 package auth
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/JamesTiberiusKirk/recipe-cms/common"
+	"github.com/JamesTiberiusKirk/recipe-cms/config"
 	"github.com/JamesTiberiusKirk/recipe-cms/registry"
 	"github.com/JamesTiberiusKirk/recipe-cms/site/components"
 	"github.com/JamesTiberiusKirk/recipe-cms/site/session"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
+	"github.com/skip2/go-qrcode"
 )
 
 type AuthHandler struct {
@@ -26,6 +29,11 @@ func InitAuthHandler(app *echo.Group, s *session.Manager, ur registry.IUser) {
 	app.POST("/login", common.UseTemplContext(h.LoginPage))
 
 	app.GET("/logout", common.UseTemplContext(h.Logout))
+
+	app.GET("/login/shortcode", common.UseTemplContext(h.ShortCode))
+	app.GET("/login/:code", common.UseTemplContext(h.ShortLogin))
+
+	app.GET("/login/qr/:code", h.QrImage)
 }
 
 type LoginPageRequestData struct {
@@ -33,7 +41,6 @@ type LoginPageRequestData struct {
 }
 
 func (h *AuthHandler) LoginPage(c *common.TemplContext) error {
-
 	props := loginPageProps{}
 
 	if c.Request().Method == http.MethodPost {
@@ -89,4 +96,48 @@ func (h *AuthHandler) LoginPage(c *common.TemplContext) error {
 func (h *AuthHandler) Logout(c *common.TemplContext) error {
 	h.sessions.TerminateSession(c)
 	return c.Redirect(http.StatusSeeOther, "/auth/login")
+}
+
+// TODO: here we need to setup a SSE for this page so that it either
+// refreshes on login or pushes a popup
+// Will also need to figure out how to setup a channel so we can figure out when to send the server event
+func (h *AuthHandler) ShortCode(c *common.TemplContext) error {
+	if h.sessions.IsAuthenticated(c, true) {
+		return c.Redirect(http.StatusSeeOther, "/")
+	}
+
+	short := h.sessions.InitShortCodeSess(c)
+	return c.TEMPL(http.StatusOK, loginPageShortCode(loginPageShortCodeProps{short}))
+}
+
+func (h *AuthHandler) ShortLogin(c *common.TemplContext) error {
+	if !h.sessions.IsAuthenticated(c, true) {
+		return c.Redirect(http.StatusSeeOther, "/auth/login?source="+c.Request().URL.String())
+	}
+
+	short := c.Param("code")
+	h.sessions.AuthShortCodeSess(short, c)
+
+	source := c.QueryParam("source")
+	logrus.Info(source)
+	if source != "" {
+		c.Response().Header().Set("HX-Location", source)
+	}
+	return c.TEMPL(http.StatusOK, shortCodeTempPage())
+}
+
+func (h *AuthHandler) QrImage(c echo.Context) error {
+	conf, ok := c.Get("cfg").(config.Config)
+	if !ok {
+		return fmt.Errorf("could not get config")
+	}
+
+	short := c.Param("code")
+	var png []byte
+	png, err := qrcode.Encode(conf.Host+"/auth/login/"+short, qrcode.Medium, 256)
+	if err != nil {
+		return err
+	}
+
+	return c.Blob(http.StatusOK, "image/png", png)
 }

@@ -58,7 +58,7 @@ func (h *RecipeHandler) Page(c *common.TemplContext) error {
 	data := recipePageData{
 		Units:           models.DefaultSystemUnits,
 		Edit:            (c.QueryParam("edit") == "true" || reqData.RecipeID == "new"),
-		IsAuthenticated: h.session.IsAuthenticated(c),
+		IsAuthenticated: h.session.IsAuthenticated(c, false),
 	}
 
 	if data.Edit && !data.IsAuthenticated {
