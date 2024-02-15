@@ -28,6 +28,7 @@ var (
 	// TODO: either way ill need to wrap this in an interface and dependency wrapper
 	// so then it can be swapped out for whatever store mechanism we want
 	shortcodeLoginSessions = map[string]string{}
+	shortCodeChannels      = map[string](chan string){}
 )
 
 // New returns an instantiated session manager.
@@ -67,7 +68,9 @@ func (m *Manager) InitShortCodeSess(c echo.Context) string {
 	}
 
 	sess.Values["shortid"] = short
+
 	shortcodeLoginSessions[short] = shortcodeLoginSessionDefault
+	shortCodeChannels[short] = make(chan string)
 
 	_ = sess.Save(c.Request(), c.Response())
 
@@ -77,9 +80,10 @@ func (m *Manager) InitShortCodeSess(c echo.Context) string {
 // AuthShortCodeSess runs for the second device with the session already ongoing.
 // to run for second device already logged in.
 func (m *Manager) AuthShortCodeSess(short string, c echo.Context) error {
-	if m.IsAuthenticated(c, false) {
-		return fmt.Errorf("not authenticated")
-	}
+	// BUG: this always triggers
+	// if m.IsAuthenticated(c, false) {
+	// 	return fmt.Errorf("not authenticated")
+	// }
 
 	usernameInShort, ok := shortcodeLoginSessions[short]
 	if !ok {
@@ -90,14 +94,46 @@ func (m *Manager) AuthShortCodeSess(short string, c echo.Context) error {
 		return fmt.Errorf("shortcode session already claimed")
 	}
 
+	fmt.Printf("short code sess map %+v", shortcodeLoginSessions)
+
 	username, err := m.GetUser(c)
 	if err != nil {
 		logrus.Errorf("error getting username %s", err.Error())
 		return fmt.Errorf("error getting user %w", err)
 	}
 
+	fmt.Printf("short code sess map %+v", shortcodeLoginSessions)
+
 	shortcodeLoginSessions[short] = username
+	shortCodeChannels[short] <- "authenticated"
 	return nil
+}
+
+func (m *Manager) GetShortCodeChan(c echo.Context) (<-chan string, error) {
+	sess, err := m.Jar.Get(c.Request(), sessionName)
+	if err != nil {
+		logrus.Errorf("error getting session %s", err.Error())
+		return nil, fmt.Errorf("error getting session %w", err)
+	}
+
+	shortI, ok := sess.Values["shortid"]
+	if !ok {
+		logrus.Errorf("could not get short")
+		return nil, fmt.Errorf("error get short")
+	}
+
+	short, ok := shortI.(string)
+	if !ok {
+		logrus.Errorf("could not type cast")
+		return nil, fmt.Errorf("error type casting")
+	}
+
+	ch, ok := shortCodeChannels[short]
+	if !ok || ch == nil {
+		return nil, fmt.Errorf("could not find channel")
+	}
+
+	return ch, nil
 }
 
 // TerminateSession will cease tracking the session for the current user.
@@ -113,6 +149,7 @@ func (m *Manager) TerminateSession(c echo.Context) {
 func (m *Manager) IsAuthenticated(c echo.Context, checkAndLoginShortSession bool) bool {
 	sess, err := m.Jar.Get(c.Request(), sessionName)
 	if err != nil {
+		logrus.Errorf("error getting session %s", err.Error())
 		return false
 	}
 
@@ -131,21 +168,28 @@ func (m *Manager) IsAuthenticated(c echo.Context, checkAndLoginShortSession bool
 			return false
 		}
 
+		fmt.Printf("short %s \n", short)
+		fmt.Printf("usernameInShort %s \n", usernameInShort)
+
 		if usernameInShort == "" {
 			return false
 		}
 
-		if usernameInShort != shortcodeLoginSessionDefault {
+		if usernameInShort == shortcodeLoginSessionDefault {
 			return false
 		}
 
 		m.InitSession(usernameInShort, c)
+
+		// map cleanup
 		delete(shortcodeLoginSessions, short)
+		delete(shortCodeChannels, short)
 
 		return true
 	}
 
 	if sess.Values["username"] == nil {
+		fmt.Printf("username is nil\n")
 		return false
 	}
 	return true

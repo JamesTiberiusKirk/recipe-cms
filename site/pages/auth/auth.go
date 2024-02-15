@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"bytes"
 	"fmt"
 	"net/http"
 
@@ -34,6 +35,9 @@ func InitAuthHandler(app *echo.Group, s *session.Manager, ur registry.IUser) {
 	app.GET("/login/:code", common.UseTemplContext(h.ShortLogin))
 
 	app.GET("/login/qr/:code", h.QrImage)
+
+	app.GET("/login/sse", h.LoginSSE)
+
 }
 
 type LoginPageRequestData struct {
@@ -102,7 +106,7 @@ func (h *AuthHandler) Logout(c *common.TemplContext) error {
 // refreshes on login or pushes a popup
 // Will also need to figure out how to setup a channel so we can figure out when to send the server event
 func (h *AuthHandler) ShortCode(c *common.TemplContext) error {
-	if h.sessions.IsAuthenticated(c, true) {
+	if h.sessions.IsAuthenticated(c, false) {
 		return c.Redirect(http.StatusSeeOther, "/")
 	}
 
@@ -116,10 +120,13 @@ func (h *AuthHandler) ShortLogin(c *common.TemplContext) error {
 	}
 
 	short := c.Param("code")
-	h.sessions.AuthShortCodeSess(short, c)
+	err := h.sessions.AuthShortCodeSess(short, c)
+	if err != nil {
+		logrus.Errorf("error authenticating short code sess %s", err.Error())
+		return err
+	}
 
 	source := c.QueryParam("source")
-	logrus.Info(source)
 	if source != "" {
 		c.Response().Header().Set("HX-Location", source)
 	}
@@ -140,4 +147,35 @@ func (h *AuthHandler) QrImage(c echo.Context) error {
 	}
 
 	return c.Blob(http.StatusOK, "image/png", png)
+}
+
+func (h *AuthHandler) LoginSSE(c echo.Context) error {
+	ch, err := h.sessions.GetShortCodeChan(c)
+	if err != nil {
+		logrus.Errorf("could not get code chan %s", err.Error())
+		return err
+	}
+
+	c.Response().Header().Set("Access-Control-Allow-Origin", "*")
+	c.Response().Header().Set("Cache-Control", "no-cache")
+	c.Response().Header().Set("Connection", "keep-alive")
+	c.Response().Header().Set("Content-Type", "text/event-stream")
+
+	for authEvent := range ch {
+		if authEvent != "authenticated" {
+			continue
+		}
+
+		h.sessions.IsAuthenticated(c, true)
+		var buf bytes.Buffer
+		authenticatedComponent().Render(c.Request().Context(), &buf)
+
+		logrus.Print("sending data")
+		// fmt.Fprintf(c.Response().Writer, "event: authEvent\ndata: authed \n\n")
+		fmt.Fprintf(c.Response().Writer, "event: auth-event\ndata: %s \n\n", buf.String())
+		c.Response().Writer.(http.Flusher).Flush()
+		// time.Sleep(2 * time.Second)
+	}
+
+	return nil
 }
