@@ -14,7 +14,6 @@ func InitIndexHandler(app *echo.Group) {
 	h := &IndexHandler{}
 
 	app.GET("", common.UseTemplContext(h.Handle))
-
 }
 
 func (h *IndexHandler) Handle(e *common.TemplContext) error {

@@ -8,9 +8,20 @@ import "net/url"
 templ recipeView(props recipeFormProps) {
 	<div class="w-full">
 		<div class="w-full flex flex-row space-between">
-			<div>
+			<div class="mb-2">
 				<h1>{ props.Recipe.Name }</h1>
-				<h6>By { props.Recipe.AuthorName }</h6>
+				<h5>
+					By { props.Recipe.AuthorName }
+					if props.Recipe.RecipeVersion != 0 {
+						&nbsp; | &nbsp; Version: { fmt.Sprint(props.Recipe.RecipeVersion) }
+					}
+					if props.Recipe.LengthTotal != "" {
+						&nbsp; | &nbsp; Total Length: { props.Recipe.LengthTotal }
+					}
+					if props.Recipe.LengthHandsOn != "" {
+						&nbsp; | &nbsp; Hands On Length: { props.Recipe.LengthHandsOn }
+					}
+				</h5>
 			</div>
 			if props.IsAuthenticated {
 				<div class="ml-auto pt-2">

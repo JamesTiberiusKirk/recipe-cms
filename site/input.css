@@ -27,13 +27,13 @@
 
 
     a {
-        @apply dark:text-red-500 hover:underline;
+        @apply dark:text-red-500 hover:underline md:text-lg;
     }
     p {
         @apply dark:text-white;
     }
     table {
-        @apply border-2 dark:border-white table-auto border-separate;
+        @apply border-2 dark:border-white table-auto border-separate md:text-xl;
     }
 
 

@@ -1,14 +1,16 @@
 package components
 
 templ navBar() {
-	<header class="block w-1/2 mx-auto">
-		<div class="flex p-2">
-			<a class="p-2" href="/recipes">Recipes</a>
-			<a class="p-2" href="/recipe/new">Add Recipe</a>
-			<a class="p-2" href="/auth/login">Login</a>
-			<a class="p-2" href="/auth/logout">Logout</a>
-		</div>
-	</header>
+	<div class="w-full">
+		<header class="lg:w-1/2 sm:w-full mx-auto">
+			<div class="lg:text-xl text-5xl flex p-2 justify-evenly">
+				<a class="p-6" href="/recipes">Recipes</a>
+				<a class="p-6" href="/recipe/new">Add Recipe</a>
+				<a class="p-6" href="/auth/login">Login</a>
+				<a class="p-6" href="/auth/logout">Logout</a>
+			</div>
+		</header>
+	</div>
 }
 
 script onLoad() {
@@ -100,13 +102,6 @@ script onLoad() {
 			return JSON.stringify(jsonEnc);
 		}
 	});
-
-	// let src = new EventSource("/_templ/reload/events");
-	// src.onmessage = (event) => {
-	// 	if (event && event.data === "reload") {
-	// 		window.location.reload();
-	// 	}
-	// };
 
 	// NOTE: not actually intended to have multiple at once 
 	// Might need to completly set the toast from js if i want it to work like a stack 
@@ -207,7 +202,7 @@ templ Layout() {
 			<script src="/assets/Sortable.js"></script>
 			<script src="https://unpkg.com/htmx.org/dist/ext/sse.js"></script>
 			@navBar()
-			<div class="mx-auto w-3/4">
+			<div class="mx-auto w-11/12 lg:w-3/4 sm:text-xl">
 				{ children... }
 			</div>
 			@toasts()
