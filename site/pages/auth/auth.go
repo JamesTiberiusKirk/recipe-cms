@@ -106,12 +106,17 @@ func (h *AuthHandler) Logout(c *common.TemplContext) error {
 // refreshes on login or pushes a popup
 // Will also need to figure out how to setup a channel so we can figure out when to send the server event
 func (h *AuthHandler) ShortCode(c *common.TemplContext) error {
+	conf, ok := c.Get("cfg").(config.Config)
+	if !ok {
+		return fmt.Errorf("could not get config")
+	}
+
 	if h.sessions.IsAuthenticated(c, false) {
 		return c.Redirect(http.StatusSeeOther, "/")
 	}
 
 	short := h.sessions.InitShortCodeSess(c)
-	return c.TEMPL(http.StatusOK, loginPageShortCode(loginPageShortCodeProps{short}))
+	return c.TEMPL(http.StatusOK, loginPageShortCode(loginPageShortCodeProps{code: short, host: conf.Host}))
 }
 
 func (h *AuthHandler) ShortLogin(c *common.TemplContext) error {

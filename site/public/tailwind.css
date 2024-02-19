@@ -551,6 +551,8 @@ select {
   padding-bottom: 0.5rem;
   padding-left: 1rem;
   padding-right: 1rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
   font-weight: 700;
 }
 
