@@ -41,7 +41,7 @@ func loginPage(props loginPageProps) templ.Component {
 				templ_7745c5c3_Buffer = templ.GetBuffer()
 				defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"login\" class=\"mx-auto w-1/2\"><h1 class=\"mb-6 text-center\">Login Page</h1><div class=\"p-4 rounded-md border-2 border-white\"><form hx-post hx-select=\"#login\" hx-target=\"#login\" hx-swap=\"outerHTML\"><table class=\"w-full\"><tbody><tr><td class=\"w-fit\"><label class=\"pr-5 text-2xl\">Username:</label></td><td class=\"w-full\"><input type=\"text\" class=\"w-full p-2 h-12 mb-4\" name=\"username\" value=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"login\" class=\"mx-auto sm:w-24 md:w-48 lg:w-66 lg:max-w-1/2\"><h1 class=\"mb-6 text-center\">Login Page</h1><div class=\"p-4 rounded-md border-2 border-white\"><form hx-post hx-select=\"#login\" hx-target=\"#login\" hx-swap=\"outerHTML\"><table class=\"w-full\"><tbody><tr><td class=\"w-fit\"><label class=\"pr-5 text-2xl\">Username:</label></td><td class=\"w-full\"><input type=\"text\" class=\"w-full p-2 h-12 mb-4\" name=\"username\" value=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
