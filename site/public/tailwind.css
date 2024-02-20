@@ -495,19 +495,19 @@ a:hover {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
-table {
+.table {
   table-layout: auto;
   border-collapse: separate;
   border-width: 2px;
 }
 
-:is(.dark table) {
+:is(.dark .table) {
   --tw-border-opacity: 1;
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 
 @media (min-width: 768px) {
-  table {
+  .table {
     font-size: 1.25rem;
     line-height: 1.75rem;
   }
@@ -754,6 +754,10 @@ ol {
   margin-right: 0.5rem;
 }
 
+.mt-4 {
+  margin-top: 1rem;
+}
+
 .mt-5 {
   margin-top: 1.25rem;
 }
@@ -825,6 +829,11 @@ ol {
 
 .w-6 {
   width: 1.5rem;
+}
+
+.w-fit {
+  width: -moz-fit-content;
+  width: fit-content;
 }
 
 .w-full {
@@ -1033,6 +1042,11 @@ ol {
 
 .text-center {
   text-align: center;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
 .text-5xl {

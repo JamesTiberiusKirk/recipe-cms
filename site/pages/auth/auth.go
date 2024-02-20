@@ -75,7 +75,7 @@ func (h *AuthHandler) LoginPage(c *common.TemplContext) error {
 		// NOTE: IKIK! i dont really care about security, at least not rn
 		// I think I'll be overhauling it anyways
 		if password != user.Password {
-			logrus.Error("pass dont match ")
+			logrus.Error("pass dont match")
 			return c.TEMPL(http.StatusUnauthorized, loginPage(props))
 		}
 

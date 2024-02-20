@@ -16,28 +16,62 @@ templ loginPage(props loginPageProps) {
 	@components.Layout() {
 		<div id="login" class="mx-auto w-1/2">
 			<h1 class="mb-6 text-center">Login Page</h1>
-			<div class=" p-4 rounded-md border-2 border-white">
+			<div class="p-4 rounded-md border-2 border-white">
 				<form
  					hx-post
  					hx-select="#login"
  					hx-target="#login"
  					hx-swap="outerHTML"
 				>
-					@components.Input(components.InputProps{
-					Error: props.errors.username,
-					Value: props.username,
-					Name: []string{"username"},
-					DisplayName: "Username",
-					Type: components.InputTypeText,
-				})
-					<br/>
-					@components.Input(components.InputProps{
-					Error: props.errors.password,
-					Name: []string{"password"},
-					DisplayName: "Password",
-					Type: components.InputTypePasswrod,
-				})
-					<button type="submit" class="btn">Login</button>
+					<table class="w-full">
+						<tbody>
+							<tr>
+								<td class="w-fit">
+									<label class="pr-5 text-2xl">Username:</label>
+								</td>
+								<td class="w-full">
+									<input
+ 										type="text"
+ 										class="w-full p-2 h-12 mb-4"
+ 										name="username"
+ 										value={ props.username }
+									/>
+								</td>
+							</tr>
+							if props.errors.username != "" {
+								<tr>
+									<td>
+										<span class="pr-6 text-red-400">
+											{ props.errors.username }
+										</span>
+									</td>
+								</tr>
+							}
+							<tr>
+								<td class="w-fit">
+									<label class="pr-5 text-2xl">Password:</label>
+								</td>
+								<td class="w-full">
+									<input
+ 										type="password"
+ 										class="w-full p-2 h-12"
+ 										name="password"
+									/>
+								</td>
+							</tr>
+							if props.errors.username != "" {
+								<tr>
+									<td>
+										<span class="pr-6 text-red-400">
+											{ props.errors.password }
+										</span>
+									</td>
+								</tr>
+								<br/>
+							}
+						</tbody>
+					</table>
+					<button type="submit" class="btn w-full mt-4">Login</button>
 				</form>
 				if props.loginAttempted && !props.success {
 					<p>
@@ -49,7 +83,9 @@ templ loginPage(props loginPageProps) {
 				if props.loginAttempted && props.success {
 					<p class="text-green-800">Success!</p>
 				}
-				<a href="/auth/login/shortcode" class="text-center">QR Login</a>
+				<div class="w-fit mx-auto">
+					<a href="/auth/login/shortcode" class="text-center">QR Login</a>
+				</div>
 			</div>
 		</div>
 	}

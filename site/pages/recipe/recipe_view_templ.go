@@ -280,7 +280,7 @@ func ingredientTable(title string, ingredients []models.Ingredient) templ.Compon
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2><table class=\"border-spacing-4 w-full p-5\"><thead><tr><th>#</th><th>Name</th><th>Amount</th></tr></thead> <tbody>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2><table class=\"table border-spacing-4 w-full p-5\"><thead><tr><th>#</th><th>Name</th><th>Amount</th></tr></thead> <tbody>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
