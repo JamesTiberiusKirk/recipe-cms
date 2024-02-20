@@ -148,8 +148,8 @@ func (m *Manager) TerminateSession(c echo.Context) {
 // As long as there is an active session, true is returned, else false.
 func (m *Manager) IsAuthenticated(c echo.Context, checkAndLoginShortSession bool) bool {
 	sess, err := m.Jar.Get(c.Request(), sessionName)
+	// IF thers an error here its because it does not exist
 	if err != nil {
-		logrus.Errorf("error getting session %s", err.Error())
 		return false
 	}
 

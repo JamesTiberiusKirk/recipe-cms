@@ -95,7 +95,7 @@ func loginPage(props loginPageProps) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</tbody></table><button type=\"submit\" class=\"btn w-full mt-4\">Login</button></form>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</tbody></table><button type=\"submit\" class=\"btn w-full mt-4\">Login</button></form><div class=\"w-fit mx-auto\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -106,12 +106,12 @@ func loginPage(props loginPageProps) templ.Component {
 				}
 			}
 			if props.loginAttempted && props.success {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<p class=\"text-green-800\">Success!</p>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<p><span class=\"text-green-500\">Success!</span></p>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"w-fit mx-auto\"><a href=\"/auth/login/shortcode\" class=\"text-center\">QR Login</a></div></div></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a href=\"/auth/login/shortcode\" class=\"text-center\">QR Login</a></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

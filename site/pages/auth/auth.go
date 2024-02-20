@@ -37,7 +37,6 @@ func InitAuthHandler(app *echo.Group, s *session.Manager, ur registry.IUser) {
 	app.GET("/login/qr/:code", h.QrImage)
 
 	app.GET("/login/sse", h.LoginSSE)
-
 }
 
 type LoginPageRequestData struct {

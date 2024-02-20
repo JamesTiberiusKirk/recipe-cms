@@ -73,17 +73,17 @@ templ loginPage(props loginPageProps) {
 					</table>
 					<button type="submit" class="btn w-full mt-4">Login</button>
 				</form>
-				if props.loginAttempted && !props.success {
-					<p>
-						<span class="text-red-600">
-							Wrong creds! 
-						</span>
-					</p>
-				}
-				if props.loginAttempted && props.success {
-					<p class="text-green-800">Success!</p>
-				}
 				<div class="w-fit mx-auto">
+					if props.loginAttempted && !props.success {
+						<p>
+							<span class="text-red-600">
+								Wrong creds! 
+							</span>
+						</p>
+					}
+					if props.loginAttempted && props.success {
+						<p><span class="text-green-500">Success!</span></p>
+					}
 					<a href="/auth/login/shortcode" class="text-center">QR Login</a>
 				</div>
 			</div>
