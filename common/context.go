@@ -10,6 +10,7 @@ type TemplContext struct {
 }
 
 func (c *TemplContext) TEMPL(status int, cmp templ.Component) error {
+	c.Response().Status = status
 	c.Response().Header().Set(echo.HeaderContentType, echo.MIMETextHTML)
 	return cmp.Render(c.Request().Context(), c.Response().Writer)
 }
