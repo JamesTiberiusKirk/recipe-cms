@@ -25,12 +25,16 @@
         @apply text-sm;
     }
 
-
+    /*md:text-lg*/
     a {
-        @apply dark:text-red-500 hover:underline md:text-lg;
+        @apply dark:text-red-500 hover:underline text-lg;
     }
     p {
         @apply dark:text-white;
+    }
+
+    .inputStyles{
+        @apply bg-gray-600 rounded-md border-2 border-white p-3;
     }
 
     input {
@@ -58,6 +62,6 @@
     }
 
     .table {
-        @apply border-2 dark:border-white table-auto border-separate md:text-xl;
+        @apply border-2 dark:border-white table-auto border-separate text-xl;
     }
 }

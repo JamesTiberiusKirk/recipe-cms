@@ -17,14 +17,14 @@ func InitRecipesHandler(app *echo.Group, rr registry.IRecipe) {
 		recipeRegistry: rr,
 	}
 
-	app.GET("", common.UseTemplContext(h.Page))
+	app.GET("", common.UseCustomContext(h.Page))
 }
 
 type RecipesRequestData struct {
 	Tag string `query:"tag"`
 }
 
-func (h *RecipesHandler) Page(c *common.TemplContext) error {
+func (h *RecipesHandler) Page(c *common.Context) error {
 
 	reqData := RecipesRequestData{}
 	// echo.QueryParamsBinder(c)

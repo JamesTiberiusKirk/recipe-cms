@@ -189,9 +189,9 @@ func (m *Manager) IsAuthenticated(c echo.Context, checkAndLoginShortSession bool
 	}
 
 	if sess.Values["username"] == nil {
-		fmt.Printf("username is nil\n")
 		return false
 	}
+
 	return true
 }
 

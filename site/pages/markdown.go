@@ -13,14 +13,14 @@ import (
 func InitMarkdownRenderer(app *echo.Group) {
 	h := MarkdownRenderer{}
 
-	app.POST("/markdown", common.UseTemplContext(h.Handle))
-	app.GET("/markdown", common.UseTemplContext(h.Handle))
+	app.POST("/markdown", common.UseCustomContext(h.Handle))
+	app.GET("/markdown", common.UseCustomContext(h.Handle))
 }
 
 type MarkdownRenderer struct {
 }
 
-func (h *MarkdownRenderer) Handle(c *common.TemplContext) error {
+func (h *MarkdownRenderer) Handle(c *common.Context) error {
 	logrus.Info("markdown content-type :\n", c.Request().Header.Get("Content-Type"))
 
 	buf := new(bytes.Buffer)

@@ -26,13 +26,13 @@ func InitAuthHandler(app *echo.Group, s *session.Manager, ur registry.IUser) {
 		userRegistry: ur,
 	}
 
-	app.GET("/login", common.UseTemplContext(h.LoginPage))
-	app.POST("/login", common.UseTemplContext(h.LoginPage))
+	app.GET("/login", common.UseCustomContext(h.LoginPage))
+	app.POST("/login", common.UseCustomContext(h.LoginPage))
 
-	app.GET("/logout", common.UseTemplContext(h.Logout))
+	app.GET("/logout", common.UseCustomContext(h.Logout))
 
-	app.GET("/login/shortcode", common.UseTemplContext(h.ShortCode))
-	app.GET("/login/:code", common.UseTemplContext(h.ShortLogin))
+	app.GET("/login/shortcode", common.UseCustomContext(h.ShortCode))
+	app.GET("/login/:code", common.UseCustomContext(h.ShortLogin))
 
 	app.GET("/login/qr/:code", h.QrImage)
 
@@ -43,7 +43,7 @@ type LoginPageRequestData struct {
 	Source string `query:"source"`
 }
 
-func (h *AuthHandler) LoginPage(c *common.TemplContext) error {
+func (h *AuthHandler) LoginPage(c *common.Context) error {
 	props := loginPageProps{}
 
 	if c.Request().Method == http.MethodPost {
@@ -96,7 +96,7 @@ func (h *AuthHandler) LoginPage(c *common.TemplContext) error {
 	return c.TEMPL(http.StatusOK, loginPage(props))
 }
 
-func (h *AuthHandler) Logout(c *common.TemplContext) error {
+func (h *AuthHandler) Logout(c *common.Context) error {
 	h.sessions.TerminateSession(c)
 	return c.Redirect(http.StatusSeeOther, "/auth/login")
 }
@@ -104,7 +104,7 @@ func (h *AuthHandler) Logout(c *common.TemplContext) error {
 // TODO: here we need to setup a SSE for this page so that it either
 // refreshes on login or pushes a popup
 // Will also need to figure out how to setup a channel so we can figure out when to send the server event
-func (h *AuthHandler) ShortCode(c *common.TemplContext) error {
+func (h *AuthHandler) ShortCode(c *common.Context) error {
 	conf, ok := c.Get("cfg").(config.Config)
 	if !ok {
 		return fmt.Errorf("could not get config")
@@ -118,7 +118,7 @@ func (h *AuthHandler) ShortCode(c *common.TemplContext) error {
 	return c.TEMPL(http.StatusOK, loginPageShortCode(loginPageShortCodeProps{code: short, host: conf.Host}))
 }
 
-func (h *AuthHandler) ShortLogin(c *common.TemplContext) error {
+func (h *AuthHandler) ShortLogin(c *common.Context) error {
 	if !h.sessions.IsAuthenticated(c, true) {
 		return c.Redirect(http.StatusSeeOther, "/auth/login?source="+c.Request().URL.String())
 	}

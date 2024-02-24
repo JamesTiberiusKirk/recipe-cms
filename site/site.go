@@ -105,7 +105,7 @@ func (s *Site) Start(addr string) error {
 	e.Static("/assets", "./site/public/")
 
 	// 404
-	e.RouteNotFound("/*", common.UseTemplContext(pages.HandleNotFound))
+	e.RouteNotFound("/*", common.UseCustomContext(pages.HandleNotFound))
 
 	auth.InitAuthHandler(e.Group("/auth"), s.sessions, s.userRegistry)
 

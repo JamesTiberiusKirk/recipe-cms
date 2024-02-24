@@ -32,13 +32,13 @@ func InitRecipeHandler(app *echo.Group, rr registry.IRecipe, s *session.Manager)
 
 	// app.Use(common.UseBodyLogger())
 
-	app.GET("/:recipe_id", common.UseTemplContext(h.Page))
-	app.POST("/:recipe_id", common.UseTemplContext(h.Page))
+	app.GET("/:recipe_id", common.UseCustomContext(h.Page))
+	app.POST("/:recipe_id", common.UseCustomContext(h.Page))
 
-	app.GET("/ingredient", common.UseTemplContext(h.Ingredient))
+	app.GET("/ingredient", common.UseCustomContext(h.Ingredient))
 
-	app.POST("/image", common.UseTemplContext(h.Image))
-	app.DELETE("/image/:image", common.UseTemplContext(h.ImageDelete))
+	app.POST("/image", common.UseCustomContext(h.Image))
+	app.DELETE("/image/:image", common.UseCustomContext(h.ImageDelete))
 }
 
 type RecipeRequestData struct {
@@ -47,7 +47,7 @@ type RecipeRequestData struct {
 	Recipe   *models.Recipe `json:"recipe,omitempty"`
 }
 
-func (h *RecipeHandler) Page(c *common.TemplContext) error {
+func (h *RecipeHandler) Page(c *common.Context) error {
 	reqData := RecipeRequestData{}
 	// echo.QueryParamsBinder(c)
 	err := c.Bind(&reqData)
@@ -120,10 +120,12 @@ func (h *RecipeHandler) Page(c *common.TemplContext) error {
 		data.Recipe.ID = "new"
 	}
 
+	logrus.Info(data.Recipe.Seasonings)
+
 	return c.TEMPL(status, recipePage(data))
 }
 
-func (h *RecipeHandler) Ingredient(c *common.TemplContext) error {
+func (h *RecipeHandler) Ingredient(c *common.Context) error {
 	t := c.QueryParam("type")
 	if t == "" {
 		t = "ingredient"
@@ -137,7 +139,7 @@ func (h *RecipeHandler) Ingredient(c *common.TemplContext) error {
 	}))
 }
 
-func (h *RecipeHandler) Image(c *common.TemplContext) error {
+func (h *RecipeHandler) Image(c *common.Context) error {
 	cfg, ok := c.Get("cfg").(config.Config)
 	if !ok {
 		return fmt.Errorf("could not get config from context")
@@ -225,7 +227,7 @@ func (h *RecipeHandler) Image(c *common.TemplContext) error {
 	}))
 }
 
-func (h *RecipeHandler) ImageDelete(c *common.TemplContext) error {
+func (h *RecipeHandler) ImageDelete(c *common.Context) error {
 	cfg, ok := c.Get("cfg").(config.Config)
 	if !ok {
 		return fmt.Errorf("could not get config from context")

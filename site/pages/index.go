@@ -13,9 +13,9 @@ type IndexHandler struct {
 func InitIndexHandler(app *echo.Group) {
 	h := &IndexHandler{}
 
-	app.GET("", common.UseTemplContext(h.Handle))
+	app.GET("", common.UseCustomContext(h.Handle))
 }
 
-func (h *IndexHandler) Handle(e *common.TemplContext) error {
+func (h *IndexHandler) Handle(e *common.Context) error {
 	return e.TEMPL(http.StatusOK, indexPage())
 }

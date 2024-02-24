@@ -7,6 +7,6 @@ import (
 	"github.com/JamesTiberiusKirk/recipe-cms/site/components"
 )
 
-func HandleNotFound(c *common.TemplContext) error {
+func HandleNotFound(c *common.Context) error {
 	return c.TEMPL(http.StatusNotFound, components.NotFound())
 }

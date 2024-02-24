@@ -5,21 +5,21 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type TemplContext struct {
+type Context struct {
 	echo.Context
 }
 
-func (c *TemplContext) TEMPL(status int, cmp templ.Component) error {
+func (c *Context) TEMPL(status int, cmp templ.Component) error {
 	c.Response().Status = status
 	c.Response().Header().Set(echo.HeaderContentType, echo.MIMETextHTML)
 	return cmp.Render(c.Request().Context(), c.Response().Writer)
 }
 
-type TemplHandlerFunc func(c *TemplContext) error
+type TemplHandlerFunc func(c *Context) error
 
-func UseTemplContext(next TemplHandlerFunc) echo.HandlerFunc {
+func UseCustomContext(next TemplHandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		cc := &TemplContext{c}
+		cc := &Context{c}
 		return next(cc)
 	}
 }

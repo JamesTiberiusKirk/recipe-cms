@@ -26,12 +26,12 @@ templ recipeView(props recipeFormProps) {
 			if props.IsAuthenticated {
 				<div class="ml-auto pt-2">
 					<button
- 						class="btn"
- 						hx-get={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
- 						hx-select={ "#" + recipeContainerID + "_inner" }
- 						hx-target={ "#" + recipeContainerID }
- 						hx-swap="innerHTML"
- 						hx-push-url="true"
+						class="btn"
+						hx-get={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
+						hx-select={ "#" + recipeContainerID + "_inner" }
+						hx-target={ "#" + recipeContainerID }
+						hx-swap="innerHTML"
+						hx-push-url="true"
 					>
 						EDIT
 					</button>
@@ -57,10 +57,10 @@ templ recipeView(props recipeFormProps) {
 		<div class="py-5">
 			@components.RenderMarkdown(props.Recipe.Description)
 		</div>
-		<div class="w-full flex flex-row flex-wrap justify-around items-stretch">
-			@ingredientTable("Ingredients:",props.Recipe.Ingredients)
+		<div class="w-full flex flex-row flex-wrap justify-around ">
+			@ingredientTable("Ingredients:", props.Recipe.Ingredients)
 			<span class="w-5"></span>
-			@ingredientTable("Seasonings:",props.Recipe.Seasonings)
+			@ingredientTable("Seasonings:", props.Recipe.Seasonings)
 		</div>
 		<div class="py-5">
 			@components.RenderMarkdown(props.Recipe.Instructions)
