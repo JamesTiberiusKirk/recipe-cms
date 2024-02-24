@@ -87,13 +87,15 @@ templ loginPage(props loginPageProps) {
 					}
 					<a href="/auth/login/shortcode" class="text-center">QR Login</a>
 				</div>
-				<button
-					hx-post="/auth/login?dev_login=true"
-					hx-swap="none"
-					class="btn w-full mt-4"
-				>
-					DEV Login
-				</button>
+				if props.dev {
+					<button
+						hx-post="/auth/login?dev_login=true"
+						hx-swap="none"
+						class="btn w-full mt-4"
+					>
+						DEV Login
+					</button>
+				}
 			</div>
 		</div>
 	}
