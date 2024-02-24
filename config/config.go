@@ -23,7 +23,7 @@ func GetConfig() Config {
 
 	conf := Config{
 		DbURL:    os.Getenv("DB_URL"),
-		Debug:    (os.Getenv("Debug") == "true"),
+		Debug:    (os.Getenv("DEBUG") == "true"),
 		Volume:   os.Getenv("VOLUME"),
 		HTTPPort: os.Getenv("HTTP_PORT"),
 		Host:     os.Getenv("HOST"),
