@@ -13,8 +13,10 @@ import "strings"
 
 import "github.com/JamesTiberiusKirk/recipe-cms/models"
 import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
+import "github.com/JamesTiberiusKirk/recipe-cms/common"
 
 type recipePageData struct {
+	c               *common.Context
 	Recipe          models.Recipe
 	Units           []models.Unit
 	Error           string
@@ -102,7 +104,7 @@ func recipePage(data recipePageData) templ.Component {
 			}
 			return templ_7745c5c3_Err
 		})
-		templ_7745c5c3_Err = components.Layout().Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Layout(data.c).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

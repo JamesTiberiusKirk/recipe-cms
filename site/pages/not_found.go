@@ -8,5 +8,5 @@ import (
 )
 
 func HandleNotFound(c *common.Context) error {
-	return c.TEMPL(http.StatusNotFound, components.NotFound())
+	return c.TEMPL(http.StatusNotFound, components.NotFound(c))
 }

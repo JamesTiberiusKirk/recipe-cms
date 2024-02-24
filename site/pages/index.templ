@@ -1,9 +1,10 @@
 package pages
 
 import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
+import "github.com/JamesTiberiusKirk/recipe-cms/common"
 
-templ indexPage() {
-	@components.Layout() {
+templ indexPage(c *common.Context) {
+	@components.Layout(c) {
 		<h1 class="">
 			Hello world
 		</h1>

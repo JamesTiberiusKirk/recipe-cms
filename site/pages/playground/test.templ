@@ -1,9 +1,10 @@
 package playground
 
 import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
+import "github.com/JamesTiberiusKirk/recipe-cms/common"
 
-templ testPage() {
-	@components.Layout() {
+templ testPage(c *common.Context) {
+	@components.Layout(c) {
 		<div class="w-full">
 			<form
 				id="recipe_form"

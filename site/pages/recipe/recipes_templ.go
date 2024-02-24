@@ -12,8 +12,10 @@ import "bytes"
 
 import "github.com/JamesTiberiusKirk/recipe-cms/models"
 import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
+import "github.com/JamesTiberiusKirk/recipe-cms/common"
 
 type recipesPageData struct {
+	c       *common.Context
 	error   string
 	recipes []models.Recipe
 }
@@ -72,7 +74,7 @@ func recipesPage(data recipesPageData) templ.Component {
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(r.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipes.templ`, Line: 19, Col: 14}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipes.templ`, Line: 21, Col: 14}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -92,7 +94,7 @@ func recipesPage(data recipesPageData) templ.Component {
 			}
 			return templ_7745c5c3_Err
 		})
-		templ_7745c5c3_Err = components.Layout().Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Layout(data.c).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

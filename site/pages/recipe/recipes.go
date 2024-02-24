@@ -33,7 +33,7 @@ func (h *RecipesHandler) Page(c *common.Context) error {
 		return err
 	}
 
-	data := recipesPageData{}
+	data := recipesPageData{c: c}
 
 	if reqData.Tag != "" {
 		recipes, err := h.recipeRegistry.GetAllByTagName(reqData.Tag)

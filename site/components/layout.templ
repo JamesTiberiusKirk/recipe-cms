@@ -1,5 +1,7 @@
 package components
 
+import "github.com/JamesTiberiusKirk/recipe-cms/common"
+
 templ navBar() {
 	<div class="w-full">
 		<header class="lg:w-1/2 sm:w-full mx-auto">
@@ -186,7 +188,7 @@ templ toasts() {
 	</div>
 }
 
-templ Layout() {
+templ Layout(c *common.Context) {
 	<html class="dark">
 		<head>
 			<link rel="stylesheet" href="/assets/styles.css"/>

@@ -1,7 +1,9 @@
 package components
 
-templ NotFound() {
-	@Layout() {
+import "github.com/JamesTiberiusKirk/recipe-cms/common"
+
+templ NotFound(c *common.Context) {
+	@Layout(c) {
 		<h1>404 Not Found</h1>
 	}
 }

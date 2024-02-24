@@ -46,7 +46,7 @@ func (h *AuthHandler) LoginPage(c *common.Context) error {
 		return fmt.Errorf("could not get config")
 	}
 
-	props := loginPageProps{}
+	props := loginPageProps{c: c}
 
 	if c.Request().Method == http.MethodPost {
 
@@ -153,7 +153,7 @@ func (h *AuthHandler) ShortLogin(c *common.Context) error {
 	if source != "" {
 		c.Response().Header().Set("HX-Location", source)
 	}
-	return c.TEMPL(http.StatusOK, shortCodeTempPage())
+	return c.TEMPL(http.StatusOK, shortCodeTempPage(c))
 }
 
 func (h *AuthHandler) QrImage(c echo.Context) error {

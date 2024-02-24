@@ -55,6 +55,7 @@ func (h *RecipeHandler) Page(c *common.Context) error {
 	}
 
 	data := recipePageData{
+		c:               c,
 		Units:           models.DefaultSystemUnits,
 		Edit:            (c.QueryParam("edit") == "true" || reqData.RecipeID == "new"),
 		IsAuthenticated: h.session.IsAuthenticated(c, false),
@@ -74,7 +75,7 @@ func (h *RecipeHandler) Page(c *common.Context) error {
 
 		if recipe == nil {
 			c.Logger().Info("recipe not found id: %s", reqData.RecipeID)
-			return c.TEMPL(http.StatusNotFound, components.NotFound())
+			return c.TEMPL(http.StatusNotFound, components.NotFound(c))
 		}
 
 		data.Recipe = *recipe

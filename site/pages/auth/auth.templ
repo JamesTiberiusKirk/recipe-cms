@@ -1,8 +1,10 @@
 package auth
 
 import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
+import "github.com/JamesTiberiusKirk/recipe-cms/common"
 
 type loginPageProps struct {
+	c      *common.Context
 	errors struct {
 		username string
 		password string
@@ -14,7 +16,7 @@ type loginPageProps struct {
 }
 
 templ loginPage(props loginPageProps) {
-	@components.Layout() {
+	@components.Layout(props.c) {
 		<div id="login" class="mx-auto sm:w-24 md:w-48 lg:w-66 lg:max-w-1/2">
 			<h1 class="mb-6 text-center">Login Page</h1>
 			<div class="p-4 rounded-md border-2 border-white">
@@ -102,12 +104,13 @@ templ loginPage(props loginPageProps) {
 }
 
 type loginPageShortCodeProps struct {
+	c    *common.Context
 	host string
 	code string
 }
 
 templ loginPageShortCode(props loginPageShortCodeProps) {
-	@components.Layout() {
+	@components.Layout(props.c) {
 		<div id="login" class="mx-auto w-1/2">
 			<h1 class="mb-6 text-center">Login Page</h1>
 			<div class=" p-4 rounded-md border-2 border-white">
@@ -124,8 +127,8 @@ templ loginPageShortCode(props loginPageShortCodeProps) {
 	}
 }
 
-templ shortCodeTempPage() {
-	@components.Layout() {
+templ shortCodeTempPage(c *common.Context) {
+	@components.Layout(c) {
 		<h1>REDIRECTING</h1>
 	}
 }

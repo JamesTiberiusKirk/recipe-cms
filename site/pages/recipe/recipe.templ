@@ -2,8 +2,10 @@ package recipe
 
 import "github.com/JamesTiberiusKirk/recipe-cms/models"
 import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
+import "github.com/JamesTiberiusKirk/recipe-cms/common"
 
 type recipePageData struct {
+	c               *common.Context
 	Recipe          models.Recipe
 	Units           []models.Unit
 	Error           string
@@ -20,24 +22,24 @@ const (
 )
 
 templ recipePage(data recipePageData) {
-	@components.Layout() {
+	@components.Layout(data.c) {
 		<div
- 			id={ recipeContainerID }
- 			class="w-full"
+			id={ recipeContainerID }
+			class="w-full"
 		>
 			<div
- 				id={ recipeContainerID + "_inner" }
- 				class="w-full md:text-3xl"
+				id={ recipeContainerID + "_inner" }
+				class="w-full md:text-3xl"
 			>
 				if data.Edit {
 					@recipeForm(recipeFormProps{
-						Recipe: data.Recipe,
+						Recipe:         data.Recipe,
 						AvailableUnits: data.Units,
 					})
 				} else {
 					@recipeView(recipeFormProps{
-						Recipe: data.Recipe,
-						AvailableUnits: data.Units,
+						Recipe:          data.Recipe,
+						AvailableUnits:  data.Units,
 						IsAuthenticated: data.IsAuthenticated,
 					})
 				}

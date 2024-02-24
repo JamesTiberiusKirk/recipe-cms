@@ -11,8 +11,10 @@ import "io"
 import "bytes"
 
 import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
+import "github.com/JamesTiberiusKirk/recipe-cms/common"
 
 type loginPageProps struct {
+	c      *common.Context
 	errors struct {
 		username string
 		password string
@@ -62,7 +64,7 @@ func loginPage(props loginPageProps) templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(props.errors.username)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 45, Col: 34}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 47, Col: 34}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -85,7 +87,7 @@ func loginPage(props loginPageProps) templ.Component {
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(props.errors.password)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 66, Col: 34}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 68, Col: 34}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -131,7 +133,7 @@ func loginPage(props loginPageProps) templ.Component {
 			}
 			return templ_7745c5c3_Err
 		})
-		templ_7745c5c3_Err = components.Layout().Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Layout(props.c).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -143,6 +145,7 @@ func loginPage(props loginPageProps) templ.Component {
 }
 
 type loginPageShortCodeProps struct {
+	c    *common.Context
 	host string
 	code string
 }
@@ -181,7 +184,7 @@ func loginPageShortCode(props loginPageShortCodeProps) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(props.code)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 114, Col: 35}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 117, Col: 35}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -203,7 +206,7 @@ func loginPageShortCode(props loginPageShortCodeProps) templ.Component {
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(props.host)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 115, Col: 100}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 118, Col: 100}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
@@ -216,7 +219,7 @@ func loginPageShortCode(props loginPageShortCodeProps) templ.Component {
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(props.code)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 115, Col: 126}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 118, Col: 126}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -231,7 +234,7 @@ func loginPageShortCode(props loginPageShortCodeProps) templ.Component {
 			}
 			return templ_7745c5c3_Err
 		})
-		templ_7745c5c3_Err = components.Layout().Render(templ.WithChildren(ctx, templ_7745c5c3_Var6), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Layout(props.c).Render(templ.WithChildren(ctx, templ_7745c5c3_Var6), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -242,7 +245,7 @@ func loginPageShortCode(props loginPageShortCodeProps) templ.Component {
 	})
 }
 
-func shortCodeTempPage() templ.Component {
+func shortCodeTempPage(c *common.Context) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -270,7 +273,7 @@ func shortCodeTempPage() templ.Component {
 			}
 			return templ_7745c5c3_Err
 		})
-		templ_7745c5c3_Err = components.Layout().Render(templ.WithChildren(ctx, templ_7745c5c3_Var12), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Layout(c).Render(templ.WithChildren(ctx, templ_7745c5c3_Var12), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

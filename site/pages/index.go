@@ -16,6 +16,6 @@ func InitIndexHandler(app *echo.Group) {
 	app.GET("", common.UseCustomContext(h.Handle))
 }
 
-func (h *IndexHandler) Handle(e *common.Context) error {
-	return e.TEMPL(http.StatusOK, indexPage())
+func (h *IndexHandler) Handle(c *common.Context) error {
+	return c.TEMPL(http.StatusOK, indexPage(c))
 }

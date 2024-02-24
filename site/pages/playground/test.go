@@ -14,5 +14,5 @@ func InitTestRoute(app *echo.Group) {
 }
 
 func (h *TestRoute) HandleTestPage(c *common.Context) error {
-	return c.TEMPL(200, testPage())
+	return c.TEMPL(200, testPage(c))
 }
