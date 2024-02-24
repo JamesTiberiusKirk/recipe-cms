@@ -10,6 +10,7 @@ type loginPageProps struct {
 	loginAttempted bool
 	success        bool
 	username       string
+	dev            bool
 }
 
 templ loginPage(props loginPageProps) {
@@ -18,10 +19,10 @@ templ loginPage(props loginPageProps) {
 			<h1 class="mb-6 text-center">Login Page</h1>
 			<div class="p-4 rounded-md border-2 border-white">
 				<form
- 					hx-post
- 					hx-select="#login"
- 					hx-target="#login"
- 					hx-swap="outerHTML"
+					hx-post
+					hx-select="#login"
+					hx-target="#login"
+					hx-swap="outerHTML"
 				>
 					<table class="w-full">
 						<tbody>
@@ -31,10 +32,10 @@ templ loginPage(props loginPageProps) {
 								</td>
 								<td class="w-full">
 									<input
- 										type="text"
- 										class="w-full p-2 h-12 mb-4"
- 										name="username"
- 										value={ props.username }
+										type="text"
+										class="w-full p-2 h-12 mb-4"
+										name="username"
+										value={ props.username }
 									/>
 								</td>
 							</tr>
@@ -53,9 +54,9 @@ templ loginPage(props loginPageProps) {
 								</td>
 								<td class="w-full">
 									<input
- 										type="password"
- 										class="w-full p-2 h-12"
- 										name="password"
+										type="password"
+										class="w-full p-2 h-12"
+										name="password"
 									/>
 								</td>
 							</tr>
@@ -86,6 +87,13 @@ templ loginPage(props loginPageProps) {
 					}
 					<a href="/auth/login/shortcode" class="text-center">QR Login</a>
 				</div>
+				<button
+					hx-post="/auth/login?dev_login=true"
+					hx-swap="none"
+					class="btn w-full mt-4"
+				>
+					DEV Login
+				</button>
 			</div>
 		</div>
 	}
@@ -105,9 +113,9 @@ templ loginPageShortCode(props loginPageShortCodeProps) {
 				<p class="mx-auto">{ props.code }</p>
 				<a class="mx-auto" href={ templ.SafeURL(props.host + "/auth/login/" + props.code) }>{ props.host }/auth/login/{ props.code }</a>
 				<div
- 					hx-ext="sse"
- 					sse-connect="/auth/login/sse"
- 					sse-swap="auth-event"
+					hx-ext="sse"
+					sse-connect="/auth/login/sse"
+					sse-swap="auth-event"
 				></div>
 			</div>
 		</div>

@@ -39,14 +39,34 @@ func InitAuthHandler(app *echo.Group, s *session.Manager, ur registry.IUser) {
 	app.GET("/login/sse", h.LoginSSE)
 }
 
-type LoginPageRequestData struct {
-	Source string `query:"source"`
-}
-
 func (h *AuthHandler) LoginPage(c *common.Context) error {
+
+	conf, ok := c.Get("cfg").(config.Config)
+	if !ok {
+		return fmt.Errorf("could not get config")
+	}
+
 	props := loginPageProps{}
 
 	if c.Request().Method == http.MethodPost {
+
+		if conf.Debug {
+			devLogin := c.QueryParam("dev_login")
+			if devLogin == "true" {
+				h.sessions.InitSession(props.username, c)
+				hxto := components.HxTriggerOptions{
+					ToastSuccess: "Logged in",
+				}.ToJson()
+				c.Response().Header().Set("HX-Trigger", hxto)
+
+				source := c.QueryParam("source")
+				if source != "" {
+					c.Response().Header().Set("HX-Location", source)
+				}
+
+				return c.TEMPL(http.StatusOK, loginPage(props))
+			}
+		}
 		props.username = c.FormValue("username")
 		password := c.FormValue("password")
 
@@ -87,7 +107,6 @@ func (h *AuthHandler) LoginPage(c *common.Context) error {
 		c.Response().Header().Set("HX-Trigger", hxto)
 
 		source := c.QueryParam("source")
-		logrus.Info(source)
 		if source != "" {
 			c.Response().Header().Set("HX-Location", source)
 		}

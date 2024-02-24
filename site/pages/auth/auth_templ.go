@@ -20,6 +20,7 @@ type loginPageProps struct {
 	loginAttempted bool
 	success        bool
 	username       string
+	dev            bool
 }
 
 func loginPage(props loginPageProps) templ.Component {
@@ -61,7 +62,7 @@ func loginPage(props loginPageProps) templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(props.errors.username)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 44, Col: 34}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 45, Col: 34}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -84,7 +85,7 @@ func loginPage(props loginPageProps) templ.Component {
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(props.errors.password)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 65, Col: 34}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 66, Col: 34}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -111,7 +112,7 @@ func loginPage(props loginPageProps) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a href=\"/auth/login/shortcode\" class=\"text-center\">QR Login</a></div></div></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a href=\"/auth/login/shortcode\" class=\"text-center\">QR Login</a></div><button hx-post=\"/auth/login?dev_login=true\" hx-swap=\"none\" class=\"btn w-full mt-4\">DEV Login</button></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -170,7 +171,7 @@ func loginPageShortCode(props loginPageShortCodeProps) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(props.code)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 104, Col: 35}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 112, Col: 35}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -192,7 +193,7 @@ func loginPageShortCode(props loginPageShortCodeProps) templ.Component {
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(props.host)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 105, Col: 100}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 113, Col: 100}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
@@ -205,7 +206,7 @@ func loginPageShortCode(props loginPageShortCodeProps) templ.Component {
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(props.code)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 105, Col: 126}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/auth/auth.templ`, Line: 113, Col: 126}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
