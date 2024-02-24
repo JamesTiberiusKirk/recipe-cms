@@ -12,18 +12,19 @@ SELECT
     r.author_name       AS authorname,
     i.ingredient_name   AS ingredients_name,
     i.amount            AS ingredients_amount,
-    u.unit_name         AS ingredients_unit_name,
-    u.display_name      AS ingredients_unit_displayname,
+    iu.unit_name        AS ingredients_unit_name,
+    iu.display_name     AS ingredients_unit_displayname,
     s.ingredient_name   AS seasonings_name,
     s.amount            AS seasonings_amount,
-    u.unit_name         AS seasonings_unit_name,
-    u.display_name      AS seasonings_unit_displayname,
+    su.unit_name        AS seasonings_unit_name,
+    su.display_name     AS seasonings_unit_displayname,
     r.images            AS images,
     t.tag_name          AS tags
-FROM recipe          AS r 
+FROM recipe r 
 LEFT JOIN ingredient AS i ON r.id = i.recipe_id AND i.field = 'INGREDIENT'
 LEFT JOIN ingredient AS s ON r.id = s.recipe_id AND s.field = 'SEASONING'
-LEFT JOIN unit       AS u ON i.unit_name = u.unit_name
+LEFT JOIN unit AS iu ON i.unit_name = iu.unit_name
+LEFT JOIN unit AS su ON s.unit_name = su.unit_name
 LEFT JOIN tag        AS t ON r.id = t.recipe_id;
 
 -- name: get_all_recipes_by_tag_name
@@ -40,18 +41,19 @@ SELECT
     r.author_name       AS authorname,
     i.ingredient_name   AS ingredients_name,
     i.amount            AS ingredients_amount,
-    u.unit_name         AS ingredients_unit_name,
-    u.display_name      AS ingredients_unit_displayname,
+    iu.unit_name        AS ingredients_unit_name,
+    iu.display_name     AS ingredients_unit_displayname,
     s.ingredient_name   AS seasonings_name,
     s.amount            AS seasonings_amount,
-    u.unit_name         AS seasonings_unit_name,
-    u.display_name      AS seasonings_unit_displayname,
+    su.unit_name        AS seasonings_unit_name,
+    su.display_name     AS seasonings_unit_displayname,
     r.images            AS images,
     t.tag_name          AS tags
-FROM recipe          AS r 
+FROM recipe r 
 LEFT JOIN ingredient AS i ON r.id = i.recipe_id AND i.field = 'INGREDIENT'
 LEFT JOIN ingredient AS s ON r.id = s.recipe_id AND s.field = 'SEASONING'
-LEFT JOIN unit       AS u ON i.unit_name = u.unit_name
+LEFT JOIN unit AS iu ON i.unit_name = iu.unit_name
+LEFT JOIN unit AS su ON s.unit_name = su.unit_name
 LEFT JOIN tag        AS t ON r.id = t.recipe_id
 WHERE t.tag_name = $1;
 
@@ -69,18 +71,19 @@ SELECT
     r.author_name       AS authorname,
     i.ingredient_name   AS ingredients_name,
     i.amount            AS ingredients_amount,
-    u.unit_name         AS ingredients_unit_name,
-    u.display_name      AS ingredients_unit_displayname,
+    iu.unit_name        AS ingredients_unit_name,
+    iu.display_name     AS ingredients_unit_displayname,
     s.ingredient_name   AS seasonings_name,
     s.amount            AS seasonings_amount,
-    u.unit_name         AS seasonings_unit_name,
-    u.display_name      AS seasonings_unit_displayname,
+    su.unit_name        AS seasonings_unit_name,
+    su.display_name     AS seasonings_unit_displayname,
     r.images            AS images,
     t.tag_name          AS tags
 FROM recipe r 
 LEFT JOIN ingredient AS i ON r.id = i.recipe_id AND i.field = 'INGREDIENT'
 LEFT JOIN ingredient AS s ON r.id = s.recipe_id AND s.field = 'SEASONING'
-LEFT JOIN unit       AS u ON i.unit_name = u.unit_name
+LEFT JOIN unit AS iu ON i.unit_name = iu.unit_name
+LEFT JOIN unit AS su ON s.unit_name = su.unit_name
 LEFT JOIN tag        AS t ON r.id = t.recipe_id
 WHERE r.id = $1;
 

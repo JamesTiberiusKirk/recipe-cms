@@ -57,7 +57,7 @@ templ recipeView(props recipeFormProps) {
 		<div class="py-5">
 			@components.RenderMarkdown(props.Recipe.Description)
 		</div>
-		<div class="w-full flex flex-row flex-wrap justify-around ">
+		<div class="w-full flex flex-row flex-wrap ">
 			@ingredientTable("Ingredients:", props.Recipe.Ingredients)
 			<span class="w-5"></span>
 			@ingredientTable("Seasonings:", props.Recipe.Seasonings)

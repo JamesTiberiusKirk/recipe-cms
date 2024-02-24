@@ -49,7 +49,6 @@ type RecipeRequestData struct {
 
 func (h *RecipeHandler) Page(c *common.Context) error {
 	reqData := RecipeRequestData{}
-	// echo.QueryParamsBinder(c)
 	err := c.Bind(&reqData)
 	if err != nil {
 		return err
@@ -119,8 +118,6 @@ func (h *RecipeHandler) Page(c *common.Context) error {
 	if reqData.RecipeID == "new" {
 		data.Recipe.ID = "new"
 	}
-
-	logrus.Info(data.Recipe.Seasonings)
 
 	return c.TEMPL(status, recipePage(data))
 }
@@ -205,17 +202,13 @@ func (h *RecipeHandler) Image(c *common.Context) error {
 		fileNames = append(recipe.Images, fileNames...)
 	}
 
-	_, upserted, err := h.recipeRegistry.Upsert(models.Recipe{
+	_, _, err = h.recipeRegistry.Upsert(models.Recipe{
 		ID:     recipeID,
 		Images: fileNames,
 	})
 	if err != nil {
 		logrus.Infof("error upserting images: %s", err.Error())
 		return fmt.Errorf("error upserting images: %w", err)
-	}
-
-	if !upserted {
-		logrus.Infof("NOT UPSERTED")
 	}
 
 	// TODO: need to figure out how to manage an id of new
