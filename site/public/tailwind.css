@@ -1275,12 +1275,29 @@ ol {
 }
 
 @media (min-width: 450px) {
+  .phone\:w-full {
+    width: 100%;
+  }
+
+  .phone\:w-10\/12 {
+    width: 83.333333%;
+  }
+
   .phone\:flex-col {
     flex-direction: column;
   }
 }
 
 @media (min-width: 1024px) {
+  .laptop\:w-full {
+    width: 100%;
+  }
+
+  .laptop\:w-fit {
+    width: -moz-fit-content;
+    width: fit-content;
+  }
+
   .laptop\:flex-col {
     flex-direction: column;
   }
