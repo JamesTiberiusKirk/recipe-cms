@@ -109,6 +109,13 @@ templ loginPage(props loginPageProps) {
 	}
 }
 
+script shortCodeSSEer(url string) {
+	const sse = new EventSource(url);
+	sse.addEventListener("refresh", (e) => {
+	  window.location.reload()
+	});
+}
+
 templ loginPageShortCode(c *common.Context, qrcode string) {
 	<div id="shortcode_box" class="mx-auto w-fit p-4">
 		if qrcode == "" {
@@ -126,11 +133,14 @@ templ loginPageShortCode(c *common.Context, qrcode string) {
 			</div>
 		} else {
 			<img class="mx-auto rounded-xl w-full" src={ "/auth/login/qr/" + qrcode }/>
-			<div
-				hx-ext="sse"
-				sse-connect="/auth/login/sse"
-				sse-swap="auth-event"
-			></div>
+			@shortCodeSSEer("/auth/login/events?" + c.QueryParams().Encode())
+			// <div
+			// 	hx-ext="sse"
+			// 	sse-connect={ "/auth/login/events?" + c.QueryParams().Encode() }
+			// 	sse-swap="auth-event"
+			// 	_="on htmx:beforeSwap log it"
+			// ></div>
+			// TODO: make a loading indicator 
 			<button
 				hx-swap="outerHTML"
 				hx-target="#shortcode_box"

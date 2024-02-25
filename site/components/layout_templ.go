@@ -335,7 +335,7 @@ func Layout(c *common.Context) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><script src=\"/assets/htmx.org@1.9.6\"></script><script src=\"/assets/hyperscript.org@0.9.12\"></script><script src=\"/assets/loading-states.js\"></script><script src=\"/assets/json-enc.js\"></script><script src=\"/assets/jquery-3.7.1.min.js\"></script><script src=\"/assets/serializeForm.js\"></script><script src=\"/assets/Sortable.js\"></script><script src=\"https://unpkg.com/htmx.org/dist/ext/sse.js\"></script>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><script src=\"/assets/htmx.org@1.9.6\"></script><script src=\"/assets/hyperscript.org@0.9.12\"></script><script src=\"/assets/loading-states.js\"></script><script src=\"/assets/json-enc.js\"></script><script src=\"/assets/jquery-3.7.1.min.js\"></script><script src=\"/assets/serializeForm.js\"></script><script src=\"/assets/Sortable.js\"></script><script src=\"/assets/sse.js\"></script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

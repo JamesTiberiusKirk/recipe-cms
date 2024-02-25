@@ -94,15 +94,11 @@ func (m *Manager) AuthShortCodeSess(short string, c echo.Context) error {
 		return fmt.Errorf("shortcode session already claimed")
 	}
 
-	fmt.Printf("short code sess map %+v", shortcodeLoginSessions)
-
 	username, err := m.GetUser(c)
 	if err != nil {
 		logrus.Errorf("error getting username %s", err.Error())
 		return fmt.Errorf("error getting user %w", err)
 	}
-
-	fmt.Printf("short code sess map %+v", shortcodeLoginSessions)
 
 	shortcodeLoginSessions[short] = username
 	shortCodeChannels[short] <- "authenticated"
@@ -167,9 +163,6 @@ func (m *Manager) IsAuthenticated(c echo.Context, checkAndLoginShortSession bool
 		if !ok {
 			return false
 		}
-
-		fmt.Printf("short %s \n", short)
-		fmt.Printf("usernameInShort %s \n", usernameInShort)
 
 		if usernameInShort == "" {
 			return false

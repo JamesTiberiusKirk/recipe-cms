@@ -161,6 +161,19 @@ func loginPage(props loginPageProps) templ.Component {
 	})
 }
 
+func shortCodeSSEer(url string) templ.ComponentScript {
+	return templ.ComponentScript{
+		Name: `__templ_shortCodeSSEer_0153`,
+		Function: `function __templ_shortCodeSSEer_0153(url){const sse = new EventSource(url);
+	sse.addEventListener("refresh", (e) => {
+	  window.location.reload()
+	});
+}`,
+		Call:       templ.SafeScript(`__templ_shortCodeSSEer_0153`, url),
+		CallInline: templ.SafeScriptInline(`__templ_shortCodeSSEer_0153`, url),
+	}
+}
+
 func loginPageShortCode(c *common.Context, qrcode string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
@@ -200,7 +213,15 @@ func loginPageShortCode(c *common.Context, qrcode string) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><div hx-ext=\"sse\" sse-connect=\"/auth/login/sse\" sse-swap=\"auth-event\"></div><button hx-swap=\"outerHTML\" hx-target=\"#shortcode_box\" hx-get=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = shortCodeSSEer("/auth/login/events?"+c.QueryParams().Encode()).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("        <button hx-swap=\"outerHTML\" hx-target=\"#shortcode_box\" hx-get=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

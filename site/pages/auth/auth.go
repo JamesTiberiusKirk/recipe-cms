@@ -36,10 +36,18 @@ func InitAuthHandler(app *echo.Group, s *session.Manager, ur registry.IUser) {
 
 	app.GET("/login/qr/:code", h.QrImage)
 
-	app.GET("/login/sse", h.LoginSSE)
+	app.GET("/login/events", h.LoginSSE)
 }
 
 func (h *AuthHandler) LoginPage(c *common.Context) error {
+	redirect := c.QueryParam("source")
+	if redirect == "" {
+		redirect = "/recipes"
+	}
+	if h.sessions.IsAuthenticated(c, false) {
+		c.Response().Header().Set("HX-Redirect", redirect)
+		return c.Redirect(http.StatusSeeOther, redirect)
+	}
 
 	conf, ok := c.Get("cfg").(config.Config)
 	if !ok {
@@ -158,7 +166,7 @@ func (h *AuthHandler) ShortLogin(c *common.Context) error {
 		c.Response().Header().Set("HX-Location", source)
 	}
 
-	return c.TEMPL(http.StatusOK, shortCodeTempPage(c))
+	return c.Redirect(http.StatusSeeOther, "/recipes")
 }
 
 func (h *AuthHandler) QrImage(c echo.Context) error {
@@ -198,11 +206,10 @@ func (h *AuthHandler) LoginSSE(c echo.Context) error {
 		var buf bytes.Buffer
 		authenticatedComponent().Render(c.Request().Context(), &buf)
 
-		logrus.Print("sending data")
-		// fmt.Fprintf(c.Response().Writer, "event: authEvent\ndata: authed \n\n")
 		fmt.Fprintf(c.Response().Writer, "event: auth-event\ndata: %s \n\n", buf.String())
+		fmt.Fprintf(c.Response().Writer, "event: refresh\ndata: true \n\n")
+
 		c.Response().Writer.(http.Flusher).Flush()
-		// time.Sleep(2 * time.Second)
 	}
 
 	return nil
