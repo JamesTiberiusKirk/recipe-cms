@@ -855,6 +855,10 @@ ol {
   max-width: 36rem;
 }
 
+.max-w-3xl {
+  max-width: 48rem;
+}
+
 .grow {
   flex-grow: 1;
 }
@@ -1204,11 +1208,43 @@ ol {
   .phone\:w-10\/12 {
     width: 83.333333%;
   }
+
+  .phone\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+
+  .phone\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
 }
 
 @media (min-width: 1024px) {
   .laptop\:w-fit {
     width: -moz-fit-content;
     width: fit-content;
+  }
+}
+
+@media (min-width: 1280px) {
+  .desktop\:max-w-80 {
+    max-width: 20rem;
+  }
+
+  .desktop\:max-w-96 {
+    max-width: 24rem;
+  }
+
+  .desktop\:max-w-lg {
+    max-width: 32rem;
+  }
+
+  .desktop\:max-w-xl {
+    max-width: 36rem;
+  }
+
+  .desktop\:max-w-3xl {
+    max-width: 48rem;
   }
 }

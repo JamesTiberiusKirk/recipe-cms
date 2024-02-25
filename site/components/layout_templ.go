@@ -343,7 +343,7 @@ func Layout(c *common.Context) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"mx-auto w-11/12 lg:w-3/4 sm:text-xl\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"phone:text-2xl max-w-3xl mx-auto w-11/12 lg:w-3/4 sm:text-xl\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
