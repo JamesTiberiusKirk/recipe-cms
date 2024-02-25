@@ -86,7 +86,7 @@ templ ingredientTable(title string, ingredients []models.Ingredient) {
 				for _, i := range ingredients {
 					<tr>
 						// <td>{ fmt.Sprint(index+1) }</td>
-						<td>{ i.Name }</td>
+						<td>{ i.Name }:</td>
 						<td>{ fmt.Sprintf("%d %s",i.Amount, i.Unit.DisplayName) }</td>
 					</tr>
 				}
