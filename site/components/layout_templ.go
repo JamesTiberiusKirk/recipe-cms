@@ -11,8 +11,31 @@ import "io"
 import "bytes"
 
 import "github.com/JamesTiberiusKirk/recipe-cms/common"
+import "github.com/JamesTiberiusKirk/recipe-cms/site/session"
+import "fmt"
 
-func navBar() templ.Component {
+func navBar(c *common.Context) templ.Component {
+	sess, ok := c.Get("session").(*session.Manager)
+	if !ok {
+		fmt.Println("not ok")
+		return navBarTempl(false, "")
+	}
+
+	user, err := sess.GetUser(c)
+	if err != nil {
+		fmt.Println("error getting user")
+		return navBarTempl(false, "")
+	}
+
+	if user == "" {
+		fmt.Println("user is empty ")
+		return navBarTempl(false, "")
+	}
+
+	return navBarTempl(true, user)
+}
+
+func navBarTempl(loggedIn bool, user string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -25,7 +48,35 @@ func navBar() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"w-full\"><header class=\"lg:w-1/2 sm:w-full mx-auto\"><div class=\"lg:text-xl text-5xl flex p-2 justify-evenly\"><a class=\"p-6\" href=\"/recipes\">Recipes</a> <a class=\"p-6\" href=\"/recipe/new\">Add Recipe</a> <a class=\"p-6\" href=\"/auth/login\">Login</a> <a class=\"p-6\" href=\"/auth/logout\">Logout</a></div></header></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"w-full\"><header class=\"lg:w-1/2 sm:w-full mx-auto\"><div class=\"lg:text-xl text-5xl flex p-2 justify-evenly\"><a class=\"p-6\" href=\"/recipes\">Recipes</a> <a class=\"p-6\" href=\"/recipe/new\">Add Recipe</a> ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if loggedIn {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a class=\"p-6\" href=\"/auth/logout\">Logout</a> <span class=\"p-6 text-sm\">USER: ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var2 string
+			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(user)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/layout.templ`, Line: 35, Col: 43}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a class=\"p-6\" href=\"/auth/login\">Login</a>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></header></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -170,9 +221,9 @@ func toasts() templ.Component {
 			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var2 == nil {
-			templ_7745c5c3_Var2 = templ.NopComponent
+		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var3 == nil {
+			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"toast_danger\" class=\"hidden z-10 absolute bottom-0 left-1/2 -translate-x-1/2 my-auto\"><div class=\"mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative\" role=\"alert\"><span id=\"toast_danger_text\" class=\"block sm:inline pr-6\"></span> ")
@@ -187,8 +238,8 @@ func toasts() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var3 templ.ComponentScript = dismissToast("toast-danger")
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3.Call)
+		var templ_7745c5c3_Var4 templ.ComponentScript = dismissToast("toast-danger")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4.Call)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -204,8 +255,8 @@ func toasts() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var4 templ.ComponentScript = dismissToast("toast-warning")
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4.Call)
+		var templ_7745c5c3_Var5 templ.ComponentScript = dismissToast("toast-warning")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5.Call)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -221,8 +272,8 @@ func toasts() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var5 templ.ComponentScript = dismissToast("toast-success")
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5.Call)
+		var templ_7745c5c3_Var6 templ.ComponentScript = dismissToast("toast-success")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6.Call)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -238,8 +289,8 @@ func toasts() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var6 templ.ComponentScript = dismissToast("toast-info")
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6.Call)
+		var templ_7745c5c3_Var7 templ.ComponentScript = dismissToast("toast-info")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7.Call)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -262,9 +313,9 @@ func Layout(c *common.Context) templ.Component {
 			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var7 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var7 == nil {
-			templ_7745c5c3_Var7 = templ.NopComponent
+		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var8 == nil {
+			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<html class=\"dark\"><head><link rel=\"stylesheet\" href=\"/assets/styles.css\"><link rel=\"stylesheet\" href=\"/assets/tailwind.css\"></head>")
@@ -279,8 +330,8 @@ func Layout(c *common.Context) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var8 templ.ComponentScript = onLoad()
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8.Call)
+		var templ_7745c5c3_Var9 templ.ComponentScript = onLoad()
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9.Call)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -288,7 +339,7 @@ func Layout(c *common.Context) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = navBar().Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = navBar(c).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -296,7 +347,7 @@ func Layout(c *common.Context) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ_7745c5c3_Var7.Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = templ_7745c5c3_Var8.Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

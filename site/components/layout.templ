@@ -1,15 +1,42 @@
 package components
 
 import "github.com/JamesTiberiusKirk/recipe-cms/common"
+import "github.com/JamesTiberiusKirk/recipe-cms/site/session"
+import "fmt"
 
-templ navBar() {
+func navBar(c *common.Context) templ.Component {
+	sess, ok := c.Get("session").(*session.Manager)
+	if !ok {
+		fmt.Println("not ok")
+		return navBarTempl(false, "")
+	}
+
+	user, err := sess.GetUser(c)
+	if err != nil {
+		fmt.Println("error getting user")
+		return navBarTempl(false, "")
+	}
+
+	if user == "" {
+		fmt.Println("user is empty ")
+		return navBarTempl(false, "")
+	}
+
+	return navBarTempl(true, user)
+}
+
+templ navBarTempl(loggedIn bool, user string) {
 	<div class="w-full">
 		<header class="lg:w-1/2 sm:w-full mx-auto">
 			<div class="lg:text-xl text-5xl flex p-2 justify-evenly">
 				<a class="p-6" href="/recipes">Recipes</a>
 				<a class="p-6" href="/recipe/new">Add Recipe</a>
-				<a class="p-6" href="/auth/login">Login</a>
-				<a class="p-6" href="/auth/logout">Logout</a>
+				if loggedIn {
+					<a class="p-6" href="/auth/logout">Logout</a>
+					<span class="p-6 text-sm">USER: { user }</span>
+				} else {
+					<a class="p-6" href="/auth/login">Login</a>
+				}
 			</div>
 		</header>
 	</div>
@@ -203,7 +230,7 @@ templ Layout(c *common.Context) {
 			<script src="/assets/serializeForm.js"></script>
 			<script src="/assets/Sortable.js"></script>
 			<script src="https://unpkg.com/htmx.org/dist/ext/sse.js"></script>
-			@navBar()
+			@navBar(c)
 			<div class="mx-auto w-11/12 lg:w-3/4 sm:text-xl">
 				{ children... }
 			</div>

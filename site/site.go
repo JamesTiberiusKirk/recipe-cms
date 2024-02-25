@@ -47,7 +47,7 @@ func (s *Site) Start(addr string) error {
 	e := echo.New()
 
 	e.Use(
-		setCfg(s.config),
+		inject(s.config, s.sessions),
 	)
 
 	// Middleware
@@ -147,10 +147,11 @@ func initLogger() {
 	})
 }
 
-func setCfg(cfg config.Config) echo.MiddlewareFunc {
+func inject(cfg config.Config, m *session.Manager) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			c.Set("cfg", cfg)
+			c.Set("session", m)
 			return next(c)
 		}
 	}

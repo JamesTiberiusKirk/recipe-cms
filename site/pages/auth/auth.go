@@ -46,14 +46,14 @@ func (h *AuthHandler) LoginPage(c *common.Context) error {
 		return fmt.Errorf("could not get config")
 	}
 
-	props := loginPageProps{c: c}
+	props := loginPageProps{c: c, dev: conf.Debug}
 
 	if c.Request().Method == http.MethodPost {
 
 		if conf.Debug {
 			devLogin := c.QueryParam("dev_login")
 			if devLogin == "true" {
-				h.sessions.InitSession(props.username, c)
+				h.sessions.InitSession("TestUser", c)
 				hxto := components.HxTriggerOptions{
 					ToastSuccess: "Logged in",
 				}.ToJson()
