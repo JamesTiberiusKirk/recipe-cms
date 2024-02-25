@@ -101,6 +101,8 @@ func (s *Site) Start(addr string) error {
 	e.Use(middleware.Gzip())
 	e.Use(middleware.Recover())
 
+	e.HTTPErrorHandler = pages.CustomHTTPErrorHandler
+
 	e.Static("/images", s.config.Volume)
 	e.Static("/assets", "./site/public/")
 

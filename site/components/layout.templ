@@ -2,23 +2,23 @@ package components
 
 import "github.com/JamesTiberiusKirk/recipe-cms/common"
 import "github.com/JamesTiberiusKirk/recipe-cms/site/session"
-import "fmt"
 
 func navBar(c *common.Context) templ.Component {
+	if c == nil {
+		return navBarTempl(false, "")
+	}
+
 	sess, ok := c.Get("session").(*session.Manager)
 	if !ok {
-		fmt.Println("not ok")
 		return navBarTempl(false, "")
 	}
 
 	user, err := sess.GetUser(c)
 	if err != nil {
-		fmt.Println("error getting user")
 		return navBarTempl(false, "")
 	}
 
 	if user == "" {
-		fmt.Println("user is empty ")
 		return navBarTempl(false, "")
 	}
 
@@ -29,9 +29,10 @@ templ navBarTempl(loggedIn bool, user string) {
 	<div class="w-full">
 		<header class="lg:w-1/2 sm:w-full mx-auto">
 			<div class="lg:text-xl text-5xl flex p-2 justify-evenly">
+				<a class="p-6" href="/">Home</a>
 				<a class="p-6" href="/recipes">Recipes</a>
-				<a class="p-6" href="/recipe/new">Add Recipe</a>
 				if loggedIn {
+					<a class="p-6" href="/recipe/new">Add Recipe</a>
 					<a class="p-6" href="/auth/logout">Logout</a>
 					<span class="p-6 text-sm">USER: { user }</span>
 				} else {

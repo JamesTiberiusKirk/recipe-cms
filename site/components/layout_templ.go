@@ -12,23 +12,23 @@ import "bytes"
 
 import "github.com/JamesTiberiusKirk/recipe-cms/common"
 import "github.com/JamesTiberiusKirk/recipe-cms/site/session"
-import "fmt"
 
 func navBar(c *common.Context) templ.Component {
+	if c == nil {
+		return navBarTempl(false, "")
+	}
+
 	sess, ok := c.Get("session").(*session.Manager)
 	if !ok {
-		fmt.Println("not ok")
 		return navBarTempl(false, "")
 	}
 
 	user, err := sess.GetUser(c)
 	if err != nil {
-		fmt.Println("error getting user")
 		return navBarTempl(false, "")
 	}
 
 	if user == "" {
-		fmt.Println("user is empty ")
 		return navBarTempl(false, "")
 	}
 
@@ -48,19 +48,19 @@ func navBarTempl(loggedIn bool, user string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"w-full\"><header class=\"lg:w-1/2 sm:w-full mx-auto\"><div class=\"lg:text-xl text-5xl flex p-2 justify-evenly\"><a class=\"p-6\" href=\"/recipes\">Recipes</a> <a class=\"p-6\" href=\"/recipe/new\">Add Recipe</a> ")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"w-full\"><header class=\"lg:w-1/2 sm:w-full mx-auto\"><div class=\"lg:text-xl text-5xl flex p-2 justify-evenly\"><a class=\"p-6\" href=\"/\">Home</a> <a class=\"p-6\" href=\"/recipes\">Recipes</a> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if loggedIn {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a class=\"p-6\" href=\"/auth/logout\">Logout</a> <span class=\"p-6 text-sm\">USER: ")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a class=\"p-6\" href=\"/recipe/new\">Add Recipe</a> <a class=\"p-6\" href=\"/auth/logout\">Logout</a> <span class=\"p-6 text-sm\">USER: ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(user)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/layout.templ`, Line: 35, Col: 43}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/layout.templ`, Line: 36, Col: 43}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {

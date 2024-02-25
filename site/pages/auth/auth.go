@@ -31,7 +31,7 @@ func InitAuthHandler(app *echo.Group, s *session.Manager, ur registry.IUser) {
 
 	app.GET("/logout", common.UseCustomContext(h.Logout))
 
-	app.GET("/login/shortcode", common.UseCustomContext(h.ShortCode))
+	// app.GET("/login/shortcode", common.UseCustomContext(h.ShortCode))
 	app.GET("/login/:code", common.UseCustomContext(h.ShortLogin))
 
 	app.GET("/login/qr/:code", h.QrImage)
@@ -48,22 +48,25 @@ func (h *AuthHandler) LoginPage(c *common.Context) error {
 
 	props := loginPageProps{c: c, dev: conf.Debug}
 
+	source := c.QueryParam("qrlogin")
+	if source != "" {
+		props.qrcode = h.sessions.InitShortCodeSess(c)
+		return c.TEMPL(http.StatusOK, loginPageShortCode(c, props.qrcode))
+	}
+
 	if c.Request().Method == http.MethodPost {
 
 		if conf.Debug {
 			devLogin := c.QueryParam("dev_login")
 			if devLogin == "true" {
 				h.sessions.InitSession("TestUser", c)
-				hxto := components.HxTriggerOptions{
-					ToastSuccess: "Logged in",
-				}.ToJson()
-				c.Response().Header().Set("HX-Trigger", hxto)
-
-				source := c.QueryParam("source")
-				if source != "" {
-					c.Response().Header().Set("HX-Location", source)
+				redirect := c.QueryParam("source")
+				fmt.Println("REDIRECT:", redirect)
+				if redirect == "" {
+					redirect = "/recipes"
 				}
 
+				c.Response().Header().Set("HX-Redirect", redirect)
 				return c.TEMPL(http.StatusOK, loginPage(props))
 			}
 		}
@@ -106,10 +109,11 @@ func (h *AuthHandler) LoginPage(c *common.Context) error {
 		}.ToJson()
 		c.Response().Header().Set("HX-Trigger", hxto)
 
-		source := c.QueryParam("source")
-		if source != "" {
-			c.Response().Header().Set("HX-Location", source)
+		redirect := c.QueryParam("source")
+		if redirect == "" {
+			redirect = "/recipes"
 		}
+		c.Response().Header().Set("HX-Redirect", redirect)
 	}
 
 	return c.TEMPL(http.StatusOK, loginPage(props))
@@ -123,19 +127,19 @@ func (h *AuthHandler) Logout(c *common.Context) error {
 // TODO: here we need to setup a SSE for this page so that it either
 // refreshes on login or pushes a popup
 // Will also need to figure out how to setup a channel so we can figure out when to send the server event
-func (h *AuthHandler) ShortCode(c *common.Context) error {
-	conf, ok := c.Get("cfg").(config.Config)
-	if !ok {
-		return fmt.Errorf("could not get config")
-	}
-
-	if h.sessions.IsAuthenticated(c, false) {
-		return c.Redirect(http.StatusSeeOther, "/")
-	}
-
-	short := h.sessions.InitShortCodeSess(c)
-	return c.TEMPL(http.StatusOK, loginPageShortCode(loginPageShortCodeProps{code: short, host: conf.Host}))
-}
+// func (h *AuthHandler) ShortCode(c *common.Context) error {
+// 	conf, ok := c.Get("cfg").(config.Config)
+// 	if !ok {
+// 		return fmt.Errorf("could not get config")
+// 	}
+//
+// 	if h.sessions.IsAuthenticated(c, false) {
+// 		return c.Redirect(http.StatusSeeOther, "/")
+// 	}
+//
+// 	short := h.sessions.InitShortCodeSess(c)
+// 	return c.TEMPL(http.StatusOK, loginPageShortCode(loginPageShortCodeProps{code: short, host: conf.Host}))
+// }
 
 func (h *AuthHandler) ShortLogin(c *common.Context) error {
 	if !h.sessions.IsAuthenticated(c, true) {
@@ -153,6 +157,7 @@ func (h *AuthHandler) ShortLogin(c *common.Context) error {
 	if source != "" {
 		c.Response().Header().Set("HX-Location", source)
 	}
+
 	return c.TEMPL(http.StatusOK, shortCodeTempPage(c))
 }
 

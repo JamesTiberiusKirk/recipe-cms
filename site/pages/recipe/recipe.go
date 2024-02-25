@@ -62,7 +62,10 @@ func (h *RecipeHandler) Page(c *common.Context) error {
 	}
 
 	if data.Edit && !data.IsAuthenticated {
-		return c.Redirect(http.StatusSeeOther, "/auth/login?source="+url.QueryEscape(c.Request().URL.String()))
+		// return c.Redirect(http.StatusSeeOther, "/auth/login?source="+url.QueryEscape(c.Request().URL.String()))
+		c.Response().Header().Set("HX-Redirect", "/auth/login?source="+url.QueryEscape(c.Request().URL.String()))
+		data.Edit = false
+		return c.TEMPL(http.StatusUnauthorized, recipePage(data))
 	}
 
 	status := http.StatusOK
@@ -93,11 +96,9 @@ func (h *RecipeHandler) Page(c *common.Context) error {
 				data.Recipe.ID = reqData.RecipeID
 			}
 
-			logrus.Infof("%+v", data.Recipe.Images)
-
 			upserted, _, err := h.recipeRegistry.Upsert(data.Recipe)
 			if err != nil {
-				return echo.NewHTTPError(500, "error upserting")
+				return echo.NewHTTPError(http.StatusInternalServerError, "error upserting")
 			}
 
 			if reqData.RecipeID == "new" {

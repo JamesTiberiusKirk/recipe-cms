@@ -1,0 +1,25 @@
+package pages
+
+import "github.com/JamesTiberiusKirk/recipe-cms/common"
+import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
+
+type page500Props struct {
+	c       *common.Context
+	message string
+}
+
+templ page500(props page500Props) {
+	@components.Layout(props.c) {
+		<div class="mt-40 w-fit mx-auto text-center">
+			<h1>Error  500</h1>
+			<h5>Blame the idiot dev lol</h5>
+			if props.message != "" {
+				<h2 class="mt-6 font-bold text-red-500">
+					ERROR:
+					<br/>
+					{ props.message }
+				</h2>
+			}
+		</div>
+	}
+}

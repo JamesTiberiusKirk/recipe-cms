@@ -13,118 +13,134 @@ type loginPageProps struct {
 	success        bool
 	username       string
 	dev            bool
+	qrcode         string
 }
 
 templ loginPage(props loginPageProps) {
 	@components.Layout(props.c) {
 		<div id="login" class="mx-auto sm:w-24 md:w-48 lg:w-66 lg:max-w-1/2">
 			<h1 class="mb-6 text-center">Login Page</h1>
-			<div class="p-4 rounded-md border-2 border-white">
-				<form
-					hx-post
-					hx-select="#login"
-					hx-target="#login"
-					hx-swap="outerHTML"
-				>
-					<table class="w-full">
-						<tbody>
-							<tr>
-								<td class="w-fit">
-									<label class="pr-5 text-2xl">Username:</label>
-								</td>
-								<td class="w-full">
-									<input
-										type="text"
-										class="w-full p-2 h-12 mb-4"
-										name="username"
-										value={ props.username }
-									/>
-								</td>
-							</tr>
-							if props.errors.username != "" {
-								<tr>
-									<td>
-										<span class="pr-6 text-red-400">
-											{ props.errors.username }
-										</span>
-									</td>
-								</tr>
-							}
-							<tr>
-								<td class="w-fit">
-									<label class="pr-5 text-2xl">Password:</label>
-								</td>
-								<td class="w-full">
-									<input
-										type="password"
-										class="w-full p-2 h-12"
-										name="password"
-									/>
-								</td>
-							</tr>
-							if props.errors.username != "" {
-								<tr>
-									<td>
-										<span class="pr-6 text-red-400">
-											{ props.errors.password }
-										</span>
-									</td>
-								</tr>
-								<br/>
-							}
-						</tbody>
-					</table>
-					<button type="submit" class="btn w-full mt-4">Login</button>
-				</form>
-				<div class="w-fit mx-auto">
-					if props.loginAttempted && !props.success {
-						<p>
-							<span class="text-red-600">
-								Wrong creds! 
-							</span>
-						</p>
-					}
-					if props.loginAttempted && props.success {
-						<p><span class="text-green-500">Success!</span></p>
-					}
-					<a href="/auth/login/shortcode" class="text-center">QR Login</a>
-				</div>
-				if props.dev {
-					<button
-						hx-post="/auth/login?dev_login=true"
-						hx-swap="none"
-						class="btn w-full mt-4"
+			<div class="flex flex-row max-laptop:flex-col mx-auto w-fit p-4 rounded-md border-2 border-white">
+				<div class="w-full my-auto">
+					<form
+						hx-post
+						hx-select="#login"
+						hx-target="#login"
+						hx-swap="outerHTML"
+						class="mt-4 mx-auto max-w-xl"
 					>
-						DEV Login
-					</button>
-				}
+						<table class="w-full">
+							<tbody>
+								<tr>
+									<td class="w-fit">
+										<label class="pr-5 text-2xl">Username:</label>
+									</td>
+									<td class="w-full">
+										<input
+											type="text"
+											class="w-full p-2 h-12 mb-4"
+											name="username"
+											value={ props.username }
+										/>
+									</td>
+								</tr>
+								if props.errors.username != "" {
+									<tr>
+										<td>
+											<span class="pr-6 text-red-400">
+												{ props.errors.username }
+											</span>
+										</td>
+									</tr>
+								}
+								<tr>
+									<td class="w-fit">
+										<label class="pr-5 text-2xl">Password:</label>
+									</td>
+									<td class="w-full">
+										<input
+											type="password"
+											class="w-full p-2 h-12"
+											name="password"
+										/>
+									</td>
+								</tr>
+								if props.errors.username != "" {
+									<tr>
+										<td>
+											<span class="pr-6 text-red-400">
+												{ props.errors.password }
+											</span>
+										</td>
+									</tr>
+									<br/>
+								}
+							</tbody>
+						</table>
+						<button type="submit" class="btn w-full mt-4">Login</button>
+					</form>
+					<div class="w-fit mx-auto">
+						if props.loginAttempted && !props.success {
+							<p>
+								<span class="text-red-600">
+									Wrong creds! 
+								</span>
+							</p>
+						}
+						if props.loginAttempted && props.success {
+							<p><span class="text-green-500">Success!</span></p>
+						}
+					</div>
+					if props.dev {
+						<button
+							hx-post={ props.c.AddQueryAndReturnURI("dev_login", "true") }
+							hx-swap="none"
+							class="w-full btn mt-4"
+						>
+							DEV Login
+						</button>
+					}
+				</div>
+				<div class="w-9/12 mx-auto">
+					@loginPageShortCode(props.c, props.qrcode)
+				</div>
 			</div>
 		</div>
 	}
 }
 
-type loginPageShortCodeProps struct {
-	c    *common.Context
-	host string
-	code string
-}
-
-templ loginPageShortCode(props loginPageShortCodeProps) {
-	@components.Layout(props.c) {
-		<div id="login" class="mx-auto w-1/2">
-			<h1 class="mb-6 text-center">Login Page</h1>
-			<div class=" p-4 rounded-md border-2 border-white">
-				<img class="mx-auto" src={ "/auth/login/qr/" + props.code }/>
-				<p class="mx-auto">{ props.code }</p>
-				<a class="mx-auto" href={ templ.SafeURL(props.host + "/auth/login/" + props.code) }>{ props.host }/auth/login/{ props.code }</a>
-				<div
-					hx-ext="sse"
-					sse-connect="/auth/login/sse"
-					sse-swap="auth-event"
-				></div>
+templ loginPageShortCode(c *common.Context, qrcode string) {
+	<div id="shortcode_box" class="mx-auto w-fit p-4">
+		if qrcode == "" {
+			<div class="relative">
+				<img
+					class="mx-auto rounded-xl opacity-60"
+					src="/assets/images/qr_standin.png"
+				/>
+				<button
+					hx-swap="outerHTML"
+					hx-target="#shortcode_box"
+					hx-get={ c.AddQueryAndReturnURI("qrlogin", "true") }
+					class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 btn"
+				>QR Login</button>
 			</div>
-		</div>
-	}
+		} else {
+			<img class="mx-auto rounded-xl w-full" src={ "/auth/login/qr/" + qrcode }/>
+			<div
+				hx-ext="sse"
+				sse-connect="/auth/login/sse"
+				sse-swap="auth-event"
+			></div>
+			<button
+				hx-swap="outerHTML"
+				hx-target="#shortcode_box"
+				hx-get={ c.AddQueryAndReturnURI("qrlogin", "true") }
+				class="btn w-full mt-4"
+			>
+				Refresh	Code
+			</button>
+		}
+	</div>
 }
 
 templ shortCodeTempPage(c *common.Context) {

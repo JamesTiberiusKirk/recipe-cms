@@ -25,7 +25,6 @@ type RecipesRequestData struct {
 }
 
 func (h *RecipesHandler) Page(c *common.Context) error {
-
 	reqData := RecipesRequestData{}
 	// echo.QueryParamsBinder(c)
 	err := c.Bind(&reqData)
