@@ -9,7 +9,7 @@ To help wit developent, ait, hot-reloader-proxy and migrator are used.
 ## Developent
 1. Start dev db `docker-compose up` 
 2. Setup .env and install some dependencies `make setup` 
-3. Start dev server `with make -j run` 
+3. Start dev server with `make -j run` 
 
 Hot reloader proxy will by default start the proxy server on port 5001
 
