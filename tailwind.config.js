@@ -8,12 +8,15 @@ module.exports = {
     extend: {
     },
 
-    screens: {
-      'phone': '450px',
-      'tablet': '640px',
-      'laptop': '1024px',
-      'desktop': '1280px',
-    },
+    // screens: {
+      // 'phone': {'min': '0px', 'max': '660px'},
+      // 'tablet': {'min': '661px', 'max': '1023px'},
+      // 'laptop': {'min': '1024px', 'max': '1279px'},
+      // 'dektop': {'min': '1280px'},
+      //
+      // 'tablet<': {'min': '661px'},
+      // 'laptop<': {'min': '1024px'},
+    // },
   },
   plugins: [
     plugin(function ({addVariant}) {

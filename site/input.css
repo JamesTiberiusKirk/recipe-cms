@@ -25,9 +25,8 @@
         @apply text-sm;
     }
 
-    /*md:text-lg*/
     a {
-        @apply dark:text-red-500 hover:underline text-lg;
+        @apply dark:text-red-500 hover:underline;
     }
     p {
         @apply dark:text-white;
@@ -58,10 +57,10 @@
 
 
     .btn {
-        @apply bg-red-500 hover:bg-red-700 font-bold py-2 px-4 rounded-full text-lg;
+        @apply bg-red-500 hover:bg-red-700 font-bold py-2 px-4 rounded-full;
     }
 
     .table {
-        @apply border-2 dark:border-white table-auto border-separate text-xl;
+        @apply border-2 dark:border-white table-auto border-separate;
     }
 }

@@ -26,9 +26,9 @@ func navBar(c *common.Context) templ.Component {
 }
 
 templ navBarTempl(loggedIn bool, user string) {
-	<div class="w-full">
-		<header class="lg:w-1/2 sm:w-full mx-auto">
-			<div class="lg:text-xl text-5xl flex p-2 justify-evenly">
+	<div class="w-full md:max-w-3xl mx-auto">
+		<header class="w-full">
+			<div class="flex p-2 justify-evenly">
 				<a class="p-6" href="/">Home</a>
 				<a class="p-6" href="/recipes">Recipes</a>
 				if loggedIn {
@@ -219,6 +219,8 @@ templ toasts() {
 templ Layout(c *common.Context) {
 	<html class="dark">
 		<head>
+			// BUG: without this chrome media queries are broken lol
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<link rel="stylesheet" href="/assets/styles.css"/>
 			<link rel="stylesheet" href="/assets/tailwind.css"/>
 		</head>
@@ -231,8 +233,10 @@ templ Layout(c *common.Context) {
 			<script src="/assets/serializeForm.js"></script>
 			<script src="/assets/Sortable.js"></script>
 			<script src="/assets/sse.js"></script>
-			@navBar(c)
-			<div class="phone:text-2xl max-w-3xl mx-auto w-11/12 lg:w-3/4 sm:text-xl">
+			<div class="w-full">
+				@navBar(c)
+			</div>
+			<div class="mx-auto w-full px-10 md:max-w-3xl ">
 				{ children... }
 			</div>
 			@toasts()

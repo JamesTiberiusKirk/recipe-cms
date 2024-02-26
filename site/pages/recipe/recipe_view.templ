@@ -72,7 +72,7 @@ templ recipeView(props recipeFormProps) {
 }
 
 templ ingredientTable(title string, ingredients []models.Ingredient) {
-	<div>
+	<div class="w-full mt-2 md:w-fit">
 		<h2>{ title }</h2>
 		<table class="table border-spacing-4 w-full p-5">
 			<thead>
@@ -86,8 +86,8 @@ templ ingredientTable(title string, ingredients []models.Ingredient) {
 				for _, i := range ingredients {
 					<tr>
 						// <td>{ fmt.Sprint(index+1) }</td>
-						<td>{ i.Name }:</td>
-						<td>{ fmt.Sprintf("%d %s",i.Amount, i.Unit.DisplayName) }</td>
+						<td class="text-left">{ i.Name }:</td>
+						<td class="text-right">{ fmt.Sprintf("%d %s",i.Amount, i.Unit.DisplayName) }</td>
 					</tr>
 				}
 			</tbody>
