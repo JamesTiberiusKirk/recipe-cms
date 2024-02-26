@@ -13,7 +13,7 @@ gen:
 	templ generate
 	npm run tw
 
-setup:
+setup: install_deps
 	cp example.env .env
 	migrator shema-up
 
