@@ -48,12 +48,12 @@ func navBarTempl(loggedIn bool, user string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"w-full\"><header class=\"lg:w-1/2 sm:w-full mx-auto\"><div class=\"lg:text-xl text-5xl flex p-2 justify-evenly\"><a class=\"p-6\" href=\"/\">Home</a> <a class=\"p-6\" href=\"/recipes\">Recipes</a> ")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"w-full md:max-w-3xl mx-auto\"><header class=\"w-full\"><div class=\"flex p-2 justify-evenly\"><a class=\"p-6\" href=\"/\">Home</a> <a class=\"p-6\" href=\"/recipes\">Recipes</a> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if loggedIn {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a class=\"p-6\" href=\"/recipe/new\">Add Recipe</a> <a class=\"p-6\" href=\"/auth/logout\">Logout</a> <span class=\"p-6 text-sm\">USER: ")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a class=\"p-6\" href=\"/recipe/new?edit=true\">Add Recipe</a> <a class=\"p-6\" href=\"/auth/logout\">Logout</a> <span class=\"p-6 text-sm\">USER: ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -318,7 +318,7 @@ func Layout(c *common.Context) templ.Component {
 			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<html class=\"dark\"><head><link rel=\"stylesheet\" href=\"/assets/styles.css\"><link rel=\"stylesheet\" href=\"/assets/tailwind.css\"></head>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<html class=\"dark\"><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"stylesheet\" href=\"/assets/styles.css\"><link rel=\"stylesheet\" href=\"/assets/tailwind.css\"></head>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -335,7 +335,7 @@ func Layout(c *common.Context) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><script src=\"/assets/htmx.org@1.9.6\"></script><script src=\"/assets/hyperscript.org@0.9.12\"></script><script src=\"/assets/loading-states.js\"></script><script src=\"/assets/json-enc.js\"></script><script src=\"/assets/jquery-3.7.1.min.js\"></script><script src=\"/assets/serializeForm.js\"></script><script src=\"/assets/Sortable.js\"></script><script src=\"/assets/sse.js\"></script>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><script src=\"/assets/htmx.org@1.9.6\"></script><script src=\"/assets/hyperscript.org@0.9.12\"></script><script src=\"/assets/loading-states.js\"></script><script src=\"/assets/json-enc.js\"></script><script src=\"/assets/jquery-3.7.1.min.js\"></script><script src=\"/assets/serializeForm.js\"></script><script src=\"/assets/Sortable.js\"></script><script src=\"/assets/sse.js\"></script><div class=\"w-full\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -343,7 +343,7 @@ func Layout(c *common.Context) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"phone:text-2xl max-w-3xl mx-auto w-11/12 lg:w-3/4 sm:text-xl\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><div class=\"mx-auto w-full px-4 md:max-w-3xl \">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

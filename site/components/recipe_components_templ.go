@@ -52,25 +52,33 @@ func ingredientTempl(props IngredientProps, nameFormName []string, amountFormNam
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"ingredient pt-5 flex justify-evenly\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"ingredient pt-5 flex justify-evenly\"><td>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = Input(InputProps{
-			Value:       props.Ingredient.Name,
-			DisplayName: "Name:",
-			Name:        nameFormName,
-			Type:        InputTypeText,
+			Classes: templ.Classes("flex", "flex-row"),
+			Value:   props.Ingredient.Name,
+			Name:    nameFormName,
+			Type:    InputTypeText,
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</td><td>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
 		templ_7745c5c3_Err = Input(InputProps{
-			Value:       fmt.Sprint(props.Ingredient.Amount),
-			DisplayName: "Amount:",
-			Name:        amountFormName,
-			Type:        InputTypeNumber,
+			Classes: templ.Classes("flex", "flex-row"),
+			Value:   fmt.Sprint(props.Ingredient.Amount),
+			Name:    amountFormName,
+			Type:    InputTypeNumber,
 		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</td><td>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -78,7 +86,7 @@ func ingredientTempl(props IngredientProps, nameFormName []string, amountFormNam
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"m-2\"><img width=\"20\" height=\"20\" src=\"/assets/cross.svg\" _=\"on click remove me.parentElement.parentElement\"></div></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</td><td><div class=\"m-2\"><img width=\"20\" height=\"20\" src=\"/assets/cross.svg\" _=\"on click remove me.parentElement.parentElement.parentElement\"></div></td></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -184,7 +192,7 @@ func tags(props TagsProps, inputName string, assembledVal string) templ.Componen
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(props.Error)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/recipe_components.templ`, Line: 88, Col: 48}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/recipe_components.templ`, Line: 96, Col: 48}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {

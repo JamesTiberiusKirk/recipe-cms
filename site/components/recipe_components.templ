@@ -26,27 +26,35 @@ templ ingredientTempl(props IngredientProps, nameFormName []string, amountFormNa
 		id={ props.ID }
 		class="ingredient pt-5 flex justify-evenly"
 	>
-		@Input(InputProps{
-					Value: props.Ingredient.Name,
-					DisplayName: "Name:",
-					Name: nameFormName, 
-					Type: InputTypeText,
-				})
-		@Input(InputProps{
-					Value: fmt.Sprint(props.Ingredient.Amount),
-					DisplayName: "Amount:",
-					Name: amountFormName, 
-					Type: InputTypeNumber,
-				})
-		@UnitForm(unitFormName,props.Ingredient.Unit, props.AvailableUnits)
-		<div class="m-2">
-			<img
-				width="20"
-				height="20"
-				src="/assets/cross.svg"
-				_="on click remove me.parentElement.parentElement"
-			/>
-		</div>
+		<td>
+			@Input(InputProps{
+				Classes: templ.Classes("flex", "flex-row"),
+				Value:   props.Ingredient.Name,
+				Name:    nameFormName,
+				Type:    InputTypeText,
+			})
+		</td>
+		<td>
+			@Input(InputProps{
+				Classes: templ.Classes("flex", "flex-row"),
+				Value:   fmt.Sprint(props.Ingredient.Amount),
+				Name:    amountFormName,
+				Type:    InputTypeNumber,
+			})
+		</td>
+		<td>
+			@UnitForm(unitFormName, props.Ingredient.Unit, props.AvailableUnits)
+		</td>
+		<td>
+			<div class="m-2">
+				<img
+					width="20"
+					height="20"
+					src="/assets/cross.svg"
+					_="on click remove me.parentElement.parentElement.parentElement"
+				/>
+			</div>
+		</td>
 	</div>
 }
 
@@ -74,7 +82,7 @@ func Tags(props TagsProps) templ.Component {
 	return tags(props, inputName, assembledVal)
 }
 
-templ tags(props TagsProps,inputName string, assembledVal string) {
+templ tags(props TagsProps, inputName string, assembledVal string) {
 	<div { props.GetBaseHTMLProps()... } class="flex w-2/3">
 		<label class="pr-5">Tags:</label>
 		<input

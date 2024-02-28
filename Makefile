@@ -5,7 +5,6 @@ run_styles:
 
 run_server:
 	air
-	#templ generate --watch --proxy="http://127.0.0.1:5000" --cmd="go run main.go"
 
 run_proxy:
 	hrp -ignoreSuffix ".templ" -includeSuffix ".go,.css" -ignore "node_modules" -debug ./
@@ -14,6 +13,14 @@ gen:
 	templ generate
 	npm run tw
 
-kill_server:
-	kill -9 $(lsof -ti:5000)
+setup: install_deps
+	cp example.env .env
+	migrator shema-up
+
+install_deps: 
+	go get ./...
+	go install github.com/cosmtrek/air@latest
+	go install github.com/a-h/templ/cmd/templ@latest
+	go install github.com/JamesTiberiusKirk/migrator/cmd/migrator@latest
+	go install github.com/JamesTiberiusKirk/hot-reloader-proxy/cmd/hrp@latest
 

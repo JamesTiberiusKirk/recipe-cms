@@ -23,7 +23,6 @@ templ recipeView(props recipeFormProps) {
 					}
 				</h5>
 			</div>
-			// if props.IsAuthenticated {
 			<div class="ml-auto pt-2">
 				<button
 					class="btn"
@@ -36,7 +35,6 @@ templ recipeView(props recipeFormProps) {
 					EDIT
 				</button>
 			</div>
-			// }
 		</div>
 		if len(props.Recipe.Images) > 0 {
 			<div class="w-full h-fit"><img class="w-full h-20 object-cover" src={ props.Recipe.Images[0] }/></div>
@@ -51,30 +49,44 @@ templ recipeView(props recipeFormProps) {
 				}
 			</p>
 		</div>
-		<div class="py-5">
-			@components.RenderMarkdown(props.Recipe.Intro)
-		</div>
-		<div class="py-5">
-			@components.RenderMarkdown(props.Recipe.Description)
-		</div>
-		<div class="w-full flex flex-row flex-wrap ">
-			@ingredientTable("Ingredients:", props.Recipe.Ingredients)
-			<span class="w-5"></span>
-			@ingredientTable("Seasonings:", props.Recipe.Seasonings)
-		</div>
-		<div class="py-5">
-			@components.RenderMarkdown(props.Recipe.Instructions)
-		</div>
-		<div class="py-5">
-			@components.RenderMarkdown(props.Recipe.Closing)
-		</div>
+		if props.Recipe.Intro != "" {
+			<div class="py-5">
+				@components.RenderMarkdown(props.Recipe.Intro)
+			</div>
+		}
+		if props.Recipe.Description != "" {
+			<div class="py-5">
+				@components.RenderMarkdown(props.Recipe.Description)
+			</div>
+		}
+		if len(props.Recipe.Ingredients) > 0 && len(props.Recipe.Seasonings) > 0 {
+			<div class="w-full flex flex-row flex-wrap ">
+				if len(props.Recipe.Ingredients) > 0 {
+					@ingredientTable("Ingredients:", props.Recipe.Ingredients)
+					<span class="w-5"></span>
+				}
+				if len(props.Recipe.Seasonings) > 0 {
+					@ingredientTable("Seasonings:", props.Recipe.Seasonings)
+				}
+			</div>
+		}
+		if props.Recipe.Instructions != "" {
+			<div class="py-5">
+				@components.RenderMarkdown(props.Recipe.Instructions)
+			</div>
+		}
+		if props.Recipe.Closing != "" {
+			<div class="py-5">
+				@components.RenderMarkdown(props.Recipe.Closing)
+			</div>
+		}
 	</div>
 }
 
 templ ingredientTable(title string, ingredients []models.Ingredient) {
-	<div>
+	<div class="w-full mt-2 sm:w-fit">
 		<h2>{ title }</h2>
-		<table class="table border-spacing-4 w-full p-5">
+		<table class="table border-spacing-4 w-full p-2">
 			<thead>
 				<tr>
 					// <th>#</th>
@@ -86,8 +98,8 @@ templ ingredientTable(title string, ingredients []models.Ingredient) {
 				for _, i := range ingredients {
 					<tr>
 						// <td>{ fmt.Sprint(index+1) }</td>
-						<td>{ i.Name }:</td>
-						<td>{ fmt.Sprintf("%d %s",i.Amount, i.Unit.DisplayName) }</td>
+						<td class="text-left">{ i.Name }:</td>
+						<td class="text-right">{ fmt.Sprintf("%d %s",i.Amount, i.Unit.DisplayName) }</td>
 					</tr>
 				}
 			</tbody>
