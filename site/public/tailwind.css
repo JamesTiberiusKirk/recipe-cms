@@ -691,6 +691,10 @@ ol {
   margin: 0.5rem;
 }
 
+.m-4 {
+  margin: 1rem;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -840,6 +844,14 @@ ol {
   width: 100%;
 }
 
+.w-40 {
+  width: 10rem;
+}
+
+.w-36 {
+  width: 9rem;
+}
+
 .max-w-xl {
   max-width: 36rem;
 }
@@ -880,12 +892,20 @@ ol {
   flex-wrap: nowrap;
 }
 
+.items-end {
+  align-items: flex-end;
+}
+
 .justify-between {
   justify-content: space-between;
 }
 
 .justify-evenly {
   justify-content: space-evenly;
+}
+
+.place-self-end {
+  place-self: end;
 }
 
 .rounded {
@@ -998,6 +1018,10 @@ ol {
 
 .p-6 {
   padding: 1.5rem;
+}
+
+.p-10 {
+  padding: 2.5rem;
 }
 
 .px-2 {

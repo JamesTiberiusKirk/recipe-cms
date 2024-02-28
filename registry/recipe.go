@@ -6,6 +6,7 @@ import (
 
 	"github.com/JamesTiberiusKirk/recipe-cms/db"
 	"github.com/JamesTiberiusKirk/recipe-cms/models"
+	sq "github.com/Masterminds/squirrel"
 	"github.com/lib/pq"
 	"github.com/rustedturnip/goscanql"
 	"github.com/sirupsen/logrus"
@@ -16,6 +17,7 @@ type IRecipe interface {
 	GetAllByTagName(string) ([]models.Recipe, error)
 	GetOneByID(id string) (*models.Recipe, error)
 	Upsert(upsert models.Recipe) (models.Recipe, bool, error)
+	DeleteOne(id string) error
 }
 
 type Recipe struct {
@@ -265,4 +267,16 @@ func (r *Recipe) Upsert(upsert models.Recipe) (models.Recipe, bool, error) {
 	}
 
 	return upsert, true, nil
+}
+
+func (r *Recipe) DeleteOne(id string) error {
+	usersq := sq.StatementBuilder.PlaceholderFormat(sq.Dollar).
+		Delete("recipe").Where(sq.Eq{"id": id})
+
+	_, err := usersq.RunWith(r.dbc.DB).Exec()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

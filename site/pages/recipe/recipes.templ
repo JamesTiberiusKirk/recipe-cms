@@ -3,6 +3,7 @@ package recipe
 import "github.com/JamesTiberiusKirk/recipe-cms/models"
 import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
 import "github.com/JamesTiberiusKirk/recipe-cms/common"
+import "fmt"
 
 type recipesPageData struct {
 	c       *common.Context
@@ -12,15 +13,46 @@ type recipesPageData struct {
 
 templ recipesPage(data recipesPageData) {
 	@components.Layout(data.c) {
-		<div class="flex flex-row flex-wrap p-4 w-full">
-			for _, r := range data.recipes {
-				<div class="p-2 lg:w-1/4 md:w-1/3 w-1/2">
-					<a href={ templ.SafeURL("/recipe/" + r.ID) }>
+		// <div class="flex flex-row flex-wrap p-4 w-full">
+		// 	for _, r := range data.recipes {
+		// 		<div class="p-2 lg:w-1/4 md:w-1/3 w-1/2">
+		// 			<a href={ templ.SafeURL("/recipe/" + r.ID) }>
+		// 				if len(r.Images) > 0 {
+		// 					<img class="rounded-lg w-full" src={ r.Images[0] }/>
+		// 				}
+		// 				{ r.Name }
+		// 			</a>
+		// 		</div>
+		// 	}
+		// </div>
+		<div class="w-full flex flex-col">
+			for i, r := range data.recipes {
+				<div id={ "recipe_" + fmt.Sprint(i) } class="flex flex-row p-2 m-2 border-white border-2 rounded-lg">
+					<div class="m-4">
 						if len(r.Images) > 0 {
-							<img class="rounded-lg w-full" src={ r.Images[0] }/>
+							<img class="rounded-lg w-36" src={ r.Images[0] }/>
+						} else {
+							<img class="rounded-lg w-36" src="/assets/images/recipe_placeholder.jpg"/>
 						}
+					</div>
+					<a href={ templ.SafeURL("/recipe/" + r.ID) } class="p-10">
 						{ r.Name }
 					</a>
+					<div class="m-2 ml-auto p-2">
+						<button
+							hx-delete={ "/recipe/" + r.ID }
+							hx-swap="delete"
+							hx-target={ "#recipe_" + fmt.Sprint(i) }
+							hx-confirm="Are you sure you wish to delete this recipe?"
+						>
+							<img
+								width="20"
+								height="20"
+								src="/assets/cross.svg"
+							/>
+							// _="on click remove me.parentElement.parentElement.parentElement"
+						</button>
+					</div>
 				</div>
 			}
 		</div>
