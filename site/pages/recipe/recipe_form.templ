@@ -16,29 +16,30 @@ const (
 
 templ recipeForm(props recipeFormProps) {
 	<div
- 		class="w-full flex flex-col"
+		class="w-full flex flex-col"
 	>
 		<form
- 			id={ recipeFormID }
- 			name="recipe"
- 			hx-ext="json-enc-nested"
- 			hx-trigger="recipe_form_submit from:body"
+			id={ recipeFormID }
+			name="recipe"
+			hx-ext="json-enc-nested"
+			hx-trigger="recipe_form_submit from:body"
 		>
 			<div class="flex flex-row space-between justify-between mb-2">
+				<input hidden name="recipe[author]" value={ props.Recipe.AuthorName }/>
 				@components.Input(components.InputProps{
-					Value: props.Recipe.Name,
+					Value:       props.Recipe.Name,
 					DisplayName: "Name:",
-					Name: []string{"recipe", "name"},
-					Type: components.InputTypeText,
+					Name:        []string{"recipe", "name"},
+					Type:        components.InputTypeText,
 				})
 				<button
- 					class="btn mb-1"
- 					hx-post={ fmt.Sprintf("/recipe/%s", props.Recipe.ID) }
- 					hx-include={ "#" + recipeFormID }
- 					hx-select={ "#" + recipeContainerID + "_inner" }
- 					hx-target={ "#" + recipeContainerID }
- 					hx-swap="innerHTML"
- 					hx-push-url="true"
+					class="btn mb-1"
+					hx-post={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
+					hx-include={ "#" + recipeFormID }
+					hx-select={ "#" + recipeContainerID + "_inner" }
+					hx-target={ "#" + recipeContainerID }
+					hx-swap="innerHTML"
+					hx-push-url="true"
 				>
 					DONE
 				</button>
@@ -49,47 +50,69 @@ templ recipeForm(props recipeFormProps) {
 			})
 			<br/>
 			@components.TextArea(components.TextAreaProps{
-					ID: "introduction",
-					Classes: templ.Classes(""),
-					FormID: recipeFormID,
-					Value: props.Recipe.Intro,
-					Rows: 5,
-					DisplayName: "Intro:",
-					Name: []string{"recipe", "intro"},
-					MarkdownPreview: true,
-				})
+				ID:              "introduction",
+				Classes:         templ.Classes(""),
+				FormID:          recipeFormID,
+				Value:           props.Recipe.Intro,
+				Rows:            5,
+				DisplayName:     "Intro:",
+				Name:            []string{"recipe", "intro"},
+				MarkdownPreview: true,
+			})
 			<br/>
 			<br/>
 			@components.TextArea(components.TextAreaProps{
-					ID: "description",
-					FormID: recipeFormID,
-					Value: props.Recipe.Description,
-					Rows: 5,
-					DisplayName: "Description:",
-					Name: []string{"recipe", "description"},
-					MarkdownPreview: true,
-				})
+				ID:              "description",
+				FormID:          recipeFormID,
+				Value:           props.Recipe.Description,
+				Rows:            5,
+				DisplayName:     "Description:",
+				Name:            []string{"recipe", "description"},
+				MarkdownPreview: true,
+			})
 			<br/>
 			<br/>
 			<br/>
 			<h2>Ingredients:</h2>
 			<div id="ingredients">
-				for _, ingr := range props.Recipe.Ingredients {
-					@components.Ingredient(components.IngredientProps{
-							// ID: fmt.Sprintf("ingredient:%d", i),
-							Ingredient: ingr,
-							AvailableUnits: props.AvailableUnits,
-							FormName: []string{"recipe", "ingredients", ""},
-						})
-				}
+				<table>
+					<thead>
+						<tr>
+							<th>
+								Name
+							</th>
+							<th>
+								Amount	
+							</th>
+							<th>
+								Unit	
+							</th>
+							<th>
+								#
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							for _, ingr := range props.Recipe.Ingredients {
+								@components.Ingredient(components.IngredientProps{
+									// ID: fmt.Sprintf("ingredient:%d", i),
+									Ingredient:     ingr,
+									AvailableUnits: props.AvailableUnits,
+									FormName:       []string{"recipe", "ingredients", ""},
+								})
+							}
+						</tr>
+					</tbody>
+				</table>
 			</div>
 			<br/>
 			<button
- 				hx-get="/recipe/ingredient"
- 				hx-swap="beforeend"
- 				hx-target="#ingredients"
- 				hx-select="#ingredient"
- 				class="w-full btn bg-red-400 hover:bg-red-500"
+				hx-get="/recipe/ingredient"
+				hx-swap="beforeend"
+				hx-target="#ingredients"
+				hx-select="#ingredient"
+				class="w-full btn bg-red-400 hover:bg-red-500"
 			>
 				Add ingredient
 			</button>
@@ -100,52 +123,52 @@ templ recipeForm(props recipeFormProps) {
 			<div id="seasonings">
 				for _, ingr := range props.Recipe.Seasonings {
 					@components.Ingredient(components.IngredientProps{
-							//ID: fmt.Sprintf("seasoning:%d",i),
-							Ingredient: ingr,
-							AvailableUnits: props.AvailableUnits,
-							FormName: []string{"recipe", "seasonings", ""},
-						})
+						//ID: fmt.Sprintf("seasoning:%d",i),
+						Ingredient:     ingr,
+						AvailableUnits: props.AvailableUnits,
+						FormName:       []string{"recipe", "seasonings", ""},
+					})
 				}
 			</div>
 			<br/>
 			<button
- 				hx-get="/recipe/ingredient?type=seasoning"
- 				hx-swap="beforeend"
- 				hx-target="#seasonings"
- 				hx-select="#seasoning"
- 				class="w-full btn bg-red-400 hover:bg-red-500"
+				hx-get="/recipe/ingredient?type=seasoning"
+				hx-swap="beforeend"
+				hx-target="#seasonings"
+				hx-select="#seasoning"
+				class="w-full btn bg-red-400 hover:bg-red-500"
 			>
 				Add Seasoning 
 			</button>
 			<br/>
 			<br/>
 			@components.TextArea(components.TextAreaProps{
-					ID: "instructions",
-					Value: props.Recipe.Instructions ,
-					Rows: 10,
-					DisplayName: "Instructions:",
-					Name: []string{"recipe", "instructions"},
-					MarkdownPreview: true,
-				})
+				ID:              "instructions",
+				Value:           props.Recipe.Instructions,
+				Rows:            10,
+				DisplayName:     "Instructions:",
+				Name:            []string{"recipe", "instructions"},
+				MarkdownPreview: true,
+			})
 			<br/>
 			@components.TextArea(components.TextAreaProps{
-					ID: "closing",
-					FormID: recipeFormID,
-					Value: props.Recipe.Closing,
-					Rows: 5,
-					DisplayName: "Closing thoughts:",
-					Name: []string{"recipe", "closing"},
-					MarkdownPreview: true,
-				})
+				ID:              "closing",
+				FormID:          recipeFormID,
+				Value:           props.Recipe.Closing,
+				Rows:            5,
+				DisplayName:     "Closing thoughts:",
+				Name:            []string{"recipe", "closing"},
+				MarkdownPreview: true,
+			})
 			<br/>
 			<div
- 				id="images_list"
- 				class="sortable flex flex-col  border-2 border-white rounded-md"
- 				hx-get
- 				hx-trigger="images_update from:body"
- 				hx-target="#images_list"
- 				hx-select="#images_list"
- 				hx-swap="outerHTML"
+				id="images_list"
+				class="sortable flex flex-col  border-2 border-white rounded-md"
+				hx-get
+				hx-trigger="images_update from:body"
+				hx-target="#images_list"
+				hx-select="#images_list"
+				hx-swap="outerHTML"
 			>
 				for _, image :=range props.Recipe.Images {
 					<div class="flex flex-row p-2 border-b border-1 border-white">
@@ -153,21 +176,21 @@ templ recipeForm(props recipeFormProps) {
 						<input value={ image } name="recipe[images][]" type="hidden"/>
 						<a class="p-6 my-auto w-1/5">{ image }</a>
 						<button
- 							class="ml-auto p-4"
- 							_={ "on click navigator.clipboard.writeText('" + image + "')" }
+							class="ml-auto p-4"
+							_={ "on click navigator.clipboard.writeText('" + image + "')" }
 						>
 							Copy
 						</button>
 						<button
- 							hx-on="click"
- 							hx-delete={ "/recipe/image/" + image }
- 							_="on click remove me.parentElement"
+							hx-on="click"
+							hx-delete={ "/recipe/image/" + image }
+							_="on click remove me.parentElement"
 						>
 							<img
- 								class="mx-auto"
- 								width="20"
- 								height="20"
- 								src="/assets/cross.svg"
+								class="mx-auto"
+								width="20"
+								height="20"
+								src="/assets/cross.svg"
 							/>
 						</button>
 					</div>
@@ -175,12 +198,12 @@ templ recipeForm(props recipeFormProps) {
 			</div>
 			// TODO: this button only works inside the form, figure out how to put it at the botton
 			<button
- 				class="w-full btn mt-5"
- 				hx-post={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
- 				hx-include={ "#" + recipeFormID }
- 				hx-select={ "#" + recipeContainerID + "_inner" }
- 				hx-target={ "#" + recipeContainerID }
- 				hx-swap="innerHTML"
+				class="w-full btn mt-5"
+				hx-post={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
+				hx-include={ "#" + recipeFormID }
+				hx-select={ "#" + recipeContainerID + "_inner" }
+				hx-target={ "#" + recipeContainerID }
+				hx-swap="innerHTML"
 			>
 				Update	
 			</button>
@@ -201,42 +224,42 @@ templ imageForm(props imageFormProps) {
 	<div id="image_form_div" class="flex flex-col">
 		<h3>Image upload</h3>
 		<form
- 			id="image_form"
- 			hx-encoding="multipart/form-data"
- 			hx-post="/recipe/image"
- 			class="flex flex-col"
- 			hx-swap="outerHTML"
- 			hx-select="#image_form_div"
- 			hx-target="#image_form_div"
- 			_="on htmx:xhr:progress(loaded, total) set load to (loaded/total)*100 if load != Infinity set #progress.value to load"
+			id="image_form"
+			hx-encoding="multipart/form-data"
+			hx-post="/recipe/image"
+			class="flex flex-col"
+			hx-swap="outerHTML"
+			hx-select="#image_form_div"
+			hx-target="#image_form_div"
+			_="on htmx:xhr:progress(loaded, total) set load to (loaded/total)*100 if load != Infinity set #progress.value to load"
 		>
 			<input hidden type="text" name="recipe_id" value={ props.RecipeID }/>
 			<br/>
 			<input type="file" name="files" multiple required accept="image/*"/>
 			<br/>
 			<progress
- 				class="h-4 w-full progress:rounded-lg progress-unfilled:bg-[#F2F2F2] progress-filled:bg-red-600"
- 				id="progress"
- 				value="0"
- 				max="100"
+				class="h-4 w-full progress:rounded-lg progress-unfilled:bg-[#F2F2F2] progress-filled:bg-red-600"
+				id="progress"
+				value="0"
+				max="100"
 			></progress>
 			<br/>
 			<div class="flex flex-row">
 				<button
- 					type="submit"
- 					hx-post="/recipe/image?type=replace"
- 					class="mr-2 w-full btn bg-red-400 hover:bg-red-500"
- 					form="image_form"
- 					_="on htmx:afterRequest send images_update to <body/>"
+					type="submit"
+					hx-post="/recipe/image?type=replace"
+					class="mr-2 w-full btn bg-red-400 hover:bg-red-500"
+					form="image_form"
+					_="on htmx:afterRequest send images_update to <body/>"
 				>
 					Replace pictures
 				</button>
 				<button
- 					type="submit"
- 					hx-post="/recipe/image?type=add"
- 					class="ml-2 w-full btn bg-red-400 hover:bg-red-500"
- 					form="image_form"
- 					_="on htmx:afterRequest send images_update to <body/>"
+					type="submit"
+					hx-post="/recipe/image?type=add"
+					class="ml-2 w-full btn bg-red-400 hover:bg-red-500"
+					form="image_form"
+					_="on htmx:afterRequest send images_update to <body/>"
 				>
 					Add pictures
 				</button>

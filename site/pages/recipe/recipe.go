@@ -63,9 +63,10 @@ func (h *RecipeHandler) Page(c *common.Context) error {
 
 	if data.Edit && !data.IsAuthenticated {
 		// return c.Redirect(http.StatusSeeOther, "/auth/login?source="+url.QueryEscape(c.Request().URL.String()))
+		// return c.Redirect(http.StatusSeeOther, "/auth/login?source="+url.QueryEscape(c.Request().URL.String()))
+
 		c.Response().Header().Set("HX-Redirect", "/auth/login?source="+url.QueryEscape(c.Request().URL.String()))
-		data.Edit = false
-		return c.TEMPL(http.StatusUnauthorized, recipePage(data))
+		return c.NoContent(http.StatusUnauthorized)
 	}
 
 	status := http.StatusOK
@@ -90,32 +91,50 @@ func (h *RecipeHandler) Page(c *common.Context) error {
 			break
 		}
 
-		if reqData.Recipe != nil {
-			data.Recipe = *reqData.Recipe
-			if reqData.RecipeID != "new" {
-				data.Recipe.ID = reqData.RecipeID
-			}
+		if reqData.Recipe == nil {
+			break
+		}
 
-			upserted, _, err := h.recipeRegistry.Upsert(data.Recipe)
+		data.Recipe = *reqData.Recipe
+
+		if reqData.RecipeID == "new" {
+			// NOTE: the only data that isnt coming back from the browser is author
+			user, err := h.session.GetUser(c)
 			if err != nil {
-				return echo.NewHTTPError(http.StatusInternalServerError, "error upserting")
+				return err
 			}
 
-			if reqData.RecipeID == "new" {
-				c.Response().Header().Set("HX-Redirect", fmt.Sprintf("/recipe/%s?edit=true", upserted.ID))
-				status = http.StatusCreated
-			}
-			data.Recipe = upserted
+			data.Recipe.AuthorName = user
+
+			data.Recipe.ID = uuid.NewString()
+
+		}
+
+		upserted, _, err := h.recipeRegistry.Upsert(data.Recipe)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, "error upserting")
+		}
+
+		if reqData.RecipeID == "new" {
+			c.Response().Header().Set("HX-Redirect", fmt.Sprintf("/recipe/%s?edit=true", upserted.ID))
+			status = http.StatusCreated
+		}
+		data.Recipe = upserted
+	case http.MethodGet:
+		if reqData.RecipeID == "new" && c.QueryParam("edit") != "true" {
+			return c.Redirect(http.StatusSeeOther, "/recipe/new?edit=true")
 		}
 	}
 
-	if len(data.Recipe.Ingredients) <= 0 {
-		data.Recipe.Ingredients = []models.Ingredient{{}}
-	}
-
-	if len(data.Recipe.Seasonings) <= 0 {
-		data.Recipe.Seasonings = []models.Ingredient{{}}
-	}
+	// if c.QueryParam("edit") != "true" {
+	// 	if len(data.Recipe.Ingredients) <= 0 {
+	// 		data.Recipe.Ingredients = []models.Ingredient{{}}
+	// 	}
+	//
+	// 	if len(data.Recipe.Seasonings) <= 0 {
+	// 		data.Recipe.Seasonings = []models.Ingredient{{}}
+	// 	}
+	// }
 
 	if reqData.RecipeID == "new" {
 		data.Recipe.ID = "new"

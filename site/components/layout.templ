@@ -32,7 +32,7 @@ templ navBarTempl(loggedIn bool, user string) {
 				<a class="p-6" href="/">Home</a>
 				<a class="p-6" href="/recipes">Recipes</a>
 				if loggedIn {
-					<a class="p-6" href="/recipe/new">Add Recipe</a>
+					<a class="p-6" href="/recipe/new?edit=true">Add Recipe</a>
 					<a class="p-6" href="/auth/logout">Logout</a>
 					<span class="p-6 text-sm">USER: { user }</span>
 				} else {
@@ -219,7 +219,7 @@ templ toasts() {
 templ Layout(c *common.Context) {
 	<html class="dark">
 		<head>
-			// BUG: without this chrome media queries are broken lol
+			// NOTE: without this chrome media queries are broken lol
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<link rel="stylesheet" href="/assets/styles.css"/>
 			<link rel="stylesheet" href="/assets/tailwind.css"/>
@@ -236,7 +236,7 @@ templ Layout(c *common.Context) {
 			<div class="w-full">
 				@navBar(c)
 			</div>
-			<div class="mx-auto w-full px-10 md:max-w-3xl ">
+			<div class="mx-auto w-full px-4 md:max-w-3xl ">
 				{ children... }
 			</div>
 			@toasts()

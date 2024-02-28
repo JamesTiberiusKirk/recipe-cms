@@ -53,7 +53,7 @@ func navBarTempl(loggedIn bool, user string) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if loggedIn {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a class=\"p-6\" href=\"/recipe/new\">Add Recipe</a> <a class=\"p-6\" href=\"/auth/logout\">Logout</a> <span class=\"p-6 text-sm\">USER: ")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a class=\"p-6\" href=\"/recipe/new?edit=true\">Add Recipe</a> <a class=\"p-6\" href=\"/auth/logout\">Logout</a> <span class=\"p-6 text-sm\">USER: ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -343,7 +343,7 @@ func Layout(c *common.Context) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><div class=\"mx-auto w-full px-10 md:max-w-3xl \">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><div class=\"mx-auto w-full px-4 md:max-w-3xl \">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

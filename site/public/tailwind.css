@@ -742,6 +742,10 @@ ol {
   margin-right: 0.5rem;
 }
 
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
 .mt-4 {
   margin-top: 1rem;
 }
@@ -756,10 +760,6 @@ ol {
 
 .mt-6 {
   margin-top: 1.5rem;
-}
-
-.mt-2 {
-  margin-top: 0.5rem;
 }
 
 .block {
@@ -996,17 +996,8 @@ ol {
   padding: 1rem;
 }
 
-.p-5 {
-  padding: 1.25rem;
-}
-
 .p-6 {
   padding: 1.5rem;
-}
-
-.px-10 {
-  padding-left: 2.5rem;
-  padding-right: 2.5rem;
 }
 
 .px-2 {
@@ -1060,11 +1051,6 @@ ol {
 
 .text-right {
   text-align: right;
-}
-
-.text-2xl {
-  font-size: 1.5rem;
-  line-height: 2rem;
 }
 
 .text-sm {
@@ -1196,8 +1182,9 @@ ol {
     display: inline;
   }
 
-  .sm\:w-24 {
-    width: 6rem;
+  .sm\:w-fit {
+    width: -moz-fit-content;
+    width: fit-content;
   }
 }
 
@@ -1206,26 +1193,12 @@ ol {
     width: 33.333333%;
   }
 
-  .md\:w-48 {
-    width: 12rem;
-  }
-
-  .md\:w-fit {
-    width: -moz-fit-content;
-    width: fit-content;
-  }
-
   .md\:max-w-3xl {
     max-width: 48rem;
   }
 
   .md\:flex-row {
     flex-direction: row;
-  }
-
-  .md\:text-3xl {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
   }
 }
 
