@@ -274,8 +274,6 @@ func (h *RecipeHandler) ImageDelete(c *common.Context) error {
 func (h *RecipeHandler) DeleteRecipe(c *common.Context) error {
 	recipeID := c.Param("recipe_id")
 
-	logrus.Info("DELETE")
-
 	err := h.recipeRegistry.DeleteOne(recipeID)
 	if err != nil {
 		c.Logger().Error("Error deleting recipe with id %s, err: %s", recipeID, err.Error())
