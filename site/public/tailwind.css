@@ -691,6 +691,10 @@ ol {
   margin: 0.5rem;
 }
 
+.m-4 {
+  margin: 1rem;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -817,6 +821,10 @@ ol {
 
 .w-3\/5 {
   width: 60%;
+}
+
+.w-36 {
+  width: 9rem;
 }
 
 .w-5 {
@@ -982,6 +990,10 @@ ol {
 .object-cover {
   -o-object-fit: cover;
      object-fit: cover;
+}
+
+.p-10 {
+  padding: 2.5rem;
 }
 
 .p-2 {

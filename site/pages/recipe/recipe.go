@@ -34,6 +34,7 @@ func InitRecipeHandler(app *echo.Group, rr registry.IRecipe, s *session.Manager)
 
 	app.GET("/:recipe_id", common.UseCustomContext(h.Page))
 	app.POST("/:recipe_id", common.UseCustomContext(h.Page))
+	app.DELETE("/:recipe_id", common.UseCustomContext(h.DeleteRecipe))
 
 	app.GET("/ingredient", common.UseCustomContext(h.Ingredient))
 
@@ -268,4 +269,16 @@ func (h *RecipeHandler) ImageDelete(c *common.Context) error {
 	// TODO: send back the entire images form
 
 	return nil
+}
+
+func (h *RecipeHandler) DeleteRecipe(c *common.Context) error {
+	recipeID := c.Param("recipe_id")
+
+	err := h.recipeRegistry.DeleteOne(recipeID)
+	if err != nil {
+		c.Logger().Error("Error deleting recipe with id %s, err: %s", recipeID, err.Error())
+		return c.NoContent(http.StatusNoContent)
+	}
+
+	return c.NoContent(http.StatusOK)
 }
