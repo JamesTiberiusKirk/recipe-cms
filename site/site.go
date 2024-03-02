@@ -108,10 +108,7 @@ func (s *Site) Start(addr string) error {
 
 	// 404
 	e.RouteNotFound("/*", common.UseCustomContext(pages.HandleNotFound))
-
-	if s.config.Debug {
-		e.GET("/ready", pages.Ready)
-	}
+	e.GET("/ready", pages.Ready)
 
 	auth.InitAuthHandler(e.Group("/auth"), s.sessions, s.userRegistry)
 	pages.InitIndexHandler(e.Group(""))
