@@ -22,6 +22,21 @@ type Recipe struct {
 	Images        []string     `json:"images"          goscanql:"images"`
 }
 
+func (r Recipe) String() string {
+	tags := ""
+	for _, t := range r.Tags {
+		tags += t + " "
+	}
+
+	return r.Name + " " +
+		r.Intro + " " +
+		r.Description + " " +
+		r.Instructions + " " +
+		r.Closing + " " +
+		tags + " " +
+		r.AuthorName
+}
+
 type Ingredient struct {
 	Name   string `json:"name"   goscanql:"name"`
 	Amount int    `json:"amount" goscanql:"amount"`

@@ -823,6 +823,10 @@ ol {
   width: 60%;
 }
 
+.w-36 {
+  width: 9rem;
+}
+
 .w-5 {
   width: 1.25rem;
 }
@@ -842,14 +846,6 @@ ol {
 
 .w-full {
   width: 100%;
-}
-
-.w-40 {
-  width: 10rem;
-}
-
-.w-36 {
-  width: 9rem;
 }
 
 .max-w-xl {
@@ -892,20 +888,12 @@ ol {
   flex-wrap: nowrap;
 }
 
-.items-end {
-  align-items: flex-end;
-}
-
 .justify-between {
   justify-content: space-between;
 }
 
 .justify-evenly {
   justify-content: space-evenly;
-}
-
-.place-self-end {
-  place-self: end;
 }
 
 .rounded {
@@ -1004,6 +992,10 @@ ol {
      object-fit: cover;
 }
 
+.p-10 {
+  padding: 2.5rem;
+}
+
 .p-2 {
   padding: 0.5rem;
 }
@@ -1018,10 +1010,6 @@ ol {
 
 .p-6 {
   padding: 1.5rem;
-}
-
-.p-10 {
-  padding: 2.5rem;
 }
 
 .px-2 {
