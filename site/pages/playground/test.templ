@@ -15,12 +15,12 @@ templ testPage(c *common.Context) {
 				hx-trigger="click from:#submit-all"
 			>
 				@components.TextArea(components.TextAreaProps{
-					ID:"test_area",
-					Value: "# Default markdown\n\n- test bullet",
-					Name: []string{"test", "area"},
+					ID:              "test_area",
+					Value:           "# Default markdown\n\n- test bullet",
+					Name:            []string{"test", "area"},
 					MarkdownPreview: true,
-					Rows: 20,
-			})
+					Rows:            20,
+				})
 			</form>
 		</div>
 	}

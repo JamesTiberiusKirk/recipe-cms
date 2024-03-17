@@ -29,16 +29,15 @@ templ recipesPage(data recipesPageData) {
 			/>
 			<div id="search-results">
 				for i, r := range data.recipes {
-					<div id={ "recipe_" + fmt.Sprint(i) } class="flex flex-row p-2 m-2 border-white border-2 rounded-lg">
+					<div id={ "recipe_" + fmt.Sprint(i) } class="flex flex-col sm:flex-row p-2 m-2 border-white border-2 rounded-lg ">
 						<div class="m-4">
-							if len(r.Images) > 0 {
-								<img class="rounded-lg w-36" src={ r.Images[0] }/>
-							} else {
-								<img class="rounded-lg w-36" src="/assets/images/recipe_placeholder.jpg"/>
-							}
+							<img
+								class="object-cover rounded-lg sm:w-36 max-h-48 w-full"
+								src={ common.IfEmptyFirstThen(r.Images, "/assets/images/recipe_placeholder.jpg") }
+							/>
 						</div>
-						<div class="p-2 m-2">
-							<a href={ templ.SafeURL("/recipe/" + r.ID) }>
+						<div class="p-2 m-2 max-w-md">
+							<a class="link" href={ templ.SafeURL("/recipe/" + r.ID) }>
 								{ r.Name }
 							</a>
 							if len(r.Tags) > 0 {
@@ -47,7 +46,7 @@ templ recipesPage(data recipesPageData) {
 									for _, t := range r.Tags {
 										<a
 											href={ templ.SafeURL(fmt.Sprintf("/recipes?tag=%s", url.QueryEscape(t))) }
-											class="rounded-full bg-red-500 hover:bg-red-700 font-bold py-1 px-2 ml-1 dark:decoration-none dark:text-white"
+											class="link rounded-full bg-red-500 hover:bg-red-700 font-bold py-1 px-2 ml-1 dark:decoration-none dark:text-white"
 										>
 											{ t }
 										</a>
@@ -55,12 +54,12 @@ templ recipesPage(data recipesPageData) {
 								</p>
 							}
 							if r.Intro != "" {
-								<p class="my-5">
+								<p class="my-5 ">
 									{ stripmd.Strip(r.Intro) }
 								</p>
 							}
 						</div>
-						<div class="m-2 ml-auto p-2">
+						<div class=" z-10 top-0 right-0 m-2 md:ml-auto p-2">
 							if data.isAuthenticated {
 								<button
 									hx-delete={ "/recipe/" + r.ID }

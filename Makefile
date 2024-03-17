@@ -7,7 +7,7 @@ run_server:
 	air
 
 run_proxy:
-	hrp -ignoreSuffix ".templ" -includeSuffix ".go,.css" -ignore "node_modules" -debug ./
+	hrp -ignoreSuffix ".templ" -includeSuffix ".go,.css" -ignore "node_modules" -debug -dp 6000 -pp 6001 ./
 
 gen: 
 	templ generate

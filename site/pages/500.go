@@ -6,11 +6,13 @@ import (
 	"github.com/JamesTiberiusKirk/recipe-cms/common"
 	"github.com/JamesTiberiusKirk/recipe-cms/config"
 	"github.com/labstack/echo/v4"
+	"github.com/sirupsen/logrus"
 )
 
 func CustomHTTPErrorHandler(err error, c echo.Context) {
 	conf, ok := c.Get("cfg").(config.Config)
 	if !ok {
+		logrus.Error("unable to get config in the custom error handler")
 		return
 	}
 
@@ -20,7 +22,7 @@ func CustomHTTPErrorHandler(err error, c echo.Context) {
 	if he, ok := err.(*echo.HTTPError); ok {
 		code = he.Code
 	}
-	cc.Logger().Error(err)
+	logrus.Error(err)
 	props := page500Props{c: cc}
 	if conf.Debug {
 		props.message = err.Error()

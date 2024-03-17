@@ -1,5 +1,7 @@
 package models
 
+import "strings"
+
 type User struct {
 	Username string `json:"name"     goscanql:"name"`
 	Password string `json:"password" goscanql:"password"`
@@ -28,13 +30,13 @@ func (r Recipe) String() string {
 		tags += t + " "
 	}
 
-	return r.Name + " " +
+	return strings.ToUpper(r.Name + " " +
 		r.Intro + " " +
 		r.Description + " " +
 		r.Instructions + " " +
 		r.Closing + " " +
 		tags + " " +
-		r.AuthorName
+		r.AuthorName)
 }
 
 type Ingredient struct {

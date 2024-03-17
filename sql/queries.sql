@@ -57,6 +57,7 @@ LEFT JOIN unit AS su ON s.unit_name = su.unit_name
 LEFT JOIN tag        AS t ON r.id = t.recipe_id
 WHERE t.tag_name = $1;
 
+
 -- name: get_recipes_by_id
 SELECT
     r.id                AS id,

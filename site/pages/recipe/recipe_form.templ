@@ -25,7 +25,7 @@ templ recipeForm(props recipeFormProps) {
 			hx-trigger="recipe_form_submit from:body"
 		>
 			<div class="flex flex-row space-between justify-between mb-2">
-				<input hidden name="recipe[author]" value={ props.Recipe.AuthorName }/>
+				<input hidden name="recipe[author_name]" value={ props.Recipe.AuthorName }/>
 				@components.Input(components.InputProps{
 					Value:       props.Recipe.Name,
 					DisplayName: "Name:",
@@ -34,7 +34,7 @@ templ recipeForm(props recipeFormProps) {
 				})
 				<button
 					class="btn mb-1"
-					hx-post={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
+					hx-post={ "/recipe/" + props.Recipe.ID }
 					hx-include={ "#" + recipeFormID }
 					hx-select={ "#" + recipeContainerID + "_inner" }
 					hx-target={ "#" + recipeContainerID }
