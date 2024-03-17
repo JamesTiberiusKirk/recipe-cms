@@ -24,16 +24,23 @@ templ recipeView(props recipeFormProps) {
 				</h5>
 			</div>
 			<div class="ml-auto pt-2">
-				<button
-					class="btn"
-					hx-get={ fmt.Sprintf("/recipe/%s?edit=true", props.Recipe.ID) }
-					hx-select={ "#" + recipeContainerID + "_inner" }
-					hx-target={ "#" + recipeContainerID }
-					hx-swap="innerHTML"
-					hx-push-url="true"
-				>
-					EDIT
+				<button class="btn">
+					<a
+						href={ templ.SafeURL("/recipe/" + props.Recipe.ID + "?edit=true") }
+					>
+						EDIT
+					</a>
 				</button>
+				// <button
+				// 	class="btn"
+				// 	hx-get={ "/recipe/" + props.Recipe.ID + "?edit=true" }
+				// 	hx-select={ "#" + recipeContainerID + "_inner" }
+				// 	hx-target={ "#" + recipeContainerID }
+				// 	hx-swap="innerHTML"
+				// 	hx-push-url="true"
+				// >
+				// 	EDIT
+				// </button>
 			</div>
 		</div>
 		if len(props.Recipe.Images) > 0 {

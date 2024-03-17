@@ -37,3 +37,49 @@ func HasNonZeroField(s interface{}) bool {
 	}
 	return false
 }
+
+// IfEmptyThen - fuction which checks if val is empty or nil then returns either the value or the default.
+//
+// Useful for template strings
+func IfEmptyThen[T any](val, def T) T {
+	value := reflect.ValueOf(val)
+	switch value.Kind() {
+	case reflect.Array, reflect.Chan, reflect.Map, reflect.Slice, reflect.String:
+		if value.Len() == 0 {
+			return def
+		}
+	case reflect.Ptr, reflect.Interface:
+		if value.IsNil() {
+			return def
+		}
+	}
+
+	return val
+}
+
+// IfEmptyFirstThen - same as IfEmptyThen fucntion but taking val from frist elem in an array.
+//
+// Useful for template strings
+func IfEmptyFirstThen[T any](val []T, def T) T {
+	if val == nil {
+		return def
+	}
+
+	if len(val) <= 0 {
+		return def
+	}
+
+	value := reflect.ValueOf(val[0])
+	switch value.Kind() {
+	case reflect.Array, reflect.Chan, reflect.Map, reflect.Slice, reflect.String:
+		if value.Len() == 0 {
+			return def
+		}
+	case reflect.Ptr, reflect.Interface:
+		if value.IsNil() {
+			return def
+		}
+	}
+
+	return val[0]
+}

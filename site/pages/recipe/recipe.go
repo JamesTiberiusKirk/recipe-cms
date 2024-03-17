@@ -44,7 +44,6 @@ func InitRecipeHandler(app *echo.Group, rr registry.IRecipe, s *session.Manager)
 
 type RecipeRequestData struct {
 	RecipeID string         `param:"recipe_id"`
-	Edit     bool           `query:"edit"`
 	Recipe   *models.Recipe `json:"recipe,omitempty"`
 }
 
@@ -63,11 +62,9 @@ func (h *RecipeHandler) Page(c *common.Context) error {
 	}
 
 	if data.Edit && !data.IsAuthenticated {
-		// return c.Redirect(http.StatusSeeOther, "/auth/login?source="+url.QueryEscape(c.Request().URL.String()))
-		// return c.Redirect(http.StatusSeeOther, "/auth/login?source="+url.QueryEscape(c.Request().URL.String()))
-
-		c.Response().Header().Set("HX-Redirect", "/auth/login?source="+url.QueryEscape(c.Request().URL.String()))
-		return c.NoContent(http.StatusUnauthorized)
+		return c.Redirect(http.StatusSeeOther, "/auth/login?source="+url.QueryEscape(c.Request().URL.String()))
+		// c.Response().Header().Set("HX-Redirect", "/auth/login?source="+url.QueryEscape(c.Request().URL.String()))
+		// return c.NoContent(http.StatusUnauthorized)
 	}
 
 	status := http.StatusOK
@@ -96,6 +93,8 @@ func (h *RecipeHandler) Page(c *common.Context) error {
 			break
 		}
 
+		reqData.Recipe.AuthorName = data.Recipe.AuthorName
+		reqData.Recipe.ID = data.Recipe.ID
 		data.Recipe = *reqData.Recipe
 
 		if reqData.RecipeID == "new" {
@@ -106,7 +105,6 @@ func (h *RecipeHandler) Page(c *common.Context) error {
 			}
 
 			data.Recipe.AuthorName = user
-
 			data.Recipe.ID = uuid.NewString()
 
 		}
@@ -117,10 +115,16 @@ func (h *RecipeHandler) Page(c *common.Context) error {
 		}
 
 		if reqData.RecipeID == "new" {
-			c.Response().Header().Set("HX-Redirect", fmt.Sprintf("/recipe/%s?edit=true", upserted.ID))
+			logrus.Print("EDIT REDIRECT")
+			c.Response().Header().Set("HX-Redirect", "/recipe/"+upserted.ID+"?edit=true")
 			status = http.StatusCreated
 		}
 		data.Recipe = upserted
+
+		if !data.Edit {
+			logrus.Print("NO EDIT REDIRECT")
+			c.Response().Header().Set("HX-Redirect", "/recipe/"+upserted.ID)
+		}
 	case http.MethodGet:
 		if reqData.RecipeID == "new" && c.QueryParam("edit") != "true" {
 			return c.Redirect(http.StatusSeeOther, "/recipe/new?edit=true")
@@ -272,6 +276,10 @@ func (h *RecipeHandler) ImageDelete(c *common.Context) error {
 }
 
 func (h *RecipeHandler) DeleteRecipe(c *common.Context) error {
+	if !h.session.IsAuthenticated(c, false) {
+		return c.NoContent(http.StatusUnauthorized)
+	}
+
 	recipeID := c.Param("recipe_id")
 
 	err := h.recipeRegistry.DeleteOne(recipeID)

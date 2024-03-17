@@ -21,7 +21,7 @@ type MarkdownRenderer struct {
 }
 
 func (h *MarkdownRenderer) Handle(c *common.Context) error {
-	logrus.Info("markdown content-type :\n", c.Request().Header.Get("Content-Type"))
+	// logrus.Info("markdown content-type :\n", c.Request().Header.Get("Content-Type"))
 
 	buf := new(bytes.Buffer)
 	b := c.Request().Body
