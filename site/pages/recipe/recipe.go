@@ -44,7 +44,6 @@ func InitRecipeHandler(app *echo.Group, rr registry.IRecipe, s *session.Manager)
 
 type RecipeRequestData struct {
 	RecipeID string         `param:"recipe_id"`
-	Edit     bool           `query:"edit"`
 	Recipe   *models.Recipe `json:"recipe,omitempty"`
 }
 
@@ -110,22 +109,20 @@ func (h *RecipeHandler) Page(c *common.Context) error {
 
 		}
 
-		logrus.Infof("RECIPE %+v", data.Recipe)
-
 		upserted, _, err := h.recipeRegistry.Upsert(data.Recipe)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "error upserting")
 		}
 
 		if reqData.RecipeID == "new" {
+			logrus.Print("EDIT REDIRECT")
 			c.Response().Header().Set("HX-Redirect", "/recipe/"+upserted.ID+"?edit=true")
 			status = http.StatusCreated
 		}
 		data.Recipe = upserted
 
-		logrus.Infof("upserted %+v", data.Recipe)
-
-		if !reqData.Edit {
+		if !data.Edit {
+			logrus.Print("NO EDIT REDIRECT")
 			c.Response().Header().Set("HX-Redirect", "/recipe/"+upserted.ID)
 		}
 	case http.MethodGet:
