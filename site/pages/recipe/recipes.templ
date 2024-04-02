@@ -11,6 +11,7 @@ type recipesPageData struct {
 	c               *common.Context
 	error           string
 	recipes         []models.Recipe
+	tagSearch       []string
 	isAuthenticated bool
 }
 
@@ -27,6 +28,25 @@ templ recipesPage(data recipesPageData) {
 				hx-target="#search-results"
 				hx-select="#search-results"
 			/>
+			if len(data.tagSearch)>0 {
+				<div class="pl-3 flex flex-row relative">
+					@displayTags("Tag search: ", data.tagSearch)
+					<div>
+						<div class="m-2 absolute z-50 top-0 right-0">
+							<a
+								href="/recipes"
+								class="py-3 px-3  font-bold shadow-current rounded-full"
+							>
+								<img
+									width="20"
+									height="20"
+									src="/assets/cross.svg"
+								/>
+							</a>
+						</div>
+					</div>
+				</div>
+			}
 			<div id="search-results">
 				for i, r := range data.recipes {
 					<div id={ "recipe_" + fmt.Sprint(i) } class="relative flex flex-col sm:flex-row p-2 m-2 border-white border-2 rounded-lg ">
@@ -58,19 +78,7 @@ templ recipesPage(data recipesPageData) {
 							<a class="link" href={ templ.SafeURL("/recipe/" + r.ID) }>
 								{ r.Name }
 							</a>
-							if len(r.Tags) > 0 {
-								<p class="my-5">
-									Tags:
-									for _, t := range r.Tags {
-										<a
-											href={ templ.SafeURL(fmt.Sprintf("/recipes?tag=%s", url.QueryEscape(t))) }
-											class="link rounded-full bg-red-500 hover:bg-red-700 font-bold py-1 px-2 ml-1 dark:decoration-none dark:text-white"
-										>
-											{ t }
-										</a>
-									}
-								</p>
-							}
+							@displayTags("Tags: ", r.Tags)
 							if r.Intro != "" {
 								<p class="my-5 ">
 									{ stripmd.Strip(r.Intro) }
@@ -81,5 +89,21 @@ templ recipesPage(data recipesPageData) {
 				}
 			</div>
 		</div>
+	}
+}
+
+templ displayTags(title string, tags []string) {
+	if len(tags) > 0 {
+		<p class="my-5">
+			{ title }
+			for _, t := range tags {
+				<a
+					href={ templ.SafeURL(fmt.Sprintf("/recipes?tag=%s", url.QueryEscape(t))) }
+					class="link rounded-full bg-red-500 hover:bg-red-700 font-bold py-1 px-2 ml-1 dark:decoration-none dark:text-white"
+				>
+					{ t }
+				</a>
+			}
+		</p>
 	}
 }
