@@ -29,14 +29,13 @@ templ navBarTempl(loggedIn bool, user string) {
 	<div class="w-full md:max-w-3xl mx-auto">
 		<header class="w-full">
 			<div class="flex p-2 justify-evenly">
-				<a class="" href="/">Home</a>
-				<a class="" href="/recipes">Recipes</a>
+				<a class="link" href="/">Home</a>
+				<a class="link" href="/recipes">Recipes</a>
 				if loggedIn {
-					<a class="" href="/recipe/new?edit=true">Add Recipe</a>
-					<a class="" href="/auth/logout">Logout</a>
-					<span class="text-sm">{ user }</span>
+					<a class="link" href="/recipe/new?edit=true">Add Recipe</a>
+					<a class="link" href="/auth/logout">Logout { user }</a>
 				} else {
-					<a class="" href="/auth/login">Login</a>
+					<a class="link" href="/auth/login">Login</a>
 				}
 			</div>
 		</header>

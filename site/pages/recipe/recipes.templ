@@ -29,7 +29,25 @@ templ recipesPage(data recipesPageData) {
 			/>
 			<div id="search-results">
 				for i, r := range data.recipes {
-					<div id={ "recipe_" + fmt.Sprint(i) } class="flex flex-col sm:flex-row p-2 m-2 border-white border-2 rounded-lg ">
+					<div id={ "recipe_" + fmt.Sprint(i) } class="relative flex flex-col sm:flex-row p-2 m-2 border-white border-2 rounded-lg ">
+						if data.isAuthenticated {
+							<div class="m-2 absolute z-50 top-0 right-0">
+								<button
+									hx-delete={ "/recipe/" + r.ID }
+									hx-swap="delete"
+									hx-target={ "#recipe_" + fmt.Sprint(i) }
+									hx-confirm="Are you sure you wish to delete this recipe?"
+									class="border-red-700 border-2 bg-red-500 font-bold py-3 px-3 shadow-current rounded-full"
+								>
+									<img
+										width="20"
+										height="20"
+										src="/assets/cross.svg"
+									/>
+									// _="on click remove me.parentElement.parentElement.parentElement"
+								</button>
+							</div>
+						}
 						<div class="m-4">
 							<img
 								class="object-cover rounded-lg sm:w-36 max-h-48 w-full"
@@ -57,23 +75,6 @@ templ recipesPage(data recipesPageData) {
 								<p class="my-5 ">
 									{ stripmd.Strip(r.Intro) }
 								</p>
-							}
-						</div>
-						<div class=" z-10 top-0 right-0 m-2 md:ml-auto p-2">
-							if data.isAuthenticated {
-								<button
-									hx-delete={ "/recipe/" + r.ID }
-									hx-swap="delete"
-									hx-target={ "#recipe_" + fmt.Sprint(i) }
-									hx-confirm="Are you sure you wish to delete this recipe?"
-								>
-									<img
-										width="20"
-										height="20"
-										src="/assets/cross.svg"
-									/>
-									// _="on click remove me.parentElement.parentElement.parentElement"
-								</button>
 							}
 						</div>
 					</div>
