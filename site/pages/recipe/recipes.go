@@ -47,15 +47,20 @@ func (h *RecipesHandler) Page(c *common.Context) error {
 	}
 
 	if reqData.Tag != "" {
+		data.tagSearch = strings.Split(reqData.Tag, ",")
+
 		// NOTE: Ideally I want to do this tag filtering in the db
 		// I am only not because otherwise I loose the rest of the tags in each recipe
 		// TODO: Need to figure out a way to do this in sql
 		// NOTE: using a map as we dont have a set type in go
 		recipeMap := map[string]models.Recipe{}
+
 		for _, r := range recipes {
 			for _, t := range r.Tags {
-				if t == reqData.Tag {
-					recipeMap[r.ID] = r
+				for _, tagToSearch := range data.tagSearch {
+					if t == tagToSearch {
+						recipeMap[r.ID] = r
+					}
 				}
 			}
 		}
