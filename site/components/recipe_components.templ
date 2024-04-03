@@ -24,11 +24,11 @@ func Ingredient(props IngredientProps) templ.Component {
 templ ingredientTempl(props IngredientProps, nameFormName []string, amountFormName []string, unitFormName string) {
 	<div
 		id={ props.ID }
-		class="ingredient pt-5 flex justify-evenly"
+		class="ingredient pt-5 flex w-full"
 	>
 		<td>
 			@Input(InputProps{
-				Classes: templ.Classes("flex", "flex-row"),
+				Classes: templ.Classes("w-full", "flex", "flex-row"),
 				Value:   props.Ingredient.Name,
 				Name:    nameFormName,
 				Type:    InputTypeText,
@@ -36,7 +36,7 @@ templ ingredientTempl(props IngredientProps, nameFormName []string, amountFormNa
 		</td>
 		<td>
 			@Input(InputProps{
-				Classes: templ.Classes("flex", "flex-row"),
+				Classes: templ.Classes("w-full", "flex", "flex-row"),
 				Value:   fmt.Sprint(props.Ingredient.Amount),
 				Name:    amountFormName,
 				Type:    InputTypeNumber,
@@ -45,8 +45,8 @@ templ ingredientTempl(props IngredientProps, nameFormName []string, amountFormNa
 		<td>
 			@UnitForm(unitFormName, props.Ingredient.Unit, props.AvailableUnits)
 		</td>
-		<td>
-			<div class="m-2">
+		<td class="">
+			<div class="">
 				<img
 					width="20"
 					height="20"
@@ -88,7 +88,7 @@ templ tags(props TagsProps, inputName string, assembledVal string) {
 		<input
 			id={ props.ID + "_input" }
 			type={ string(InputTypeText) }
-			class="w-full p-2"
+			class="input w-full p-2"
 			name={ inputName }
 			value={ assembledVal }
 			placeholder="tag1, tag2, tag3"

@@ -12,6 +12,7 @@ import "bytes"
 
 import "github.com/JamesTiberiusKirk/recipe-cms/models"
 import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
+import "strconv"
 
 type recipeFormProps struct {
 	Recipe          models.Recipe
@@ -43,7 +44,7 @@ func recipeForm(props recipeFormProps) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(recipeFormID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 21, Col: 20}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 22, Col: 20}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -56,7 +57,7 @@ func recipeForm(props recipeFormProps) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(props.Recipe.AuthorName)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 27, Col: 76}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 28, Col: 76}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -82,7 +83,7 @@ func recipeForm(props recipeFormProps) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs("/recipe/" + props.Recipe.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 36, Col: 43}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 37, Col: 43}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -95,7 +96,7 @@ func recipeForm(props recipeFormProps) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs("#" + recipeFormID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 37, Col: 36}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 38, Col: 36}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -108,7 +109,7 @@ func recipeForm(props recipeFormProps) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs("#" + recipeContainerID + "_inner")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 38, Col: 51}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 39, Col: 51}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -121,7 +122,7 @@ func recipeForm(props recipeFormProps) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs("#" + recipeContainerID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 39, Col: 40}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 40, Col: 40}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -171,11 +172,28 @@ func recipeForm(props recipeFormProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<br><br><br><h2>Ingredients:</h2><div id=\"ingredients\"><table><thead><tr><th>Name</th><th>Amount\t</th><th>Unit\t</th><th>#</th></tr></thead> <tbody><tr>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<br><br><br><h2>Ingredients:</h2><div id=\"ingredients\"><table class=\"table-auto\"><thead><tr class=\"w-full\"><th>#</th><th class=\"w-1/2\">Name</th><th class=\"w-1/4\">Amount\t</th><th>Unit\t</th><th class=\"w-1/8\">X</th></tr></thead> <tbody class=\"mx-auto\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for _, ingr := range props.Recipe.Ingredients {
+		for idx, ingr := range props.Recipe.Ingredients {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<tr class=\"w-full mx-auto\"><td>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var8 string
+			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(idx + 1))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 101, Col: 33}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</td>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 			templ_7745c5c3_Err = components.Ingredient(components.IngredientProps{
 				// ID: fmt.Sprintf("ingredient:%d", i),
 				Ingredient:     ingr,
@@ -185,12 +203,33 @@ func recipeForm(props recipeFormProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</tr>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</tr></tbody></table></div><br><button hx-get=\"/recipe/ingredient\" hx-swap=\"beforeend\" hx-target=\"#ingredients\" hx-select=\"#ingredient\" class=\"w-full btn bg-red-400 hover:bg-red-500\">Add ingredient</button><br><br><br><h2>Seasonings:</h2><div id=\"seasonings\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</tbody></table></div><br><button hx-get=\"/recipe/ingredient\" hx-swap=\"beforeend\" hx-target=\"#ingredients\" hx-select=\"#ingredient\" class=\"w-full btn bg-red-400 hover:bg-red-500\">Add ingredient</button><br><br><br><h2>Seasonings:</h2><div id=\"seasonings\"><table class=\"table-auto\"><thead><tr class=\"w-full\"><th>#</th><th class=\"w-1/2\">Name</th><th class=\"w-1/4\">Amount\t</th><th>Unit\t</th><th class=\"w-1/8\">X</th></tr></thead> <tbody class=\"mx-auto\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for _, ingr := range props.Recipe.Seasonings {
+		for idx, ingr := range props.Recipe.Seasonings {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<tr class=\"w-full mx-auto\"><td>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var9 string
+			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(idx + 1))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 151, Col: 33}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</td>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 			templ_7745c5c3_Err = components.Ingredient(components.IngredientProps{
 				//ID: fmt.Sprintf("seasoning:%d",i),
 				Ingredient:     ingr,
@@ -200,8 +239,12 @@ func recipeForm(props recipeFormProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</tr>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><br><button hx-get=\"/recipe/ingredient?type=seasoning\" hx-swap=\"beforeend\" hx-target=\"#seasonings\" hx-select=\"#seasoning\" class=\"w-full btn bg-red-400 hover:bg-red-500\">Add Seasoning </button><br><br>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</tbody></table></div><br><button hx-get=\"/recipe/ingredient?type=seasoning\" hx-swap=\"beforeend\" hx-target=\"#seasonings\" hx-select=\"#seasoning\" class=\"w-full btn bg-red-400 hover:bg-red-500\">Add Seasoning </button><br><br>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -241,12 +284,12 @@ func recipeForm(props recipeFormProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var8 string
-			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(image)
+			var templ_7745c5c3_Var10 string
+			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(image)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 174, Col: 22}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 205, Col: 22}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -254,12 +297,12 @@ func recipeForm(props recipeFormProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var9 string
-			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(image)
+			var templ_7745c5c3_Var11 string
+			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(image)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 175, Col: 26}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 206, Col: 26}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -267,12 +310,12 @@ func recipeForm(props recipeFormProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var10 string
-			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(image)
+			var templ_7745c5c3_Var12 string
+			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(image)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 176, Col: 42}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 207, Col: 42}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -280,12 +323,12 @@ func recipeForm(props recipeFormProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var11 string
-			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs("on click navigator.clipboard.writeText('" + image + "')")
+			var templ_7745c5c3_Var13 string
+			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs("on click navigator.clipboard.writeText('" + image + "')")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 179, Col: 68}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 210, Col: 68}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -293,12 +336,12 @@ func recipeForm(props recipeFormProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var12 string
-			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs("/recipe/image/" + image)
+			var templ_7745c5c3_Var14 string
+			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs("/recipe/image/" + image)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 185, Col: 43}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 216, Col: 43}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -311,12 +354,12 @@ func recipeForm(props recipeFormProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var13 string
-		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs("/recipe/" + props.Recipe.ID + "?edit=true")
+		var templ_7745c5c3_Var15 string
+		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs("/recipe/" + props.Recipe.ID + "?edit=true")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 201, Col: 57}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 232, Col: 57}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -324,12 +367,12 @@ func recipeForm(props recipeFormProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var14 string
-		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs("#" + recipeFormID)
+		var templ_7745c5c3_Var16 string
+		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs("#" + recipeFormID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 202, Col: 35}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 233, Col: 35}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -337,12 +380,12 @@ func recipeForm(props recipeFormProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var15 string
-		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs("#" + recipeContainerID + "_inner")
+		var templ_7745c5c3_Var17 string
+		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs("#" + recipeContainerID + "_inner")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 203, Col: 50}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 234, Col: 50}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -350,12 +393,12 @@ func recipeForm(props recipeFormProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var16 string
-		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs("#" + recipeContainerID)
+		var templ_7745c5c3_Var18 string
+		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs("#" + recipeContainerID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 204, Col: 39}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 235, Col: 39}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -414,21 +457,21 @@ func imageForm(props imageFormProps) templ.Component {
 			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var17 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var17 == nil {
-			templ_7745c5c3_Var17 = templ.NopComponent
+		templ_7745c5c3_Var19 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var19 == nil {
+			templ_7745c5c3_Var19 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"image_form_div\" class=\"flex flex-col\"><h3>Image upload</h3><form id=\"image_form\" hx-encoding=\"multipart/form-data\" hx-post=\"/recipe/image\" class=\"flex flex-col\" hx-swap=\"outerHTML\" hx-select=\"#image_form_div\" hx-target=\"#image_form_div\" _=\"on htmx:xhr:progress(loaded, total) set load to (loaded/total)*100 if load != Infinity set #progress.value to load\"><input hidden type=\"text\" name=\"recipe_id\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var18 string
-		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(props.RecipeID)
+		var templ_7745c5c3_Var20 string
+		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(props.RecipeID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 239, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/pages/recipe/recipe_form.templ`, Line: 270, Col: 68}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

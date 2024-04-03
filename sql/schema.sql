@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS recipe (
     author_name     TEXT,
     images          TEXT[],
 
-    FOREIGN KEY (author_name) REFERENCES author (username)
+    FOREIGN KEY (author_name) REFERENCES author (username) ON UPDATE CASCADE
 );
 CREATE TABLE IF NOT EXISTS ingredient (
     recipe_id   TEXT         NOT NULL,

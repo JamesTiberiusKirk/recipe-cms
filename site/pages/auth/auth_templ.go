@@ -45,7 +45,7 @@ func loginPage(props loginPageProps) templ.Component {
 				templ_7745c5c3_Buffer = templ.GetBuffer()
 				defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"login\" class=\"mx-auto\"><h1 class=\"mb-6 text-center\">Login Page</h1><div class=\"flex flex-col md:flex-row mx-auto p-4 rounded-md border-2 border-white\"><div class=\"w-full my-auto\"><form hx-post hx-select=\"#login\" hx-target=\"#login\" hx-swap=\"outerHTML\" class=\"mt-4 mx-auto max-w-xl\"><table class=\"w-full\"><tbody><tr><td class=\"w-fit\"><label class=\"pr-5\">Username:</label></td><td class=\"w-full\"><input type=\"text\" class=\"w-full p-2 h-12 mb-4\" name=\"username\" value=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"login\" class=\"mx-auto\"><h1 class=\"mb-6 text-center\">Login Page</h1><div class=\"flex flex-col md:flex-row mx-auto p-4 rounded-md border-2 border-white\"><div class=\"w-full my-auto\"><form hx-post hx-select=\"#login\" hx-target=\"#login\" hx-swap=\"outerHTML\" class=\"mt-4 mx-auto max-w-xl\"><table class=\"w-full\"><tbody><tr><td class=\"w-fit\"><label class=\"pr-5\">Username:</label></td><td class=\"w-full\"><input type=\"text\" class=\"input w-full p-2 h-12 mb-4\" name=\"username\" value=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -81,7 +81,7 @@ func loginPage(props loginPageProps) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<tr><td class=\"w-fit\"><label class=\"pr-5\">Password:</label></td><td class=\"w-full\"><input type=\"password\" class=\"w-full p-2 h-12\" name=\"password\"></td></tr>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<tr><td class=\"w-fit\"><label class=\"pr-5\">Password:</label></td><td class=\"w-full\"><input type=\"password\" class=\"input w-full p-2 h-12\" name=\"password\"></td></tr>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
