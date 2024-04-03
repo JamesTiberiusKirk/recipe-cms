@@ -118,6 +118,14 @@ templ recipeForm(props recipeFormProps) {
 				hx-select="#ingredient"
 				class="w-full btn bg-red-400 hover:bg-red-500"
 			>
+				for _, ingr := range props.Recipe.Seasonings {
+					@components.Ingredient(components.IngredientProps{
+						//ID: fmt.Sprintf("seasoning:%d",i),
+						Ingredient:     ingr,
+						AvailableUnits: props.AvailableUnits,
+						FormName:       []string{"recipe", "seasonings", ""},
+					})
+				}
 				Add ingredient
 			</button>
 			<br/>
