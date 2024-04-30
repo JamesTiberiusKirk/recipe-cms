@@ -67,14 +67,14 @@ func Input(props InputProps) templ.Component {
 }
 
 templ inputTemplate(props InputProps, inputName string) {
-	<div class={ props.Classes }>
+	<div class={ props.Classes, templ.SafeClass("flex flex-row justify-stretch") }>
 		if props.DisplayName != "" {
 			<label class="pr-5">{ props.DisplayName }</label>
 		}
 		<input
 			id={ inputName }
 			type={ string(props.Type) }
-			class="m-2 h-12"
+			class="w-full input m-2 h-12"
 			name={ inputName }
 			value={ props.Value }
 			placeholder={ props.Placeholder }
@@ -123,7 +123,7 @@ templ textAreaTemplate(props TextAreaProps, textAreaName string) {
 		>
 			<textarea
 				id={ fmt.Sprintf("%s-textarea", props.ID) }
-				class="grow w-2/5"
+				class="input grow w-2/5"
 				name={ textAreaName }
 				if props.Placeholder != "" {
 					placeholder={ props.Placeholder }

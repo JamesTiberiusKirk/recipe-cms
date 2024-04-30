@@ -32,19 +32,19 @@
         @apply dark:text-white whitespace-normal break-all;
     }
 
-    .inputStyles{
+    .input{
         @apply bg-gray-600 rounded-md border-2 border-white p-3;
     }
 
-    input {
-        @apply inputStyles;
-    }
-    textarea {
-        @apply inputStyles;
-    }
-    select {
-        @apply inputStyles;
-    }
+    /* input { */
+    /*     @apply inputStyles; */
+    /* } */
+    /* textarea { */
+    /*     @apply inputStyles; */
+    /* } */
+    /* select { */
+    /*     @apply inputStyles; */
+    /* } */
 
 
     ul {

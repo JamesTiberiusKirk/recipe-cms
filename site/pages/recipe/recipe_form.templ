@@ -2,6 +2,7 @@ package recipe
 
 import "github.com/JamesTiberiusKirk/recipe-cms/models"
 import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
+import "strconv"
 
 type recipeFormProps struct {
 	Recipe          models.Recipe
@@ -74,34 +75,38 @@ templ recipeForm(props recipeFormProps) {
 			<br/>
 			<h2>Ingredients:</h2>
 			<div id="ingredients">
-				<table>
+				<table class="table-auto">
 					<thead>
-						<tr>
+						<tr class="w-full">
 							<th>
+								#
+							</th>
+							<th class="w-1/2">
 								Name
 							</th>
-							<th>
+							<th class="w-1/4">
 								Amount	
 							</th>
 							<th>
 								Unit	
 							</th>
-							<th>
-								#
+							<th class="w-1/8">
+								X
 							</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							for _, ingr := range props.Recipe.Ingredients {
+					<tbody class="mx-auto">
+						for idx, ingr := range props.Recipe.Ingredients {
+							<tr class="w-full mx-auto">
+								<td>{ strconv.Itoa(idx+1) }</td>
 								@components.Ingredient(components.IngredientProps{
 									// ID: fmt.Sprintf("ingredient:%d", i),
 									Ingredient:     ingr,
 									AvailableUnits: props.AvailableUnits,
 									FormName:       []string{"recipe", "ingredients", ""},
 								})
-							}
-						</tr>
+							</tr>
+						}
 					</tbody>
 				</table>
 			</div>
@@ -113,13 +118,6 @@ templ recipeForm(props recipeFormProps) {
 				hx-select="#ingredient"
 				class="w-full btn bg-red-400 hover:bg-red-500"
 			>
-				Add ingredient
-			</button>
-			<br/>
-			<br/>
-			<br/>
-			<h2>Seasonings:</h2>
-			<div id="seasonings">
 				for _, ingr := range props.Recipe.Seasonings {
 					@components.Ingredient(components.IngredientProps{
 						//ID: fmt.Sprintf("seasoning:%d",i),
@@ -128,6 +126,47 @@ templ recipeForm(props recipeFormProps) {
 						FormName:       []string{"recipe", "seasonings", ""},
 					})
 				}
+				Add ingredient
+			</button>
+			<br/>
+			<br/>
+			<br/>
+			<h2>Seasonings:</h2>
+			<div id="seasonings">
+				<table class="table-auto">
+					<thead>
+						<tr class="w-full">
+							<th>
+								#
+							</th>
+							<th class="w-1/2">
+								Name
+							</th>
+							<th class="w-1/4">
+								Amount	
+							</th>
+							<th>
+								Unit	
+							</th>
+							<th class="w-1/8">
+								X
+							</th>
+						</tr>
+					</thead>
+					<tbody class="mx-auto">
+						for idx, ingr := range props.Recipe.Seasonings {
+							<tr class="w-full mx-auto">
+								<td>{ strconv.Itoa(idx+1) }</td>
+								@components.Ingredient(components.IngredientProps{
+									//ID: fmt.Sprintf("seasoning:%d",i),
+									Ingredient:     ingr,
+									AvailableUnits: props.AvailableUnits,
+									FormName:       []string{"recipe", "seasonings", ""},
+								})
+							</tr>
+						}
+					</tbody>
+				</table>
 			</div>
 			<br/>
 			<button
