@@ -36,14 +36,16 @@ templ ingredientTempl(props IngredientProps, nameFormName []string, amountFormNa
 		</td>
 		<td>
 			@Input(InputProps{
-				Classes: templ.Classes("w-full", "flex", "flex-row"),
+				Classes: templ.Classes("w-2/3", "flex", "flex-row"),
 				Value:   fmt.Sprint(props.Ingredient.Amount),
 				Name:    amountFormName,
 				Type:    InputTypeNumber,
 			})
 		</td>
 		<td>
-			@UnitForm(unitFormName, props.Ingredient.Unit, props.AvailableUnits)
+			<div class="pt-2">
+				@UnitForm(unitFormName, props.Ingredient.Unit, props.AvailableUnits)
+			</div>
 		</td>
 		<td class="">
 			<div class="">
@@ -51,15 +53,12 @@ templ ingredientTempl(props IngredientProps, nameFormName []string, amountFormNa
 					width="20"
 					height="20"
 					src="/assets/cross.svg"
-					_="on click remove me.parentElement.parentElement.parentElement"
+					_="on click remove me.parentElement.parentElement"
+					class="m-2 mt-6"
 				/>
 			</div>
 		</td>
 	</div>
-}
-
-script JSNavigateTo(url templ.SafeURL) {
-	window.location = url
 }
 
 type TagsProps struct {

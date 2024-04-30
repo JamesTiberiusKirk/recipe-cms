@@ -47,14 +47,16 @@ templ recipeView(props recipeFormProps) {
 			<div class="w-full h-fit"><img class="w-full h-20 object-cover" src={ props.Recipe.Images[0] }/></div>
 		}
 		<div>
-			<p class="my-5">
-				Tags:
-				for _, t := range props.Recipe.Tags {
-					<a href={ templ.SafeURL(fmt.Sprintf("/recipes?tag=%s", url.QueryEscape(t))) } class="rounded-full bg-red-500 hover:bg-red-700 font-bold py-1 px-2 ml-1 dark:decoration-none dark:text-white">
-						{ t }
-					</a>
-				}
-			</p>
+			if len(props.Recipe.Tags) > 0 {
+				<p class="my-5">
+					Tags:
+					for _, t := range props.Recipe.Tags {
+						<a href={ templ.SafeURL(fmt.Sprintf("/recipes?tag=%s", url.QueryEscape(t))) } class="rounded-full bg-red-500 hover:bg-red-700 font-bold py-1 px-2 ml-1 dark:decoration-none dark:text-white">
+							{ t }
+						</a>
+					}
+				</p>
+			}
 		</div>
 		if props.Recipe.Intro != "" {
 			<div class="py-5">

@@ -9,9 +9,14 @@ run_server:
 run_proxy:
 	hrp -ignoreSuffix ".templ" -includeSuffix ".go,.css" -ignore "node_modules" -debug -dp 6000 -pp 6001 ./
 
-gen: 
-	templ generate
+gen: gen-styles gen-templates
+
+gen-styles: 
 	npm run tw
+
+gen-templates:
+	go mod tidy
+	go run github.com/a-h/templ/cmd/templ generate 
 
 setup: install_deps
 	cp example.env .env
