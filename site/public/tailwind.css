@@ -708,6 +708,10 @@ ol {
   margin: 1rem;
 }
 
+.m-auto {
+  margin: auto;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -779,6 +783,10 @@ ol {
   margin-top: 1.5rem;
 }
 
+.mt-auto {
+  margin-top: auto;
+}
+
 .block {
   display: block;
 }
@@ -789,6 +797,10 @@ ol {
 
 .table {
   display: table;
+}
+
+.table-row-group {
+  display: table-row-group;
 }
 
 .hidden {
@@ -863,6 +875,26 @@ ol {
 
 .w-full {
   width: 100%;
+}
+
+.w-16 {
+  width: 4rem;
+}
+
+.w-2 {
+  width: 0.5rem;
+}
+
+.w-10 {
+  width: 2.5rem;
+}
+
+.w-20 {
+  width: 5rem;
+}
+
+.min-w-16 {
+  min-width: 4rem;
 }
 
 .max-w-md {
@@ -1090,6 +1122,14 @@ ol {
 
 .pt-5 {
   padding-top: 1.25rem;
+}
+
+.pt-4 {
+  padding-top: 1rem;
+}
+
+.pt-6 {
+  padding-top: 1.5rem;
 }
 
 .text-left {

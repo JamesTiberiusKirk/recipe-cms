@@ -75,7 +75,7 @@ func ingredientTempl(props IngredientProps, nameFormName []string, amountFormNam
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = Input(InputProps{
-			Classes: templ.Classes("w-full", "flex", "flex-row"),
+			Classes: templ.Classes("w-2/3", "flex", "flex-row"),
 			Value:   fmt.Sprint(props.Ingredient.Amount),
 			Name:    amountFormName,
 			Type:    InputTypeNumber,
@@ -83,7 +83,7 @@ func ingredientTempl(props IngredientProps, nameFormName []string, amountFormNam
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</td><td>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</td><td><div class=\"pt-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -91,7 +91,7 @@ func ingredientTempl(props IngredientProps, nameFormName []string, amountFormNam
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</td><td class=\"\"><div class=\"\"><img width=\"20\" height=\"20\" src=\"/assets/cross.svg\" _=\"on click remove me.parentElement.parentElement.parentElement\"></div></td></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></td><td class=\"\"><div class=\"\"><img width=\"20\" height=\"20\" src=\"/assets/cross.svg\" _=\"on click remove me.parentElement.parentElement\" class=\"m-2 mt-6\"></div></td></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -100,16 +100,6 @@ func ingredientTempl(props IngredientProps, nameFormName []string, amountFormNam
 		}
 		return templ_7745c5c3_Err
 	})
-}
-
-func JSNavigateTo(url templ.SafeURL) templ.ComponentScript {
-	return templ.ComponentScript{
-		Name: `__templ_JSNavigateTo_028a`,
-		Function: `function __templ_JSNavigateTo_028a(url){window.location = url
-}`,
-		Call:       templ.SafeScript(`__templ_JSNavigateTo_028a`, url),
-		CallInline: templ.SafeScriptInline(`__templ_JSNavigateTo_028a`, url),
-	}
 }
 
 type TagsProps struct {
@@ -160,7 +150,7 @@ func tags(props TagsProps, inputName string, assembledVal string) templ.Componen
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(props.ID + "_input")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/recipe_components.templ`, Line: 89, Col: 27}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/recipe_components.templ`, Line: 88, Col: 27}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -173,7 +163,7 @@ func tags(props TagsProps, inputName string, assembledVal string) templ.Componen
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(string(InputTypeText))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/recipe_components.templ`, Line: 90, Col: 31}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/recipe_components.templ`, Line: 89, Col: 31}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -186,7 +176,7 @@ func tags(props TagsProps, inputName string, assembledVal string) templ.Componen
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(inputName)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/recipe_components.templ`, Line: 92, Col: 19}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/recipe_components.templ`, Line: 91, Col: 19}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -199,7 +189,7 @@ func tags(props TagsProps, inputName string, assembledVal string) templ.Componen
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(assembledVal)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/recipe_components.templ`, Line: 93, Col: 23}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/recipe_components.templ`, Line: 92, Col: 23}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -217,7 +207,7 @@ func tags(props TagsProps, inputName string, assembledVal string) templ.Componen
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(props.Error)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/recipe_components.templ`, Line: 97, Col: 48}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `site/components/recipe_components.templ`, Line: 96, Col: 48}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
