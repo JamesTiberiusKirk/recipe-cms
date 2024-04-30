@@ -48,24 +48,28 @@ type Ingredient struct {
 var (
 	DefaultSystemUnits = []Unit{
 		{
-			DisplayName: "kg",
-			Name:        "kg",
-		},
-		{
 			DisplayName: "g",
 			Name:        "g",
-		},
-		{
-			DisplayName: "l",
-			Name:        "l",
 		},
 		{
 			DisplayName: "ml",
 			Name:        "ml",
 		},
 		{
-			DisplayName: "unit",
+			DisplayName: "Unit",
 			Name:        "unit",
+		},
+		{
+			DisplayName: "Large",
+			Name:        "large",
+		},
+		{
+			DisplayName: "Medium",
+			Name:        "medium",
+		},
+		{
+			DisplayName: "Small",
+			Name:        "small",
 		},
 	}
 )
