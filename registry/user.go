@@ -22,9 +22,10 @@ func NewUser(dbc *db.DB) *User {
 }
 
 // NOTE: trying out squirrel here
+// GetOneByUsername retrieves a user by username, case-insensitive
 func (u *User) GetOneByUsername(username string) (models.User, error) {
 	usersq := sq.StatementBuilder.PlaceholderFormat(sq.Dollar).
-		Select("username, password").From("author").Where(sq.Eq{"username": username})
+		Select("username, password").From("author").Where("LOWER(username)=?", username)
 
 	rows, err := usersq.RunWith(u.dbc.DB).Query()
 	if err != nil {
