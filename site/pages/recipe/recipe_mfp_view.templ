@@ -1,0 +1,23 @@
+package recipe 
+
+import "strconv"
+import "github.com/JamesTiberiusKirk/recipe-cms/models"
+import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
+import "github.com/JamesTiberiusKirk/recipe-cms/common"
+
+type recipeMFPViewProps struct {
+	c      *common.Context
+	Recipe models.Recipe
+}
+
+templ recipeMFPView(props recipeMFPViewProps) {
+	@components.Layout(props.c) {
+		<h1>{ props.Recipe.Name }</h1>
+		<h2>Ingredients</h2>
+		<ul>
+			for _, ing := range props.Recipe.Ingredients {
+				<li>{ strconv.Itoa(ing.Amount) + ing.Unit.DisplayName }, { ing.Name }</li>
+			}
+		</ul>
+	}
+}

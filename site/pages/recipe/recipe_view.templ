@@ -58,6 +58,15 @@ templ recipeView(props recipeFormProps) {
 				</p>
 			}
 		</div>
+		<div>
+			<button class="btn">
+				<a
+					href={ templ.SafeURL("/recipe/" + props.Recipe.ID + "/mfp") }
+				>
+					MFP Import
+				</a>
+			</button>
+		</div>
 		if props.Recipe.Intro != "" {
 			<div class="py-5">
 				@components.RenderMarkdown(props.Recipe.Intro)

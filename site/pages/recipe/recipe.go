@@ -33,6 +33,7 @@ func InitRecipeHandler(app *echo.Group, rr registry.IRecipe, s *session.Manager)
 	// app.Use(common.UseBodyLogger())
 
 	app.GET("/:recipe_id", common.UseCustomContext(h.Page))
+	app.GET("/:recipe_id/mfp", common.UseCustomContext(h.MFPPage))
 	app.POST("/:recipe_id", common.UseCustomContext(h.Page))
 	app.DELETE("/:recipe_id", common.UseCustomContext(h.DeleteRecipe))
 
@@ -45,6 +46,30 @@ func InitRecipeHandler(app *echo.Group, rr registry.IRecipe, s *session.Manager)
 type RecipeRequestData struct {
 	RecipeID string         `param:"recipe_id"`
 	Recipe   *models.Recipe `json:"recipe,omitempty"`
+}
+
+func (h *RecipeHandler) MFPPage(c *common.Context) error {
+	reqData := RecipeRequestData{}
+	err := c.Bind(&reqData)
+	if err != nil {
+		return err
+	}
+
+	if reqData.RecipeID == "" && reqData.RecipeID != "new" {
+		return c.TEMPL(http.StatusNotFound, components.NotFound(c))
+	}
+
+	recipe, err := h.recipeRegistry.GetOneByID(reqData.RecipeID)
+	if err != nil {
+		return err
+	}
+
+	if recipe == nil {
+		c.Logger().Info("recipe not found id: %s", reqData.RecipeID)
+		return c.TEMPL(http.StatusNotFound, components.NotFound(c))
+	}
+
+	return c.TEMPL(http.StatusOK, recipeMFPView(recipeMFPViewProps{c: c, Recipe: *recipe}))
 }
 
 func (h *RecipeHandler) Page(c *common.Context) error {

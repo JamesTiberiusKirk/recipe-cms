@@ -15,7 +15,6 @@ To help wit developent, ait, hot-reloader-proxy and migrator are used.
 Hot reloader proxy will by default start the proxy server on port 5001
 
 # Roadmap
-- [ ] Figure out what todo with the homepage
 - [ ] On every recipe add a recipe exporter page/button to import to my fitness pal
     - [More info](https://support.myfitnesspal.com/hc/en-us/articles/360032271592-How-does-the-Recipe-Importer-on-the-website-work)
 - [ ] Add nutrients info table support
