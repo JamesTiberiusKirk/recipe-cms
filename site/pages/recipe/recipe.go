@@ -80,6 +80,8 @@ func (h *RecipeHandler) Page(c *common.Context) error {
 			return c.TEMPL(http.StatusNotFound, components.NotFound(c))
 		}
 
+		fmt.Printf("ingredients: %v\n", recipe.Ingredients)
+
 		data.Recipe = *recipe
 	}
 
