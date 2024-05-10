@@ -68,17 +68,15 @@ templ recipeView(props recipeFormProps) {
 				@components.RenderMarkdown(props.Recipe.Description)
 			</div>
 		}
-		if len(props.Recipe.Ingredients) > 0 && len(props.Recipe.Seasonings) > 0 {
-			<div class="w-full flex flex-row flex-wrap ">
-				if len(props.Recipe.Ingredients) > 0 {
-					@ingredientTable("Ingredients:", props.Recipe.Ingredients)
-					<span class="w-5"></span>
-				}
-				if len(props.Recipe.Seasonings) > 0 {
-					@ingredientTable("Seasonings:", props.Recipe.Seasonings)
-				}
-			</div>
-		}
+		<div class="w-full flex flex-row flex-wrap ">
+			if len(props.Recipe.Ingredients) > 0 {
+				@ingredientTable("Ingredients:", props.Recipe.Ingredients)
+				<span class="w-5"></span>
+			}
+			if len(props.Recipe.Seasonings) > 0 {
+				@ingredientTable("Seasonings:", props.Recipe.Seasonings)
+			}
+		</div>
 		if props.Recipe.Instructions != "" {
 			<div class="py-5">
 				@components.RenderMarkdown(props.Recipe.Instructions)
