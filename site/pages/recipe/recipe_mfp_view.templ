@@ -14,10 +14,8 @@ templ recipeMFPView(props recipeMFPViewProps) {
 	@components.Layout(props.c) {
 		<h1>{ props.Recipe.Name }</h1>
 		<h2>Ingredients</h2>
-		<ul>
-			for _, ing := range props.Recipe.Ingredients {
-				<li>{ strconv.Itoa(ing.Amount) + ing.Unit.DisplayName }, { ing.Name }</li>
-			}
-		</ul>
+		for _, ing := range props.Recipe.Ingredients {
+			<p>{ strconv.Itoa(ing.Amount) + ing.Unit.DisplayName }&nbsp;&nbsp;{ ing.Name }</p>
+		}
 	}
 }
