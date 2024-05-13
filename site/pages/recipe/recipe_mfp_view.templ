@@ -2,6 +2,7 @@ package recipe
 
 import "github.com/JamesTiberiusKirk/recipe-cms/models"
 import "github.com/JamesTiberiusKirk/recipe-cms/common"
+import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
 
 type recipeMFPViewProps struct {
 	c      *common.Context
@@ -22,8 +23,10 @@ templ recipeMFPView(props recipeMFPViewProps) {
 	// 	}
 	// </p>
 	// }
-	if len(props.Recipe.Ingredients) > 0 {
-		@ingredientTable("Ingredients:", props.Recipe.Ingredients)
-		<span class="w-5"></span>
+	@components.Layout(props.c) {
+		if len(props.Recipe.Ingredients) > 0 {
+			@ingredientTable("Ingredients:", props.Recipe.Ingredients)
+			<span class="w-5"></span>
+		}
 	}
 }
