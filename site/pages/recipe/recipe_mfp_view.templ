@@ -13,10 +13,13 @@ type recipeMFPViewProps struct {
 templ recipeMFPView(props recipeMFPViewProps) {
 	@components.Layout(props.c) {
 		<h1>{ props.Recipe.Name }</h1>
+		<br/>
+		<br/>
+		<br/>
 		<h2>Ingredients</h2>
 		<p>
 			for _, ing := range props.Recipe.Ingredients {
-				{ strconv.Itoa(ing.Amount) + ing.Unit.DisplayName }&nbsp;&nbsp;{ ing.Name }
+				{ strconv.Itoa(ing.Amount) + " " + ing.Unit.DisplayName }&nbsp;&nbsp;{ ing.Name }
 				<br/>
 			}
 		</p>
