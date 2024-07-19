@@ -44,12 +44,17 @@ CREATE TABLE IF NOT EXISTS tag (
 );
 CREATE INDEX tag_index ON tag (tag_name);
 INSERT INTO unit (unit_name, display_name) VALUES
+    ('can', 'Can'),
+    ('clove', 'Clove'),
+    ('small', 'Small'),
+    ('medium', 'Medium'),
+    ('large', 'Large'),
     ('kg', 'kg'),
     ('g', 'g'),
     ('l', 'l'),
     ('ml', 'ml'),
-    ('unit', 'unit'),
-    ('part', 'part');
+    ('unit', 'Unit'),
+    ('part', 'Part');
 
 INSERT INTO author (username, password) VALUES
     ('TestUser', 'testPass');

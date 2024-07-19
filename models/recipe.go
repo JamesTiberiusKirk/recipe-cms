@@ -56,6 +56,14 @@ var (
 			Name:        "ml",
 		},
 		{
+			DisplayName: "Can",
+			Name:        "can",
+		},
+		{
+			DisplayName: "Clove",
+			Name:        "clove",
+		},
+		{
 			DisplayName: "Unit",
 			Name:        "unit",
 		},
