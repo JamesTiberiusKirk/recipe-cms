@@ -29,10 +29,9 @@ templ navBarTempl(loggedIn bool, user string) {
 	<div class="w-full md:max-w-3xl mx-auto">
 		<header class="w-full">
 			<div class="flex p-2 justify-evenly">
-				<a class="link" href="/">Home</a>
 				<a class="link" href="/recipes">Recipes</a>
 				if loggedIn {
-					<a class="link" href="/recipe/new?edit=true">Add Recipe</a>
+					<a class="link" href="/recipe/new/edit">Add Recipe</a>
 					<a class="link" href="/auth/logout">Logout { user }</a>
 				} else {
 					<a class="link" href="/auth/login">Login</a>
@@ -45,53 +44,55 @@ templ navBarTempl(loggedIn bool, user string) {
 script onLoad() {
 	// htmx.logAll();
 
-	htmx.config.defaultSettleDelay = 0;
-	//document.addEventListener('htmx:afterRequest', function (event) {
-	// console.log(event)
-	//})
+	// htmx.config.defaultSettleDelay = 0;
+	// document.addEventListener('htmx:afterRequest', function (event) {
+	// 	console.log(event)
+	// })
+	/**
 	document.addEventListener('htmx:beforeOnLoad', function (event) {
-			// console.log("htmx:beforeOnLoad CUSTOM", event)
+		// console.log("htmx:beforeOnLoad CUSTOM", event)
 
-			const res = event.detail.xhr
-			const isValidationRoute = (event.detail.requestConfig.path.search("validate"))
+		const res = event.detail.xhr
+		const isValidationRoute = (event.detail.requestConfig.path.search("validate"))
 
-			if (isValidationRoute) {
-				if (res.status === 400) {
-					// console.log("status === 400")
-					event.detail.shouldSwap = true;
-					event.detail.isError = false;
-				}
-
-				if (res.status === 200) {
-					// console.log("status === 200")
-				}
+		if (isValidationRoute) {
+			if (res.status === 400) {
+				// console.log("status === 400")
+				event.detail.shouldSwap = true;
+				event.detail.isError = false;
 			}
 
-			// Bellow is an example of creating your own custom attibutes
-			// In this example I have created attibutes which dynamically enables or disables (buttons) when using validation routes
-			// This same could be expanded for a lot of other behaviour
-			// However, this should not be overused as it could already be covered in htmx
-			// AND because too much js here will just render the whole point of htmx nil
-			if (isValidationRoute) {
-				if (res.status === 400) {
-					const disableOnErrorTargetId = event.srcElement.getAttribute("disableOnError")
-					if (disableOnErrorTargetId) {
-						const targetIdParsed = disableOnErrorTargetId.replace("#", "")
-							const target = document.getElementById(targetIdParsed)
-							if (target) target.setAttribute("disabled", true)
-					}
-				}
+			if (res.status === 200) {
+				// console.log("status === 200")
+			}
+		}
 
-				if (res.status === 200) {
-				const enableOnValidTargetId = event.srcElement.getAttribute("enableOnValid")
-					if (enableOnValidTargetId) {
-						const targetIdParsed = enableOnValidTargetId.replace("#", "")
+		// Bellow is an example of creating your own custom attibutes
+		// In this example I have created attibutes which dynamically enables or disables (buttons) when using validation routes
+		// This same could be expanded for a lot of other behaviour
+		// However, this should not be overused as it could already be covered in htmx
+		// AND because too much js here will just render the whole point of htmx nil
+		if (isValidationRoute) {
+			if (res.status === 400) {
+				const disableOnErrorTargetId = event.srcElement.getAttribute("disableOnError")
+				if (disableOnErrorTargetId) {
+					const targetIdParsed = disableOnErrorTargetId.replace("#", "")
 						const target = document.getElementById(targetIdParsed)
-						if (target) target.removeAttribute("disabled")
-					}
+						if (target) target.setAttribute("disabled", true)
 				}
 			}
+
+			if (res.status === 200) {
+			const enableOnValidTargetId = event.srcElement.getAttribute("enableOnValid")
+				if (enableOnValidTargetId) {
+					const targetIdParsed = enableOnValidTargetId.replace("#", "")
+					const target = document.getElementById(targetIdParsed)
+					if (target) target.removeAttribute("disabled")
+				}
+			}
+		}
 	});
+	*/
 
 	htmx.defineExtension('markdown-preview', {
 		onEvent: function (name, evt) {
@@ -114,13 +115,13 @@ script onLoad() {
 			if (name === "htmx:configRequest" &&
 				(evt.srcElement.tagName === "FORM" ||
 				 evt.srcElement.form != undefined) ) {
-				console.log("json-enc-nested:",evt)
+				// console.log("json-enc-nested:",evt)
 				evt.detail.headers['Content-Type'] = "application/json";
 			}
 		},
 		encodeParameters : function(xhr, parameters, elt) {
-			console.log("json-enc-nested elt:")
-			console.dir(elt)
+			// console.log("json-enc-nested elt:")
+			// console.dir(elt)
 
 			if (elt.form === undefined) return
 

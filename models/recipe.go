@@ -40,9 +40,10 @@ func (r Recipe) String() string {
 }
 
 type Ingredient struct {
-	Name   string `json:"name"   sql:"name"`
-	Amount int    `json:"amount" sql:"amount"`
-	Unit   Unit   `json:"unit"   sql:"unit"`
+	ArrayIndex int    `json:"array_index" sql:"array_index"`
+	Name       string `json:"name" sql:"name"`
+	Amount     int    `json:"amount" sql:"amount"`
+	Unit       Unit   `json:"unit" sql:"unit"`
 }
 
 var (
