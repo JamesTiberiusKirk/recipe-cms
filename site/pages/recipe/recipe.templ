@@ -3,13 +3,15 @@ package recipe
 import "github.com/JamesTiberiusKirk/recipe-cms/models"
 import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
 import "github.com/JamesTiberiusKirk/recipe-cms/common"
+import "fmt"
+import "strconv"
+import "net/url"
 
 type recipePageData struct {
 	c               *common.Context
 	Recipe          models.Recipe
 	Units           []models.Unit
 	Error           string
-	Edit            bool
 	IsAuthenticated bool
 }
 
@@ -31,19 +33,159 @@ templ recipePage(data recipePageData) {
 				id={ recipeContainerID + "_inner" }
 				class="w-full"
 			>
-				if data.Edit {
-					@recipeForm(recipeFormProps{
-						Recipe:         data.Recipe,
-						AvailableUnits: data.Units,
-					})
-				} else {
-					@recipeView(recipeFormProps{
-						Recipe:          data.Recipe,
-						AvailableUnits:  data.Units,
-						IsAuthenticated: data.IsAuthenticated,
-					})
-				}
+				@recipeView(recipeViewProps{
+					Recipe:          data.Recipe,
+					AvailableUnits:  data.Units,
+					IsAuthenticated: data.IsAuthenticated,
+				})
 			</div>
+		</div>
+	}
+}
+
+type recipeViewProps struct {
+	Recipe          models.Recipe
+	AvailableUnits  []models.Unit
+	IsAuthenticated bool
+}
+
+templ recipeView(props recipeViewProps) {
+	<div class="w-full">
+		<div class="w-full flex flex-row space-between">
+			<div class="mb-2">
+				<h1>{ props.Recipe.Name }</h1>
+				<h5>
+					By { props.Recipe.AuthorName }
+					if props.Recipe.RecipeVersion != 0 {
+						&nbsp; | &nbsp; Version: { fmt.Sprint(props.Recipe.RecipeVersion) }
+					}
+					if props.Recipe.LengthTotal != "" {
+						&nbsp; | &nbsp; Total Length: { props.Recipe.LengthTotal }
+					}
+					if props.Recipe.LengthHandsOn != "" {
+						&nbsp; | &nbsp; Hands On Length: { props.Recipe.LengthHandsOn }
+					}
+				</h5>
+			</div>
+			<div class="ml-auto pt-2">
+				<button class="btn">
+					<a
+						href={ templ.SafeURL("/recipe/" + props.Recipe.ID + "/edit") }
+					>
+						EDIT
+					</a>
+				</button>
+			</div>
+		</div>
+		if len(props.Recipe.Images) > 0 {
+			<div class="w-full h-fit"><img class="w-full h-20 object-cover" src={ props.Recipe.Images[0] }/></div>
+		}
+		<div>
+			if len(props.Recipe.Tags) > 0 {
+				<p class="my-5">
+					Tags:
+					for _, t := range props.Recipe.Tags {
+						<a href={ templ.SafeURL(fmt.Sprintf("/recipes?tag=%s", url.QueryEscape(t))) } class="rounded-full bg-red-500 hover:bg-red-700 font-bold py-1 px-2 ml-1 dark:decoration-none dark:text-white">
+							{ t }
+						</a>
+					}
+				</p>
+			}
+		</div>
+		<div>
+			<button class="btn">
+				<a
+					href={ templ.SafeURL("/recipe/" + props.Recipe.ID + "/mfp") }
+				>
+					MFP Import
+				</a>
+			</button>
+		</div>
+		if props.Recipe.Intro != "" {
+			<div class="py-5">
+				@components.RenderMarkdown(props.Recipe.Intro)
+			</div>
+		}
+		if props.Recipe.Description != "" {
+			<div class="py-5">
+				@components.RenderMarkdown(props.Recipe.Description)
+			</div>
+		}
+		<div class="w-full flex flex-row flex-wrap ">
+			if len(props.Recipe.Ingredients) > 0 {
+				@ingredientTable("Ingredients:", props.Recipe.Ingredients)
+				<span class="w-5"></span>
+			}
+			if len(props.Recipe.Seasonings) > 0 {
+				@ingredientTable("Seasonings:", props.Recipe.Seasonings)
+			}
+		</div>
+		if props.Recipe.Instructions != "" {
+			<div class="py-5">
+				@components.RenderMarkdown(props.Recipe.Instructions)
+			</div>
+		}
+		if props.Recipe.Closing != "" {
+			<div class="py-5">
+				@components.RenderMarkdown(props.Recipe.Closing)
+			</div>
+		}
+	</div>
+}
+
+templ ingredientTable(title string, ingredients []models.Ingredient) {
+	<div class="w-full mt-2 sm:w-fit">
+		<h2>{ title }</h2>
+		<table class="table border-spacing-4 w-full p-2">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Amount</th>
+				</tr>
+			</thead>
+			<tbody>
+				for _, i := range ingredients {
+					<tr>
+						<td class="text-left">{ i.Name }:</td>
+						<td class="text-right">{ fmt.Sprintf("%d %s",i.Amount, i.Unit.DisplayName) }</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}
+
+type recipeMFPViewProps struct {
+	c      *common.Context
+	Recipe models.Recipe
+}
+
+script toClipBoard() {
+	var copyText = document.getElementById("ingText");
+	console.log(copyText.innerText)
+	navigator.clipboard.writeText(copyText.innerText)
+}
+
+templ recipeMFPView(props recipeMFPViewProps) {
+	@components.Layout(props.c) {
+		<div>
+			<h1>{ props.Recipe.Name }</h1>
+			<br/>
+			<br/>
+			<button id="copyButton" onclick={ toClipBoard() } class="btn">Copy to clipboard</button>
+			<br/>
+			<h2>Ingredients</h2>
+			<table id="ingText">
+				for _, ing := range props.Recipe.Ingredients {
+					<tr>
+						<td>{ ing.Name }:</td>
+						<td>
+							{ strconv.Itoa(ing.Amount) }
+							{ ing.Unit.DisplayName }
+						</td>
+					</tr>
+				}
+			</table>
 		</div>
 	}
 }

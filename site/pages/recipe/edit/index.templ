@@ -1,8 +1,43 @@
-package recipe
+package edit
 
 import "github.com/JamesTiberiusKirk/recipe-cms/models"
 import "github.com/JamesTiberiusKirk/recipe-cms/site/components"
-import "strconv"
+import "github.com/JamesTiberiusKirk/recipe-cms/common"
+
+type recipePageData struct {
+	c               *common.Context
+	Recipe          models.Recipe
+	Units           []models.Unit
+	Error           string
+	IsAuthenticated bool
+}
+
+css recipePageCSS() {
+	width: 80%;
+}
+
+const (
+	recipeContainerID = "recipe_container"
+)
+
+templ recipePage(data recipePageData) {
+	@components.Layout(data.c) {
+		<div
+			id={ recipeContainerID }
+			class="w-full"
+		>
+			<div
+				id={ recipeContainerID + "_inner" }
+				class="w-full"
+			>
+				@recipeForm(recipeFormProps{
+					Recipe:         data.Recipe,
+					AvailableUnits: data.Units,
+				})
+			</div>
+		</div>
+	}
+}
 
 type recipeFormProps struct {
 	Recipe          models.Recipe
@@ -34,7 +69,7 @@ templ recipeForm(props recipeFormProps) {
 				})
 				<button
 					class="btn mb-1"
-					hx-post={ "/recipe/" + props.Recipe.ID }
+					hx-post={ "/recipe/" + props.Recipe.ID + "/edit?done=true" }
 					hx-include={ "#" + recipeFormID }
 					hx-select={ "#" + recipeContainerID + "_inner" }
 					hx-target={ "#" + recipeContainerID }
@@ -95,27 +130,26 @@ templ recipeForm(props recipeFormProps) {
 							</th>
 						</tr>
 					</thead>
-					<tbody class="mx-auto">
+					<tbody id="ingredients_tbl_body" class="mx-auto">
 						for idx, ingr := range props.Recipe.Ingredients {
-							<tr class="w-full mx-auto">
-								<td>{ strconv.Itoa(idx+1) }</td>
-								@components.Ingredient(components.IngredientProps{
-									// ID: fmt.Sprintf("ingredient:%d", i),
-									Ingredient:     ingr,
-									AvailableUnits: props.AvailableUnits,
-									FormName:       []string{"recipe", "ingredients", ""},
-								})
-							</tr>
+							@components.Ingredient(components.IngredientProps{
+								// ID: fmt.Sprintf("ingredient:%d", i),
+								Ingredient:     ingr,
+								AvailableUnits: props.AvailableUnits,
+								FormName:       []string{"recipe", "ingredients", ""},
+								Count:          idx + 1,
+							})
 						}
 					</tbody>
 				</table>
 			</div>
 			<br/>
 			<button
-				hx-get="/recipe/ingredient"
-				hx-swap="beforeend"
+				hx-post={ "/recipe/" + props.Recipe.ID + "/edit?action=" + ActionAddIngredient }
+				hx-swap="outerHTML"
+				hx-include={ "#" + recipeFormID }
 				hx-target="#ingredients"
-				hx-select="#ingredient"
+				hx-select="#ingredients"
 				class="w-full btn bg-red-400 hover:bg-red-500"
 			>
 				Add ingredient
@@ -147,25 +181,23 @@ templ recipeForm(props recipeFormProps) {
 					</thead>
 					<tbody class="mx-auto">
 						for idx, ingr := range props.Recipe.Seasonings {
-							<tr class="w-full mx-auto">
-								<td>{ strconv.Itoa(idx+1) }</td>
-								@components.Ingredient(components.IngredientProps{
-									//ID: fmt.Sprintf("seasoning:%d",i),
-									Ingredient:     ingr,
-									AvailableUnits: props.AvailableUnits,
-									FormName:       []string{"recipe", "seasonings", ""},
-								})
-							</tr>
+							@components.Ingredient(components.IngredientProps{
+								Ingredient:     ingr,
+								AvailableUnits: props.AvailableUnits,
+								FormName:       []string{"recipe", "seasonings", ""},
+								Count:          idx + 1,
+							})
 						}
 					</tbody>
 				</table>
 			</div>
 			<br/>
 			<button
-				hx-get="/recipe/ingredient?type=seasoning"
-				hx-swap="beforeend"
+				hx-post={ "/recipe/" + props.Recipe.ID + "/edit?action=" + ActionAddSeasoning }
+				hx-swap="outerHTML"
+				hx-include={ "#" + recipeFormID }
 				hx-target="#seasonings"
-				hx-select="#seasoning"
+				hx-select="#seasonings"
 				class="w-full btn bg-red-400 hover:bg-red-500"
 			>
 				Add Seasoning 
@@ -229,7 +261,7 @@ templ recipeForm(props recipeFormProps) {
 			// TODO: this button only works inside the form, figure out how to put it at the botton
 			<button
 				class="w-full btn mt-5"
-				hx-post={ "/recipe/" + props.Recipe.ID + "?edit=true" }
+				hx-post={ "/recipe/" + props.Recipe.ID + "/edit" }
 				hx-include={ "#" + recipeFormID }
 				hx-select={ "#" + recipeContainerID + "_inner" }
 				hx-target={ "#" + recipeContainerID }

@@ -3,6 +3,7 @@ package components
 import (
 	"fmt"
 	"github.com/JamesTiberiusKirk/recipe-cms/models"
+	"strconv"
 )
 
 type IngredientProps struct {
@@ -10,6 +11,7 @@ type IngredientProps struct {
 	FormName       []string
 	Ingredient     models.Ingredient
 	AvailableUnits []models.Unit
+	Count          int
 }
 
 func Ingredient(props IngredientProps) templ.Component {
@@ -18,33 +20,35 @@ func Ingredient(props IngredientProps) templ.Component {
 		append(props.FormName, "name"),
 		append(append(props.FormName, "amount"), ":number"),
 		GenerateNestedJsonFormPropName(props.FormName),
+		props.Count,
 	)
 }
 
-templ ingredientTempl(props IngredientProps, nameFormName []string, amountFormName []string, unitFormName string) {
-	<td>
-		@Input(InputProps{
-			Classes: templ.Classes("w-full", "flex", "flex-row"),
-			Value:   props.Ingredient.Name,
-			Name:    nameFormName,
-			Type:    InputTypeText,
-		})
-	</td>
-	<td>
-		@Input(InputProps{
-			Classes: templ.Classes("w-2/3", "flex", "flex-row"),
-			Value:   fmt.Sprint(props.Ingredient.Amount),
-			Name:    amountFormName,
-			Type:    InputTypeNumber,
-		})
-	</td>
-	<td>
-		<div class="pt-2">
-			@UnitForm(unitFormName, props.Ingredient.Unit, props.AvailableUnits)
-		</div>
-	</td>
-	<td class="">
-		<div class="">
+templ ingredientTempl(props IngredientProps, nameFormName []string, amountFormName []string, unitFormName string, count int) {
+	<tr class="w-full mx-auto">
+		<td>{ strconv.Itoa(count) }</td>
+		<td>
+			@Input(InputProps{
+				Classes: templ.Classes("w-full", "flex", "flex-row"),
+				Value:   props.Ingredient.Name,
+				Name:    nameFormName,
+				Type:    InputTypeText,
+			})
+		</td>
+		<td>
+			@Input(InputProps{
+				Classes: templ.Classes("w-2/3", "flex", "flex-row"),
+				Value:   fmt.Sprint(props.Ingredient.Amount),
+				Name:    amountFormName,
+				Type:    InputTypeNumber,
+			})
+		</td>
+		<td>
+			<div class="pt-2">
+				@UnitForm(unitFormName, props.Ingredient.Unit, props.AvailableUnits)
+			</div>
+		</td>
+		<td class="">
 			<img
 				width="20"
 				height="20"
@@ -52,8 +56,8 @@ templ ingredientTempl(props IngredientProps, nameFormName []string, amountFormNa
 				_="on click remove me.parentElement.parentElement"
 				class="m-2 mt-6"
 			/>
-		</div>
-	</td>
+		</td>
+	</tr>
 }
 
 type TagsProps struct {

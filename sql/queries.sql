@@ -10,10 +10,12 @@ SELECT
     r.closing           AS closing,
     r.recipe_version    AS recipeversion,
     r.author_name       AS authorname,
+    i.array_index       AS ingredients_array_index,
     i.ingredient_name   AS ingredients_name,
     i.amount            AS ingredients_amount,
     iu.unit_name        AS ingredients_unit_name,
     iu.display_name     AS ingredients_unit_displayname,
+    s.array_index       AS seasonings_array_index,
     s.ingredient_name   AS seasonings_name,
     s.amount            AS seasonings_amount,
     su.unit_name        AS seasonings_unit_name,
@@ -39,10 +41,12 @@ SELECT
     r.closing           AS closing,
     r.recipe_version    AS recipeversion,
     r.author_name       AS authorname,
+    i.array_index       AS ingredients_array_index,
     i.ingredient_name   AS ingredients_name,
     i.amount            AS ingredients_amount,
     iu.unit_name        AS ingredients_unit_name,
     iu.display_name     AS ingredients_unit_displayname,
+    s.array_index       AS seasonings_array_index,
     s.ingredient_name   AS seasonings_name,
     s.amount            AS seasonings_amount,
     su.unit_name        AS seasonings_unit_name,
@@ -50,7 +54,7 @@ SELECT
     r.images            AS images,
     t.tag_name          AS tags
 FROM recipe r 
-LEFT JOIN ingredient AS i ON r.id = i.recipe_id AND i.field = 'INGREDIENT'
+LEFT JOIN ingredient AS i ON r.id = i.recipe_id AND i.field = 'INGREDIENT' 
 LEFT JOIN ingredient AS s ON r.id = s.recipe_id AND s.field = 'SEASONING'
 LEFT JOIN unit AS iu ON i.unit_name = iu.unit_name
 LEFT JOIN unit AS su ON s.unit_name = su.unit_name
@@ -70,10 +74,12 @@ SELECT
     r.closing           AS closing,
     r.recipe_version    AS recipeversion,
     r.author_name       AS authorname,
+    i.array_index       AS ingredients_array_index,
     i.ingredient_name   AS ingredients_name,
     i.amount            AS ingredients_amount,
     iu.unit_name        AS ingredients_unit_name,
     iu.display_name     AS ingredients_unit_displayname,
+    s.array_index       AS seasonings_array_index,
     s.ingredient_name   AS seasonings_name,
     s.amount            AS seasonings_amount,
     su.unit_name        AS seasonings_unit_name,
@@ -81,8 +87,8 @@ SELECT
     r.images            AS images,
     t.tag_name          AS tags
 FROM recipe r 
-LEFT JOIN ingredient AS i ON r.id = i.recipe_id AND i.field = 'INGREDIENT'
-LEFT JOIN ingredient AS s ON r.id = s.recipe_id AND s.field = 'SEASONING'
+LEFT JOIN ingredient AS i ON r.id = i.recipe_id AND i.field = 'INGREDIENT' 
+LEFT JOIN ingredient AS s ON r.id = s.recipe_id AND s.field = 'SEASONING' 
 LEFT JOIN unit AS iu ON i.unit_name = iu.unit_name
 LEFT JOIN unit AS su ON s.unit_name = su.unit_name
 LEFT JOIN tag        AS t ON r.id = t.recipe_id

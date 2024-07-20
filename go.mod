@@ -6,7 +6,7 @@ replace github.com/lithammer/fuzzysearch => github.com/np-at/fuzzysearch v0.0.0-
 
 require (
 	github.com/Masterminds/squirrel v1.5.4
-	github.com/a-h/templ v0.2.663
+	github.com/a-h/templ v0.2.680
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/securecookie v1.1.2
 	github.com/gorilla/sessions v1.2.2
