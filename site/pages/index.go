@@ -18,5 +18,4 @@ func InitIndexHandler(app *echo.Group) {
 
 func (h *IndexHandler) Handle(c *common.Context) error {
 	return c.Redirect(http.StatusMovedPermanently, "/recipes")
-	// return c.TEMPL(http.StatusOK, indexPage(c))
 }

@@ -76,6 +76,8 @@ func (h *EditRecipeHandler) Page(c *common.Context) error {
 		}
 
 		data.Recipe = *recipe
+	} else {
+		data.Recipe.ID = "new"
 	}
 
 	switch c.Request().Method {
