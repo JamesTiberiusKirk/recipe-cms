@@ -201,6 +201,8 @@ func (h *EditRecipeHandler) Image(c *common.Context) error {
 			return fmt.Errorf("error making recipe directory %w", err)
 		}
 	}
+	// NOTE: linter complaining about this following check being the same as nim!=nil
+	// but this is meant to check if the error isnt nill after its been checked for it being an os error
 	if err != nil {
 		logrus.Errorf("error getting recipe folder stats stats %s", err.Error())
 		return fmt.Errorf("error getting recipe folder stats stats %w", err)
