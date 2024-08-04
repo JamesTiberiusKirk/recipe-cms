@@ -78,6 +78,10 @@ func (r *Recipe) GetAllByTagName(tag string) ([]models.Recipe, error) {
 		return nil, fmt.Errorf("error getting all recipes: %w", err)
 	}
 
+	if len(recipes) < 1 {
+		return nil, nil
+	}
+
 	errChan := make(chan error, len(recipes)*2)
 	defer close(errChan)
 
@@ -120,7 +124,7 @@ func (r *Recipe) GetOneByID(id string) (*models.Recipe, error) {
 	}
 
 	if len(recipes) < 1 {
-		return nil, fmt.Errorf("no recipe found with id %s", id)
+		return nil, nil
 	}
 
 	errChan := make(chan error, 2)
