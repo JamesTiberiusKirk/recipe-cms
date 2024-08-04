@@ -23,7 +23,7 @@ func CustomHTTPErrorHandler(err error, c echo.Context) {
 		code = he.Code
 	}
 	logrus.Error(err)
-	props := page500Props{c: cc}
+	props := page500Props{c: cc, message: "Internal Server Error"}
 	if conf.Debug {
 		props.message = err.Error()
 	}

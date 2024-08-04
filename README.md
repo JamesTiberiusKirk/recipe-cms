@@ -22,3 +22,13 @@ Hot reloader proxy will by default start the proxy server on port 5001
 - [ ] On ingredients/seasonings add a way to ignore amount
      - I.E. for seasonings I don't care about the amount, just want the list
 - [ ] Maybe think of a way to reorder items in a recipe?
+
+
+## Immediate TODO: 
+- [ ] Add tests across the more complex pages to test htmx logic
+- [ ] Re-write the entire registry
+    - The db recipe select needs to be broken up into multiple selects then stitched together
+    - Do away with the queries file, use squirrel, and create reusable selects etc
+
+
+

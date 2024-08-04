@@ -2,13 +2,11 @@ package registry
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/JamesTiberiusKirk/recipe-cms/db"
 	"github.com/JamesTiberiusKirk/recipe-cms/models"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/lib/pq"
-	"github.com/rustedturnip/goscanql"
 	"github.com/sirupsen/logrus"
 )
 
@@ -30,233 +28,234 @@ func NewRecipe(dbc *db.DB) *Recipe {
 	}
 }
 
+type ingredientChanResponse struct {
+	Ingredients []models.Ingredient
+	Err         error
+	Index       int
+}
+
 func (r *Recipe) GetAll() ([]models.Recipe, error) {
-	query, _, err := r.dbc.GetQuery(db.GetAllRecipes)
+	recipes, err := r.getRecipes()
 	if err != nil {
-		return nil, fmt.Errorf("error getting qeury: %w", err)
+		logrus.Errorf("error getting all recipes: %s", err.Error())
+		return nil, fmt.Errorf("error getting all recipes: %w", err)
 	}
 
-	rows, err := r.dbc.DB.Query(query)
-	if err != nil {
-		return nil, fmt.Errorf("error quering db: %w", err)
+	errChan := make(chan error, len(recipes)*2)
+	defer close(errChan)
+
+	for i, recipe := range recipes {
+		go func(i int, recipeID string) {
+			ingredients, err := r.getIngredientsByRecipeID(recipeID)
+			errChan <- err
+			recipes[i].Ingredients = ingredients
+		}(i, recipe.ID)
+		go func(i int, recipeID string) {
+			seasonings, err := r.getSeasoningsByRecipeID(recipeID)
+			errChan <- err
+			recipes[i].Seasonings = seasonings
+		}(i, recipe.ID)
 	}
 
-	recipes, err := goscanql.RowsToStructs[models.Recipe](rows)
-	if err != nil {
-		return nil, fmt.Errorf("error mapping row to structs: %w", err)
-	}
+	for i := 0; i < len(recipes)*2; i++ {
+		cErr := <-errChan
 
-	// TODO: fix this, should be done in sql
-	for i := range recipes {
-		if len(recipes[i].Images) < 1 {
-			continue
+		if cErr != nil {
+			err = cErr
 		}
-
-		trimmed := strings.Trim(strings.Trim(recipes[i].Images[0], "{"), "}")
-		recipes[i].Images = strings.Split(trimmed, ",")
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error getting all recipes: %w", err)
 	}
 
 	return recipes, nil
 }
 
 func (r *Recipe) GetAllByTagName(tag string) ([]models.Recipe, error) {
-	query, _, err := r.dbc.GetQuery(db.GetAllRecipesByTagName)
+	recipes, err := r.getRecipes(sq.Eq{"t.tag_name": tag})
 	if err != nil {
-		return nil, fmt.Errorf("error getting qeury: %w", err)
+		logrus.Errorf("error getting all recipes: %s", err.Error())
+		return nil, fmt.Errorf("error getting all recipes: %w", err)
 	}
 
-	rows, err := r.dbc.DB.Query(query, tag)
-	if err != nil {
-		return nil, fmt.Errorf("error quering db: %w", err)
+	if len(recipes) < 1 {
+		return nil, nil
 	}
 
-	recipes, err := goscanql.RowsToStructs[models.Recipe](rows)
-	if err != nil {
-		return nil, fmt.Errorf("error mapping row to structs: %w", err)
+	errChan := make(chan error, len(recipes)*2)
+	defer close(errChan)
+
+	for i, recipe := range recipes {
+		go func(i int, recipeID string) {
+			ingredients, err := r.getIngredientsByRecipeID(recipeID)
+			errChan <- err
+			recipes[i].Ingredients = ingredients
+		}(i, recipe.ID)
+		go func(i int, recipeID string) {
+			seasonings, err := r.getSeasoningsByRecipeID(recipeID)
+			errChan <- err
+			recipes[i].Seasonings = seasonings
+		}(i, recipe.ID)
 	}
 
-	// TODO: fix this, should be done in sql
-	for i := range recipes {
-		if len(recipes[i].Images) < 1 {
-			continue
+	for i := 0; i < len(recipes)*2; i++ {
+		cErr := <-errChan
+
+		if cErr != nil {
+			err = cErr
 		}
-
-		trimmed := strings.Trim(strings.Trim(recipes[i].Images[0], "{"), "}")
-		recipes[i].Images = strings.Split(trimmed, ",")
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error getting all recipes: %w", err)
 	}
 
 	return recipes, nil
 }
 
 func (r *Recipe) GetOneByID(id string) (*models.Recipe, error) {
-	query, _, err := r.dbc.GetQuery(db.GetRecipeByID)
+	recipes, err := r.getRecipes(sq.Eq{"r.id": id})
 	if err != nil {
-		return nil, fmt.Errorf("error getting qeury: %w", err)
+		logrus.Errorf("error getting all recipes: %s", err.Error())
+		return nil, fmt.Errorf("error getting all recipes: %w", err)
 	}
 
-	rows, err := r.dbc.DB.Query(query, id)
+	if len(recipes) > 1 {
+		return nil, fmt.Errorf("more than one recipe found with id %s", id)
+	}
+
+	if len(recipes) < 1 {
+		return nil, nil
+	}
+
+	errChan := make(chan error, 2)
+	defer close(errChan)
+
+	recipe := recipes[0]
+
+	go func(recipeID string) {
+		ingredients, err := r.getIngredientsByRecipeID(recipeID)
+		errChan <- err
+		recipe.Ingredients = ingredients
+	}(recipe.ID)
+	go func(recipeID string) {
+		seasonings, err := r.getSeasoningsByRecipeID(recipeID)
+		errChan <- err
+		recipe.Seasonings = seasonings
+	}(recipe.ID)
+
+	for i := 0; i < 2; i++ {
+		cErr := <-errChan
+
+		if cErr != nil {
+			err = cErr
+		}
+	}
 	if err != nil {
-		return nil, fmt.Errorf("error quering db: %w", err)
+		return nil, fmt.Errorf("error getting all recipes: %w", err)
 	}
 
-	recipe, err := goscanql.RowsToStruct[*models.Recipe](rows)
-	if err != nil {
-		return nil, fmt.Errorf("error mapping row to struct: %w", err)
-	}
-
-	// TODO: fix this, should be done in sql
-	if len(recipe.Images) > 0 {
-		trimmed := strings.Trim(strings.Trim(recipe.Images[0], "{"), "}")
-		recipe.Images = strings.Split(trimmed, ",")
-	}
-
-	return recipe, nil
+	return &recipe, nil
 }
 
 func (r *Recipe) Upsert(upsert models.Recipe) (models.Recipe, bool, error) {
-	tagsInsertArgs := []map[string]any{}
-	for _, t := range upsert.Tags {
-		tagsInsertArgs = append(tagsInsertArgs, map[string]any{
-			"recipeid": upsert.ID,
-			"tagname":  t,
-		})
-	}
-
-	ingredientInsertArgs := []map[string]any{}
-	for i, ing := range upsert.Ingredients {
-		ingredientInsertArgs = append(ingredientInsertArgs, map[string]any{
-			"recipeid":       upsert.ID,
-			"arrayindex":     i,
-			"field":          "INGREDIENT",
-			"ingredientname": ing.Name,
-			"amount":         ing.Amount,
-			"unitname":       ing.Unit.Name,
-		})
-	}
-
-	seasoningInsertArgs := []map[string]any{}
-	for i, ing := range upsert.Seasonings {
-		seasoningInsertArgs = append(seasoningInsertArgs, map[string]any{
-			"recipeid":       upsert.ID,
-			"arrayindex":     i,
-			"field":          "SEASONING",
-			"ingredientname": ing.Name,
-			"amount":         ing.Amount,
-			"unitname":       ing.Unit.Name,
-		})
-	}
-
 	// NOTE: so that COALESCE would work with the array
 	var images any
 	if len(upsert.Images) > 0 {
 		images = pq.Array(upsert.Images)
 	}
 
-	transactions := []db.Transaction{
-		{
-			QueryName: db.UpsertRecipe,
-			Args: map[string]any{
-				"id":            upsert.ID,
-				"recipename":    upsert.Name,
-				"intro":         upsert.Intro,
-				"description":   upsert.Description,
-				"instructions":  upsert.Instructions,
-				"lengthtotal":   upsert.LengthTotal,
-				"lengthhandson": upsert.LengthHandsOn,
-				"closing":       upsert.Closing,
-				"recipeversion": upsert.RecipeVersion,
-				"authorname":    upsert.AuthorName,
-				"images":        images,
-			},
-		},
+	transactions := []db.SqlBuilder{
+		// upsert recipe
+		psql.Insert(recipeTableName).Columns(recipeTableNameCols...).Values(
+			upsert.ID,
+			upsert.Name,
+			upsert.Intro,
+			upsert.Description,
+			upsert.Instructions,
+			upsert.LengthTotal,
+			upsert.LengthHandsOn,
+			upsert.Closing,
+			upsert.RecipeVersion,
+			upsert.AuthorName,
+			images,
+		).Suffix(`ON CONFLICT (id) DO UPDATE SET
+			recipe_name =       COALESCE(NULLIF(EXCLUDED.recipe_name, ''),     recipe.recipe_name),
+			intro =             COALESCE(NULLIF(EXCLUDED.intro, ''),           recipe.intro),
+			description =       COALESCE(NULLIF(EXCLUDED.description, ''),     recipe.description),
+			instructions =      COALESCE(NULLIF(EXCLUDED.instructions, ''),    recipe.instructions),
+			length_total =      COALESCE(NULLIF(EXCLUDED.length_total, ''),    recipe.length_total),
+			length_hands_on =   COALESCE(NULLIF(EXCLUDED.length_hands_on, ''), recipe.length_hands_on),
+			closing =           COALESCE(NULLIF(EXCLUDED.closing, ''),         recipe.closing),
+			recipe_version =    COALESCE(NULLIF(EXCLUDED.recipe_version, 0),   recipe.recipe_version),
+			author_name =       COALESCE(NULLIF(EXCLUDED.author_name, ''),     recipe.author_name),
+			images =            COALESCE(EXCLUDED.images, recipe.images); -- doing the check for this in go
+		`),
 	}
 
-	if len(tagsInsertArgs) > 0 {
+	// manually upserting tags
+	if len(upsert.Tags) > 0 {
 		transactions = append(transactions,
-			db.Transaction{
-				QueryName: db.DeleteAllTagsByRecipeID,
-				Args: map[string]any{
-					"recipeid": upsert.ID,
-				},
-			},
+			psql.Delete(tagTableName).Where(sq.Eq{"recipe_id": upsert.ID}),
 		)
-		transactions = append(transactions,
-			db.Transaction{
-				QueryName: db.InsertTag,
-				Args:      tagsInsertArgs,
-			},
-		)
+
+		stmt := psql.Insert(tagTableName).Columns(tagTableCols...)
+
+		for _, t := range upsert.Tags {
+			stmt = stmt.Values(upsert.ID, t)
+		}
+
+		transactions = append(transactions, stmt)
 	}
 
-	if len(ingredientInsertArgs) > 0 {
+	if len(upsert.Ingredients) > 0 {
+		transactions = append(transactions,
+			psql.Delete(ingredientTableName).Where(sq.And{sq.Eq{"recipe_id": upsert.ID}, sq.Eq{"field": "INGREDIENT"}}),
+		)
 
-		transactions = append(transactions,
-			db.Transaction{
-				QueryName: db.DeleteIngredient,
-				Args: map[string]any{
-					"recipeid": upsert.ID,
-					"field":    "INGREDIENT",
-				},
-			},
-		)
-		transactions = append(transactions,
-			db.Transaction{
-				QueryName: db.UpsertIngredients,
-				Args:      ingredientInsertArgs,
-			},
-		)
+		stmt := psql.Insert(ingredientTableName).Columns(ingredientTableCols...)
+
+		for i, ing := range upsert.Ingredients {
+			stmt = stmt.Values(upsert.ID, i, "INGREDIENT", ing.Name, ing.Amount, ing.Unit.Name)
+		}
+
+		transactions = append(transactions, stmt)
 	}
 
-	if len(ingredientInsertArgs) > 0 {
+	if len(upsert.Seasonings) > 0 {
 		transactions = append(transactions,
-			db.Transaction{
-				QueryName: db.DeleteIngredient,
-				Args: map[string]any{
-					"recipeid": upsert.ID,
-					"field":    "SEASONING",
-				},
-			},
+			psql.Delete(ingredientTableName).Where(sq.And{sq.Eq{"recipe_id": upsert.ID}, sq.Eq{"field": "SEASONING"}}),
 		)
-		transactions = append(transactions,
-			db.Transaction{
-				QueryName: db.UpsertIngredients,
-				Args:      seasoningInsertArgs,
-			},
-		)
+
+		stmt := psql.Insert(ingredientTableName).Columns(ingredientTableCols...)
+
+		for i, ing := range upsert.Seasonings {
+			stmt = stmt.Values(upsert.ID, i, "SEASONING", ing.Name, ing.Amount, ing.Unit.Name)
+		}
+
+		transactions = append(transactions, stmt)
 	}
 
 	trx := r.dbc.DB.MustBegin()
+	// NOTE: This does not rollback if trx is done
 	defer trx.Rollback()
 
-	for _, t := range transactions {
-		q, _, err := r.dbc.GetQuery(t.QueryName)
+	for i, t := range transactions {
+		q, args, err := t.ToSql()
 		if err != nil {
-			logrus.Errorf("error getting query %s: %s", t.QueryName, err.Error())
+			logrus.Errorf("error getting query %d, %s: %s", i, q, err.Error())
 			return models.Recipe{}, false, fmt.Errorf("error getting query: %w", err)
 		}
 
-		switch args := t.Args.(type) {
-		case []map[string]any:
-			stmt, err := trx.PrepareNamed(q)
-			if err != nil {
-				logrus.Errorf("error prepairing transaction %s: %s", t.QueryName, err.Error())
-				return models.Recipe{}, false, fmt.Errorf("error prepairing transaction: %w", err)
-			}
-			defer stmt.Close()
-
-			for _, a := range args {
-				_, err := stmt.Exec(a)
-				if err != nil {
-					logrus.Errorf("error creating prepaired transaction %s: %s", t.QueryName, err.Error())
-					return models.Recipe{}, false, fmt.Errorf("error creating transaction: %w", err)
-				}
-			}
-		default:
-			_, err = trx.NamedExec(q, args)
-			if err != nil {
-				logrus.Errorf("error creating transaction %s: %s", t.QueryName, err.Error())
-				return models.Recipe{}, false, fmt.Errorf("error creating transaction: %w", err)
-			}
+		if args != nil {
+			_, err = trx.Exec(q, args...)
+		} else {
+			_, err = trx.Exec(q)
+		}
+		if err != nil {
+			logrus.Errorf("error creating transaction %s", err.Error())
+			logrus.Errorf("QUERY: %s", q)
+			fmt.Printf("ARGS: len(%d) %#v\n", len(args), args)
+			return models.Recipe{}, false, fmt.Errorf("error creating transaction: %w", err)
 		}
 	}
 

@@ -97,6 +97,7 @@ func (h *EditRecipeHandler) Page(c *common.Context) error {
 		if err != nil && !errors.Is(err, errTerminated) {
 			c.Logger().Error("error managing upsert: %s", err.Error())
 			return echo.NewHTTPError(http.StatusInternalServerError, "error upserting")
+			// return echo.NewHTTPError(http.StatusBadRequest, "error upserting")
 		}
 
 		if c.QueryParam("done") == "true" {
@@ -194,13 +195,15 @@ func (h *EditRecipeHandler) Image(c *common.Context) error {
 	recipeID := form.Value["recipe_id"][0]
 
 	recipePath := fmt.Sprintf("%s/%s", cfg.Volume, recipeID)
-	if _, err := os.Stat(recipePath); os.IsNotExist(err) {
+	_, err = os.Stat(recipePath)
+	if os.IsNotExist(err) {
 		err := os.Mkdir(recipePath, 0755)
 		if err != nil {
 			logrus.Errorf("error making recipe directory %s", err.Error())
 			return fmt.Errorf("error making recipe directory %w", err)
 		}
 	}
+
 	if err != nil {
 		logrus.Errorf("error getting recipe folder stats stats %s", err.Error())
 		return fmt.Errorf("error getting recipe folder stats stats %w", err)
