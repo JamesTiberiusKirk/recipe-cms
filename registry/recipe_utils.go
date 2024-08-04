@@ -58,12 +58,13 @@ var (
 	}
 
 	ingredientTableColsAs = []string{
-		"i.recipe_id",
+		"i.recipe_id 	     AS recipe_id",
+		"i.field 		     AS field",
 		"i.array_index       AS array_index",
 		"i.ingredient_name   AS name",
 		"i.amount            AS amount",
-		"iu.unit_name        AS unit_name",
-		"iu.display_name     AS unit_displayname",
+		"u.unit_name         AS unit_name",
+		"u.display_name      AS unit_displayname",
 	}
 
 	tagTableCols = []string{
@@ -75,24 +76,9 @@ var (
 func makeSelectIngredientSelectSatement(recipeID, field string) sq.SelectBuilder {
 	return psql.Select(ingredientTableColsAs...).
 		From(ingredientTableName + " i").
-		LeftJoin(unitTableName + " as iu ON iu.unit_name = i.unit_name").
-		Where(sq.Eq{"i.field": recipeID}).
-		Where(sq.Eq{"i.recipe_id": field})
-}
-
-func (r *Recipe) getSeasoningsByRecipeID(recipeID string) ([]models.Ingredient, error) {
-	rows, err := makeSelectIngredientSelectSatement(recipeID, "SEASONING").
-		RunWith(r.dbc.DB).Query()
-	if err != nil {
-		return nil, fmt.Errorf("error quering db: %w", err)
-	}
-
-	seasonings, err := goscanql.RowsToStructs[models.Ingredient](rows)
-	if err != nil {
-		return nil, fmt.Errorf("error mapping row to structs: %w", err)
-	}
-
-	return seasonings, nil
+		LeftJoin(unitTableName + " as u ON u.unit_name = i.unit_name").
+		Where(sq.And{sq.Eq{"i.recipe_id": recipeID}, sq.Eq{"i.field": field}}).
+		OrderBy("i.array_index ASC")
 }
 
 func (r *Recipe) getIngredientsByRecipeID(recipeID string) ([]models.Ingredient, error) {
@@ -108,6 +94,21 @@ func (r *Recipe) getIngredientsByRecipeID(recipeID string) ([]models.Ingredient,
 	}
 
 	return ingredients, nil
+}
+
+func (r *Recipe) getSeasoningsByRecipeID(recipeID string) ([]models.Ingredient, error) {
+	rows, err := makeSelectIngredientSelectSatement(recipeID, "SEASONING").
+		RunWith(r.dbc.DB).Query()
+	if err != nil {
+		return nil, fmt.Errorf("error quering db: %w", err)
+	}
+
+	seasonings, err := goscanql.RowsToStructs[models.Ingredient](rows)
+	if err != nil {
+		return nil, fmt.Errorf("error mapping row to structs: %w", err)
+	}
+
+	return seasonings, nil
 }
 
 func (r *Recipe) getRecipes(extraWhereParams ...sq.Eq) ([]models.Recipe, error) {
