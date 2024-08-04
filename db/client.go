@@ -1,21 +1,17 @@
 package db
 
 import (
-	"fmt"
-
 	"github.com/jmoiron/sqlx"
-	"github.com/knadh/goyesql"
 	_ "github.com/lib/pq"
 )
 
-type DB struct {
-	DB      *sqlx.DB
-	queries goyesql.Queries
+// squirrel helper
+type SqlBuilder interface {
+	ToSql() (string, []interface{}, error)
 }
 
-type Transaction struct {
-	QueryName QueryName
-	Args      any
+type DB struct {
+	DB *sqlx.DB
 }
 
 func Connect(dbUrl string) (*DB, error) {
@@ -24,11 +20,8 @@ func Connect(dbUrl string) (*DB, error) {
 		return nil, err
 	}
 
-	queries := goyesql.MustParseFile("./sql/queries.sql")
-
 	return &DB{
-		DB:      db,
-		queries: queries,
+		DB: db,
 	}, nil
 }
 
@@ -44,13 +37,3 @@ const (
 	DeleteIngredient        QueryName = "delete_ingredient"
 	UpsertIngredients       QueryName = "upsert_ingredients"
 )
-
-// GetQuery - returns query based on name
-func (db *DB) GetQuery(name QueryName) (string, map[string]string, error) {
-	sq, ok := db.queries[string(name)]
-	if !ok {
-		return "", nil, fmt.Errorf("schema \"%s\" not not found", name)
-	}
-
-	return sq.Query, sq.Tags, nil
-}

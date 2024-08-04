@@ -21,8 +21,6 @@ func NewUser(dbc *db.DB) *User {
 	}
 }
 
-// NOTE: trying out squirrel here
-
 // GetOneByUsername retrieves a user by username, case-insensitive
 func (u *User) GetOneByUsername(username string) (models.User, error) {
 	usersq := sq.StatementBuilder.PlaceholderFormat(sq.Dollar).
