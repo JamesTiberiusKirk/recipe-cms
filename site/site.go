@@ -46,9 +46,9 @@ func (s *Site) Start(addr string) error {
 	// Echo instance
 	e := echo.New()
 
-	e.Use(
-		inject(s.config, s.sessions),
-	)
+	e.HTTPErrorHandler = pages.CustomHTTPErrorHandler
+
+	e.Use(inject(s.config, s.sessions))
 
 	// Middleware
 	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
@@ -101,8 +101,6 @@ func (s *Site) Start(addr string) error {
 	e.Use(middleware.Gzip())
 	e.Use(middleware.Recover())
 
-	e.HTTPErrorHandler = pages.CustomHTTPErrorHandler
-
 	e.Static("/images", s.config.Volume)
 	e.Static("/assets", "./site/public/")
 
@@ -115,7 +113,7 @@ func (s *Site) Start(addr string) error {
 	recipe.InitRecipeHandler(e.Group("/recipe"), s.recipreRegistry, s.sessions)
 	recipe.InitRecipesHandler(e.Group("/recipes"), s.recipreRegistry)
 	pages.InitMarkdownRenderer(e.Group(""))
-	playground.InitTestRoute(e.Group("/pg"))
+	playground.InitTestRoute(s.config, e.Group(""))
 
 	// data, err := json.MarshalIndent(e.Routes(), "", "  ")
 	// if err != nil {

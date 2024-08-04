@@ -71,8 +71,7 @@ templ recipeForm(props recipeFormProps) {
 					class="btn mb-1"
 					hx-post={ "/recipe/" + props.Recipe.ID + "/edit?done=true" }
 					hx-include={ "#" + recipeFormID }
-					hx-select={ "#" + recipeContainerID + "_inner" }
-					hx-target={ "#" + recipeContainerID }
+					hx-target="body"
 					hx-swap="innerHTML"
 					hx-push-url="true"
 				>
