@@ -29,3 +29,6 @@ install_deps:
 	go install github.com/JamesTiberiusKirk/migrator/cmd/migrator@latest
 	go install github.com/JamesTiberiusKirk/hot-reloader-proxy/cmd/hrp@latest
 
+start_dev_k8s:
+	minikube start --driver=docker
+
